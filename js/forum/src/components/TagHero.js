@@ -5,16 +5,19 @@ export default class TagHero extends Component {
     const tag = this.props.tag;
     const color = tag.color();
 
-    return (
-      <header className={'Hero TagHero' + (color ? ' TagHero--colored' : '')}
-        style={color ? {color: '#fff', backgroundColor: color} : ''}>
-        <div className="container">
-          <div className="containerNarrow">
-            <h2 className="Hero-title">{tag.name()}</h2>
-            <div className="Hero-subtitle">{tag.description()}</div>
-          </div>
-        </div>
-      </header>
+      return (
+	      <table class="marketing-block">
+	      <tbody><tr class="marketing-block">
+	      <td class="leftside">
+	      <div class="group-name">The DIVINE MERCY Discussion Group</div>
+	      <div class="group-summary">Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis.</div>
+	      </td>
+	      <td class="rightside">
+	        <img src="http://res.cloudinary.com/hir7sbm3c/image/upload/c_fill/cc-uploads/itmjlbgk5cpsrilkltax.jpg"></img>
+	      <div class="button-join-group"> JOIN GROUP</div>
+	      </td>
+	      </tr>
+	      </tbody></table>
     );
   }
 }

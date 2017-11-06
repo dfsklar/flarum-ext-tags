@@ -828,62 +828,75 @@ System.register('flarum/tags/components/TagDiscussionModal', ['flarum/components
     }
   };
 });;
-'use strict';
+"use strict";
 
-System.register('flarum/tags/components/TagHero', ['flarum/Component'], function (_export, _context) {
-  "use strict";
+System.register("flarum/tags/components/TagHero", ["flarum/Component"], function (_export, _context) {
+		"use strict";
 
-  var Component, TagHero;
-  return {
-    setters: [function (_flarumComponent) {
-      Component = _flarumComponent.default;
-    }],
-    execute: function () {
-      TagHero = function (_Component) {
-        babelHelpers.inherits(TagHero, _Component);
+		var Component, TagHero;
+		return {
+				setters: [function (_flarumComponent) {
+						Component = _flarumComponent.default;
+				}],
+				execute: function () {
+						TagHero = function (_Component) {
+								babelHelpers.inherits(TagHero, _Component);
 
-        function TagHero() {
-          babelHelpers.classCallCheck(this, TagHero);
-          return babelHelpers.possibleConstructorReturn(this, (TagHero.__proto__ || Object.getPrototypeOf(TagHero)).apply(this, arguments));
-        }
+								function TagHero() {
+										babelHelpers.classCallCheck(this, TagHero);
+										return babelHelpers.possibleConstructorReturn(this, (TagHero.__proto__ || Object.getPrototypeOf(TagHero)).apply(this, arguments));
+								}
 
-        babelHelpers.createClass(TagHero, [{
-          key: 'view',
-          value: function view() {
-            var tag = this.props.tag;
-            var color = tag.color();
+								babelHelpers.createClass(TagHero, [{
+										key: "view",
+										value: function view() {
+												var tag = this.props.tag;
+												var color = tag.color();
 
-            return m(
-              'header',
-              { className: 'Hero TagHero' + (color ? ' TagHero--colored' : ''),
-                style: color ? { color: '#fff', backgroundColor: color } : '' },
-              m(
-                'div',
-                { className: 'container' },
-                m(
-                  'div',
-                  { className: 'containerNarrow' },
-                  m(
-                    'h2',
-                    { className: 'Hero-title' },
-                    tag.name()
-                  ),
-                  m(
-                    'div',
-                    { className: 'Hero-subtitle' },
-                    tag.description()
-                  )
-                )
-              )
-            );
-          }
-        }]);
-        return TagHero;
-      }(Component);
+												return m(
+														"table",
+														{ "class": "marketing-block" },
+														m(
+																"tbody",
+																null,
+																m(
+																		"tr",
+																		{ "class": "marketing-block" },
+																		m(
+																				"td",
+																				{ "class": "leftside" },
+																				m(
+																						"div",
+																						{ "class": "group-name" },
+																						"The DIVINE MERCY Discussion Group"
+																				),
+																				m(
+																						"div",
+																						{ "class": "group-summary" },
+																						"Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis."
+																				)
+																		),
+																		m(
+																				"td",
+																				{ "class": "rightside" },
+																				m("img", { src: "http://res.cloudinary.com/hir7sbm3c/image/upload/c_fill/cc-uploads/itmjlbgk5cpsrilkltax.jpg" }),
+																				m(
+																						"div",
+																						{ "class": "button-join-group" },
+																						" JOIN GROUP"
+																				)
+																		)
+																)
+														)
+												);
+										}
+								}]);
+								return TagHero;
+						}(Component);
 
-      _export('default', TagHero);
-    }
-  };
+						_export("default", TagHero);
+				}
+		};
 });;
 'use strict';
 
