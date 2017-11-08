@@ -267,24 +267,27 @@ System.register('flarum/tags/addTagLabels', ['flarum/extend', 'flarum/components
 });;
 'use strict';
 
-System.register('flarum/tags/addTagList', ['flarum/extend', 'flarum/components/IndexPage', 'flarum/components/Separator', 'flarum/components/LinkButton', 'flarum/tags/components/TagLinkButton', 'flarum/tags/components/TagsPage', 'flarum/tags/utils/sortTags'], function (_export, _context) {
+System.register('flarum/tags/addTagList', ['flarum/extend', 'flarum/components/IndexPage', 'flarum/components/Separator', 'flarum/components/LinkButton', 'flarum/tags/components/TagLinkButton', 'flarum/tags/components/GroupsListHeader', 'flarum/tags/components/TagsPage', 'flarum/tags/utils/sortTags'], function (_export, _context) {
   "use strict";
 
-  var extend, IndexPage, Separator, LinkButton, TagLinkButton, TagsPage, sortTags;
+  var extend, IndexPage, Separator, LinkButton, TagLinkButton, GroupsListHeader, TagsPage, sortTags;
 
   _export('default', function () {
     // Add a link to the tags page, as well as a list of all the tags,
     // to the index page's sidebar.
     extend(IndexPage.prototype, 'navItems', function (items) {
+
+      /*
       items.add('tags', LinkButton.component({
         icon: 'th-large',
         children: app.translator.trans('flarum-tags.forum.index.tags_link'),
         href: app.route('tags')
-      }), -10);
+      }), -10); */
 
       if (app.current instanceof TagsPage) return;
 
       items.add('separator', Separator.component(), -10);
+      items.add('groups-list-header', GroupsListHeader.component({}), -10);
 
       var params = this.stickyParams();
       var tags = app.store.all('tags');
@@ -332,6 +335,8 @@ System.register('flarum/tags/addTagList', ['flarum/extend', 'flarum/components/I
       LinkButton = _flarumComponentsLinkButton.default;
     }, function (_flarumTagsComponentsTagLinkButton) {
       TagLinkButton = _flarumTagsComponentsTagLinkButton.default;
+    }, function (_flarumTagsComponentsGroupsListHeader) {
+      GroupsListHeader = _flarumTagsComponentsGroupsListHeader.default;
     }, function (_flarumTagsComponentsTagsPage) {
       TagsPage = _flarumTagsComponentsTagsPage.default;
     }, function (_flarumTagsUtilsSortTags) {
@@ -424,6 +429,51 @@ System.register('flarum/tags/components/DiscussionTaggedPost', ['flarum/componen
       }(EventPost);
 
       _export('default', DiscussionTaggedPost);
+    }
+  };
+});;
+"use strict";
+
+System.register("flarum/tags/components/GroupsListHeader", ["flarum/Component"], function (_export, _context) {
+  "use strict";
+
+  var Component, GroupsListHeader;
+  return {
+    setters: [function (_flarumComponent) {
+      Component = _flarumComponent.default;
+    }],
+    execute: function () {
+      GroupsListHeader = function (_Component) {
+        babelHelpers.inherits(GroupsListHeader, _Component);
+
+        function GroupsListHeader() {
+          babelHelpers.classCallCheck(this, GroupsListHeader);
+          return babelHelpers.possibleConstructorReturn(this, (GroupsListHeader.__proto__ || Object.getPrototypeOf(GroupsListHeader)).apply(this, arguments));
+        }
+
+        babelHelpers.createClass(GroupsListHeader, [{
+          key: "view",
+          value: function view() {
+            return m(
+              "div",
+              null,
+              m(
+                "div",
+                { "class": "groups-list-header" },
+                "Other Groups"
+              ),
+              m(
+                "div",
+                { "class": "comment-to-lou" },
+                "(TODO: hide this group from this list.)"
+              )
+            );
+          }
+        }]);
+        return GroupsListHeader;
+      }(Component);
+
+      _export("default", GroupsListHeader);
     }
   };
 });;
@@ -868,12 +918,12 @@ System.register("flarum/tags/components/TagHero", ["flarum/Component"], function
 																				m(
 																						"div",
 																						{ "class": "group-name" },
-																						"The DIVINE MERCY Discussion Group"
+																						"The YOUNG MARRIEDS Group"
 																				),
 																				m(
 																						"div",
 																						{ "class": "group-summary" },
-																						"Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis."
+																						"The above title is hardwired for demo - it is not yet dynamic!  Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis."
 																				)
 																		),
 																		m(
