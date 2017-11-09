@@ -7,8 +7,10 @@ export default class TagLinkButton extends LinkButton {
     const active = this.constructor.isActive(this.props);
     const description = tag && tag.description();
 
+    const isChild = false;  // tag.isChild()
+
     return (
-      <a className={'TagLinkButton hasIcon ' + (tag.isChild() ? 'child' : '')} href={this.props.href} config={m.route}
+      <a className={'TagLinkButton hasIcon ' + (isChild ? 'child' : '')} href={this.props.href} config={m.route}
         style={active && tag ? {color: tag.color()} : ''}
         title={description || ''}>
         {tagIcon(tag, {className: 'Button-icon'})}

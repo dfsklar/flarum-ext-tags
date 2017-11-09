@@ -22,6 +22,8 @@ export default function() {
 
     if (app.current instanceof TagsPage) return;
 
+    // DFSKLARD: I want to show only the current tag's children (secondary tags).  That's all!
+
     items.add('separator', Separator.component(), -10);
     items.add('groups-list-header', GroupsListHeader.component({}), -10);
 
@@ -36,13 +38,20 @@ export default function() {
         active = currentTag.parent() === tag;
       }
 
-      items.add('tag' + tag.id(), TagLinkButton.component({tag, params, active}), -10);
+      // ACTUALLY, I ONLY SHOW THE subtags OF THE active primary tag.
+      if (tag.isChild() && (tag.parent() === currentTag)) {
+        items.add('tag' + tag.id(), TagLinkButton.component({tag, params, active}), -10);
+      }
     };
 
     sortTags(tags)
       .filter(tag => tag.position() !== null && (!tag.isChild() || (currentTag && (tag.parent() === currentTag || tag.parent() === currentTag.parent()))))
       .forEach(addTag);
 
+    /*
+
+    I SEE NO REASON FOR THIS.
+    
     const more = tags
       .filter(tag => tag.position() === null)
       .sort((a, b) => b.discussionsCount() - a.discussionsCount());
@@ -55,5 +64,9 @@ export default function() {
         href: app.route('tags')
       }), -10);
     }
+    */
+
+
+
   });
 }

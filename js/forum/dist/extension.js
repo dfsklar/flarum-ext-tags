@@ -286,6 +286,8 @@ System.register('flarum/tags/addTagList', ['flarum/extend', 'flarum/components/I
 
       if (app.current instanceof TagsPage) return;
 
+      // DFSKLARD: I want to show only the current tag's children (secondary tags).  That's all!
+
       items.add('separator', Separator.component(), -10);
       items.add('groups-list-header', GroupsListHeader.component({}), -10);
 
@@ -300,27 +302,30 @@ System.register('flarum/tags/addTagList', ['flarum/extend', 'flarum/components/I
           active = currentTag.parent() === tag;
         }
 
-        items.add('tag' + tag.id(), TagLinkButton.component({ tag: tag, params: params, active: active }), -10);
+        // ACTUALLY, I ONLY SHOW THE subtags OF THE active primary tag.
+        if (tag.isChild() && tag.parent() === currentTag) {
+          items.add('tag' + tag.id(), TagLinkButton.component({ tag: tag, params: params, active: active }), -10);
+        }
       };
 
       sortTags(tags).filter(function (tag) {
         return tag.position() !== null && (!tag.isChild() || currentTag && (tag.parent() === currentTag || tag.parent() === currentTag.parent()));
       }).forEach(addTag);
 
-      var more = tags.filter(function (tag) {
-        return tag.position() === null;
-      }).sort(function (a, b) {
-        return b.discussionsCount() - a.discussionsCount();
-      });
-
-      more.splice(0, 3).forEach(addTag);
-
-      if (more.length) {
+      /*
+       I SEE NO REASON FOR THIS.
+      
+      const more = tags
+        .filter(tag => tag.position() === null)
+        .sort((a, b) => b.discussionsCount() - a.discussionsCount());
+       more.splice(0, 3).forEach(addTag);
+       if (more.length) {
         items.add('moreTags', LinkButton.component({
           children: app.translator.trans('flarum-tags.forum.index.more_link'),
           href: app.route('tags')
         }), -10);
       }
+      */
     });
   });
 
@@ -456,17 +461,8 @@ System.register("flarum/tags/components/GroupsListHeader", ["flarum/Component"],
           value: function view() {
             return m(
               "div",
-              null,
-              m(
-                "div",
-                { "class": "groups-list-header" },
-                "Other Groups"
-              ),
-              m(
-                "div",
-                { "class": "comment-to-lou" },
-                "(TODO: hide this group from this list.)"
-              )
+              { "class": "sessions-list-header" },
+              "Sessions"
             );
           }
         }]);
