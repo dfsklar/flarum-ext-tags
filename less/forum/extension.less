@@ -7,9 +7,12 @@
 @import "Formed.less";
 
 .DiscussionHero {
-  .item-title {
+  .item-tags {
+    display: none !important;
   }
 }
+
+
 .TagLinkButton.child {
   @media @tablet-up {
     padding-top: 4px;
@@ -38,6 +41,7 @@
       margin-right: 155px;
     }
     .DiscussionListItem-info > .item-tags {
+      display: none !important;
       margin-right: 0;
       position: absolute;
       right: 80px;
@@ -55,6 +59,8 @@
     }
   }
 }
+
+
 @media @desktop-up {
   .TagsPage {
     .sideNav {

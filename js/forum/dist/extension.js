@@ -286,7 +286,7 @@ System.register('flarum/tags/addTagList', ['flarum/extend', 'flarum/components/I
 
       if (app.current instanceof TagsPage) return;
 
-      // DFSKLARD: I want to show only the current tag's children (secondary tags).  That's all!
+      // DFSKLARD: I want to show only the current PRIMARY tag's children (secondary tags).  That's all!
 
       items.add('separator', Separator.component(), -10);
       items.add('groups-list-header', GroupsListHeader.component({}), -10);
@@ -295,6 +295,8 @@ System.register('flarum/tags/addTagList', ['flarum/extend', 'flarum/components/I
       var tags = app.store.all('tags');
       var currentTag = this.currentTag();
 
+      var currentPrimaryTag = currentTag ? currentTag.isChild() ? currentTag.parent() : currentTag : null;
+
       var addTag = function addTag(tag) {
         var active = currentTag === tag;
 
@@ -302,8 +304,9 @@ System.register('flarum/tags/addTagList', ['flarum/extend', 'flarum/components/I
           active = currentTag.parent() === tag;
         }
 
+        // DFSKLARD: my own attempts at a custom list of secondary tags to provide a list of sessions.
         // ACTUALLY, I ONLY SHOW THE subtags OF THE active primary tag.
-        if (tag.isChild() && tag.parent() === currentTag) {
+        if (tag.isChild() && tag.parent() === currentPrimaryTag) {
           items.add('tag' + tag.id(), TagLinkButton.component({ tag: tag, params: params, active: active }), -10);
         }
       };
@@ -314,8 +317,7 @@ System.register('flarum/tags/addTagList', ['flarum/extend', 'flarum/components/I
 
       /*
        I SEE NO REASON FOR THIS.
-      
-      const more = tags
+       const more = tags
         .filter(tag => tag.position() === null)
         .sort((a, b) => b.discussionsCount() - a.discussionsCount());
        more.splice(0, 3).forEach(addTag);
@@ -918,8 +920,18 @@ System.register("flarum/tags/components/TagHero", ["flarum/Component"], function
 																				),
 																				m(
 																						"div",
+																						{ "class": "group-leader-name" },
+																						"[name of this group's leader]"
+																				),
+																				m(
+																						"div",
 																						{ "class": "group-summary" },
-																						"The above title is hardwired for demo - it is not yet dynamic!  Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis."
+																						"This hero area is hardwired for demo - it is not yet dynamic!  Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis."
+																				),
+																				m(
+																						"div",
+																						{ "class": "button-join-group" },
+																						" JOIN GROUP button (if you are not a member yet)"
 																				)
 																		),
 																		m(
@@ -928,8 +940,8 @@ System.register("flarum/tags/components/TagHero", ["flarum/Component"], function
 																				m("img", { src: "http://res.cloudinary.com/hir7sbm3c/image/upload/c_fill/cc-uploads/itmjlbgk5cpsrilkltax.jpg" }),
 																				m(
 																						"div",
-																						{ "class": "button-join-group" },
-																						" JOIN GROUP"
+																						{ "class": "commentary" },
+																						"This is a thumbnail and \"play-launcher\" for whatever is the media item for the currently-selected SESSION! "
 																				)
 																		)
 																)
@@ -972,9 +984,11 @@ System.register('flarum/tags/components/TagLinkButton', ['flarum/components/Link
             var active = this.constructor.isActive(this.props);
             var description = tag && tag.description();
 
+            var isChild = false; // tag.isChild()
+
             return m(
               'a',
-              { className: 'TagLinkButton hasIcon ' + (tag.isChild() ? 'child' : ''), href: this.props.href, config: m.route,
+              { className: 'TagLinkButton hasIcon ' + (isChild ? 'child' : ''), href: this.props.href, config: m.route,
                 style: active && tag ? { color: tag.color() } : '',
                 title: description || '' },
               tagIcon(tag, { className: 'Button-icon' }),

@@ -11,14 +11,31 @@
 }
 
 
+
+
+
+
 table.marketing-block {
 
    tr.marketing-block {
 
         td.leftside {
+            position: relative;
             vertical-align: top;
             background-color: navy;
             color: white;   
+            .button-join-group {
+                cursor: pointer;
+                position: absolute;
+                padding-top: 4px;
+                padding-bottom: 4px;
+                padding-left: 10px;
+                padding-right: 10px;
+                color: white;
+                right: 10px;
+                bottom: 10px;
+                background-color: rgb(228, 157, 36);
+            }
             .group-name {
                 padding-top: 23px;
                 font-size: 20px;
@@ -44,18 +61,14 @@ table.marketing-block {
                 opacity: 0.5;
                 width: 500px;
             }
-            .button-join-group {
-                cursor: pointer;
+            .commentary {
                 position: absolute;
-                padding-top: 4px;
-                padding-bottom: 4px;
-                padding-left: 10px;
-                padding-right: 10px;
+                top: 10px;
+                z-index: 2000;
                 color: white;
-                right: 10px;
-                bottom: 10px;
-                background-color: rgb(228, 157, 36);
+                padding: 20px;
             }
+
 
         }
 

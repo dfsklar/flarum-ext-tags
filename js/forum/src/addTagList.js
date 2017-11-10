@@ -22,7 +22,7 @@ export default function() {
 
     if (app.current instanceof TagsPage) return;
 
-    // DFSKLARD: I want to show only the current tag's children (secondary tags).  That's all!
+    // DFSKLARD: I want to show only the current PRIMARY tag's children (secondary tags).  That's all!
 
     items.add('separator', Separator.component(), -10);
     items.add('groups-list-header', GroupsListHeader.component({}), -10);
@@ -31,15 +31,22 @@ export default function() {
     const tags = app.store.all('tags');
     const currentTag = this.currentTag();
 
+    const currentPrimaryTag = 
+       currentTag ? 
+        ( (currentTag.isChild() ? currentTag.parent() : currentTag) ) 
+        : 
+        null;
+
     const addTag = tag => {
-      let active = currentTag === tag;
+      let active = (currentTag === tag);
 
       if (!active && currentTag) {
-        active = currentTag.parent() === tag;
+        active = (currentTag.parent() === tag);
       }
 
+      // DFSKLARD: my own attempts at a custom list of secondary tags to provide a list of sessions.
       // ACTUALLY, I ONLY SHOW THE subtags OF THE active primary tag.
-      if (tag.isChild() && (tag.parent() === currentTag)) {
+      if (tag.isChild() && (tag.parent() === currentPrimaryTag)) {
         items.add('tag' + tag.id(), TagLinkButton.component({tag, params, active}), -10);
       }
     };
@@ -51,7 +58,7 @@ export default function() {
     /*
 
     I SEE NO REASON FOR THIS.
-    
+
     const more = tags
       .filter(tag => tag.position() === null)
       .sort((a, b) => b.discussionsCount() - a.discussionsCount());
