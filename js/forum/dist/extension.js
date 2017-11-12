@@ -1098,10 +1098,10 @@ System.register('flarum/tags/components/TagsPage', ['flarum/Component', 'flarum/
                         return child.parent() === tag;
                       }));
 
+                      // DFSKLARD: I am eliminating the colored-background feature
                       return m(
                         'li',
-                        { className: 'TagTile ' + (tag.color() ? 'colored' : ''),
-                          style: { backgroundColor: tag.color() } },
+                        { className: 'TagTile' },
                         m(
                           'a',
                           { className: 'TagTile-info', href: app.route.tag(tag), config: m.route },
@@ -1109,6 +1109,11 @@ System.register('flarum/tags/components/TagsPage', ['flarum/Component', 'flarum/
                             'h3',
                             { className: 'TagTile-name' },
                             tag.name()
+                          ),
+                          m(
+                            'p',
+                            { className: 'TagTile-leader' },
+                            'Led by ...name of leader will appear here...'
                           ),
                           m(
                             'p',
@@ -1138,13 +1143,13 @@ System.register('flarum/tags/components/TagsPage', ['flarum/Component', 'flarum/
                           { className: 'TagTile-lastDiscussion',
                             href: app.route.discussion(lastDiscussion, lastDiscussion.lastPostNumber()),
                             config: m.route },
-                          m(
-                            'span',
-                            { className: 'TagTile-lastDiscussion-title' },
-                            lastDiscussion.title()
-                          ),
+                          'Most recent activity: ',
                           humanTime(lastDiscussion.lastTime())
-                        ) : m('span', { className: 'TagTile-lastDiscussion' })
+                        ) : m(
+                          'span',
+                          { className: 'TagTile-lastDiscussion no-activity' },
+                          'No activity yet.'
+                        )
                       );
                     })
                   ),

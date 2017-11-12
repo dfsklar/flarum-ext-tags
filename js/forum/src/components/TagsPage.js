@@ -35,11 +35,12 @@ export default class TagsPage extends Component {
                 const lastDiscussion = tag.lastDiscussion();
                 const children = sortTags(app.store.all('tags').filter(child => child.parent() === tag));
 
+                // DFSKLARD: I am eliminating the colored-background feature
                 return (
-                  <li className={'TagTile ' + (tag.color() ? 'colored' : '')}
-                    style={{backgroundColor: tag.color()}}>
+                  <li className="TagTile">
                     <a className="TagTile-info" href={app.route.tag(tag)} config={m.route}>
                       <h3 className="TagTile-name">{tag.name()}</h3>
+                      <p className="TagTile-leader">Led by ...name of leader will appear here...</p>
                       <p className="TagTile-description">{tag.description()}</p>
                       {children
                         ? (
@@ -62,11 +63,11 @@ export default class TagsPage extends Component {
                         <a className="TagTile-lastDiscussion"
                           href={app.route.discussion(lastDiscussion, lastDiscussion.lastPostNumber())}
                           config={m.route}>
-                          <span className="TagTile-lastDiscussion-title">{lastDiscussion.title()}</span>
+                          {'Most recent activity: '}
                           {humanTime(lastDiscussion.lastTime())}
                         </a>
                       ) : (
-                        <span className="TagTile-lastDiscussion"/>
+                        <span className="TagTile-lastDiscussion no-activity">No activity yet.</span>
                       )}
                   </li>
                 );
