@@ -13,17 +13,35 @@
 }
 
 
+.TagLinkButton {
+  img {
+    width: 100%;
+  }
+  .holder {
+    font-size: 13px;
+  }
+
+  &.inactive {
+    opacity: 0.5;
+  }
+  
+}
+
 .TagLinkButton.child {
   @media @tablet-up {
     padding-top: 4px;
     padding-bottom: 4px;
   }
-  margin-left: 10px;
+
+  margin-left: 0px;
 
   .TagIcon {
     display: none;
   }
 }
+
+
+
 .DiscussionComposer-changeTags {
   margin-right: 15px;
   vertical-align: 2px;

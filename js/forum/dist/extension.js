@@ -986,13 +986,18 @@ System.register('flarum/tags/components/TagLinkButton', ['flarum/components/Link
 
             var isChild = false; // tag.isChild()
 
+            // DFSKLARD removed hasIcon class from below
             return m(
               'a',
-              { className: 'TagLinkButton hasIcon ' + (isChild ? 'child' : ''), href: this.props.href, config: m.route,
+              { className: 'TagLinkButton ' + (active ? 'active ' : 'inactive') + (isChild ? 'child' : ''), href: this.props.href, config: m.route,
                 style: active && tag ? { color: tag.color() } : '',
                 title: description || '' },
-              tagIcon(tag, { className: 'Button-icon' }),
-              this.props.children
+              m('img', { className: 'TagLinkButtonImage', src: 'http://res.cloudinary.com/hir7sbm3c/image/upload/c_fill/cc-uploads/itmjlbgk5cpsrilkltax.jpg' }),
+              m(
+                'div',
+                { className: 'holder' },
+                this.props.children
+              )
             );
           }
         }], [{

@@ -9,12 +9,15 @@ export default class TagLinkButton extends LinkButton {
 
     const isChild = false;  // tag.isChild()
 
+    // DFSKLARD removed hasIcon class from below
     return (
-      <a className={'TagLinkButton hasIcon ' + (isChild ? 'child' : '')} href={this.props.href} config={m.route}
+      <a className={'TagLinkButton ' + (active ? 'active ':'inactive') + (isChild ? 'child' : '')} href={this.props.href} config={m.route}
         style={active && tag ? {color: tag.color()} : ''}
         title={description || ''}>
-        {tagIcon(tag, {className: 'Button-icon'})}
-        {this.props.children}
+        <img className='TagLinkButtonImage' src='http://res.cloudinary.com/hir7sbm3c/image/upload/c_fill/cc-uploads/itmjlbgk5cpsrilkltax.jpg'></img>
+        <div className='holder'>
+          {this.props.children}
+        </div>
       </a>
     );
   }
