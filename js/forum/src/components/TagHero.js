@@ -15,7 +15,7 @@ export default class TagHero extends Component {
 	      <div class="button-join-group"> JOIN GROUP button (if you are not a member yet)</div>
 				</td>
 	      <td class="rightside">
-	        <img src="http://res.cloudinary.com/hir7sbm3c/image/upload/c_fill/cc-uploads/itmjlbgk5cpsrilkltax.jpg"></img>
+	        <img src={tag.data.attributes.backgroundImage}></img>
 					<div class='commentary'>This is a thumbnail and "play-launcher" for whatever is the media item for the currently-selected SESSION! </div>
 				</td>
 	      </tr>

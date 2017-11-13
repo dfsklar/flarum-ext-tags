@@ -14,7 +14,7 @@ export default class TagLinkButton extends LinkButton {
       <a className={'TagLinkButton ' + (active ? 'active ':'inactive') + (isChild ? 'child' : '')} href={this.props.href} config={m.route}
         style={active && tag ? {color: tag.color()} : ''}
         title={description || ''}>
-        <img className='TagLinkButtonImage' src='http://res.cloudinary.com/hir7sbm3c/image/upload/c_fill/cc-uploads/itmjlbgk5cpsrilkltax.jpg'></img>
+        <img className='TagLinkButtonImage' src={tag.data.attributes.backgroundImage}></img>
         <div className='holder'>
           {this.props.children}
         </div>

@@ -937,7 +937,7 @@ System.register("flarum/tags/components/TagHero", ["flarum/Component"], function
 																		m(
 																				"td",
 																				{ "class": "rightside" },
-																				m("img", { src: "http://res.cloudinary.com/hir7sbm3c/image/upload/c_fill/cc-uploads/itmjlbgk5cpsrilkltax.jpg" }),
+																				m("img", { src: tag.data.attributes.backgroundImage }),
 																				m(
 																						"div",
 																						{ "class": "commentary" },
@@ -992,7 +992,7 @@ System.register('flarum/tags/components/TagLinkButton', ['flarum/components/Link
               { className: 'TagLinkButton ' + (active ? 'active ' : 'inactive') + (isChild ? 'child' : ''), href: this.props.href, config: m.route,
                 style: active && tag ? { color: tag.color() } : '',
                 title: description || '' },
-              m('img', { className: 'TagLinkButtonImage', src: 'http://res.cloudinary.com/hir7sbm3c/image/upload/c_fill/cc-uploads/itmjlbgk5cpsrilkltax.jpg' }),
+              m('img', { className: 'TagLinkButtonImage', src: tag.data.attributes.backgroundImage }),
               m(
                 'div',
                 { className: 'holder' },
