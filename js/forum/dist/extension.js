@@ -1113,12 +1113,18 @@ System.register('flarum/tags/components/TagsPage', ['flarum/Component', 'flarum/
                           m(
                             'p',
                             { className: 'TagTile-leader' },
-                            'Led by ...name of leader will appear here...'
+                            'Led by ...name of group leader will appear here...'
                           ),
                           m(
                             'p',
                             { className: 'TagTile-description' },
                             tag.description()
+                          ),
+                          m(
+                            'p',
+                            { className: 'TagTile-sessionCount' },
+                            'Number of sessions: ',
+                            children.length
                           ),
                           children ? m(
                             'div',
@@ -1136,19 +1142,19 @@ System.register('flarum/tags/components/TagsPage', ['flarum/Component', 'flarum/
                                 child.name()
                               ), ' '];
                             })
-                          ) : ''
-                        ),
-                        lastDiscussion ? m(
-                          'a',
-                          { className: 'TagTile-lastDiscussion',
-                            href: app.route.discussion(lastDiscussion, lastDiscussion.lastPostNumber()),
-                            config: m.route },
-                          'Most recent activity: ',
-                          humanTime(lastDiscussion.lastTime())
-                        ) : m(
-                          'span',
-                          { className: 'TagTile-lastDiscussion no-activity' },
-                          'No activity yet.'
+                          ) : '',
+                          lastDiscussion ? m(
+                            'div',
+                            { className: 'TagTile-lastDiscussion',
+                              hrefunused: app.route.discussion(lastDiscussion, lastDiscussion.lastPostNumber()),
+                              config: m.route },
+                            'Most recent activity: ',
+                            humanTime(lastDiscussion.lastTime())
+                          ) : m(
+                            'span',
+                            { className: 'TagTile-lastDiscussion no-activity' },
+                            'No activity yet.'
+                          )
                         )
                       );
                     })

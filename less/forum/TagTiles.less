@@ -9,7 +9,6 @@
 }
 
 .TagTile {
-
   &, a {
     color: @control-color;
   }
@@ -18,41 +17,42 @@
       color: @body-bg;
     }
   }
+  margin-bottom: 18px;
 }
-.TagTile-info, .TagTile-lastDiscussion {
-  padding-bottom: 20px;
+
+
+.TagTile-info {
+  padding: 9px;
   text-decoration: none !important;
   display: block;
-//  position: absolute;
-//  left: 0;
-//  right: 0;
-}
-.TagTile-info {
-  padding-right: 20px;
   transition: background 0.2s;
-
   &:hover {
     background: fade(#000, 5%);
   }
+  p {
+    margin-bottom: 0px !important;
+  }
 }
+
+
 .TagTile-name {
-  font-size: 18px;
-  margin: 0 0 10px;
+  font-size: 20px;
+  margin: 0 0 6px;
   font-weight: bold;
 }
 .TagTile-description {
   font-size: 14px;
   margin: 0 0 10px;
-
   .TagTile.colored & {
     color: fade(@body-bg, 70%);
   }
 }
-.TagTile-children {
 
+
+.TagTile-children {
+  display: none !important;
   font-weight: bold;
   font-size: 12px;
-
   a {
     display: block;
     margin-left: 12px;
@@ -60,16 +60,15 @@
   }
 }
 
+
+
+
 .TagTile-lastDiscussion {
-  bottom: 0;
-  height: 42px;
-  padding: 7px 0;
   white-space: nowrap;
   text-overflow: ellipsis;
   overflow: hidden;
-  line-height: 21px;
   font-size: 12px;
-  margin: 0 20px;
+  margin: 0 0px;
 
   .TagTile.colored & {
     color: fade(@body-bg, 70%);

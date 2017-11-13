@@ -40,8 +40,9 @@ export default class TagsPage extends Component {
                   <li className="TagTile">
                     <a className="TagTile-info" href={app.route.tag(tag)} config={m.route}>
                       <h3 className="TagTile-name">{tag.name()}</h3>
-                      <p className="TagTile-leader">Led by ...name of leader will appear here...</p>
+                      <p className="TagTile-leader">Led by ...name of group leader will appear here...</p>
                       <p className="TagTile-description">{tag.description()}</p>
+                      <p className="TagTile-sessionCount">Number of sessions: {children.length}</p>
                       {children
                         ? (
                           <div className="TagTile-children">
@@ -57,18 +58,18 @@ export default class TagsPage extends Component {
                             ])}
                           </div>
                         ) : ''}
-                    </a>
                     {lastDiscussion
                       ? (
-                        <a className="TagTile-lastDiscussion"
-                          href={app.route.discussion(lastDiscussion, lastDiscussion.lastPostNumber())}
+                        <div className="TagTile-lastDiscussion"
+                          hrefunused={app.route.discussion(lastDiscussion, lastDiscussion.lastPostNumber())}
                           config={m.route}>
                           {'Most recent activity: '}
                           {humanTime(lastDiscussion.lastTime())}
-                        </a>
+                        </div>
                       ) : (
                         <span className="TagTile-lastDiscussion no-activity">No activity yet.</span>
                       )}
+                    </a>
                   </li>
                 );
               })}
