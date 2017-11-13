@@ -3,10 +3,13 @@ export default function sortTags(tags) {
     const aPos = a.position();
     const bPos = b.position();
 
-    // If they're both secondary tags, sort them by their discussions count,
-    // descending.
-    if (aPos === null && bPos === null)
-      return b.discussionsCount() - a.discussionsCount();
+
+    // If they're both second-level tags, sort them by their ID because that
+    // tells us about their relative "birth" times.
+    // DFSKLARD changed this from previous sort-by-discussion-count.
+    if (a.data.attributes.isChild && b.data.attributes.isChild) {
+      return b.data.id - a.data.id;
+    }
 
     // If just one is a secondary tag, then the primary tag should
     // come first.
