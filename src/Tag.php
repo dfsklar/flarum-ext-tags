@@ -64,6 +64,8 @@ class Tag extends AbstractModel
         $tag->slug = $slug;
         $tag->description = $description;
         $tag->color = $color;
+        //$tag->background_image = $background_image;
+        //$tag->link_destination = $link_destination;
         $tag->is_hidden = (bool) $isHidden;
 
         return $tag;
