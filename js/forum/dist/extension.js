@@ -32,13 +32,17 @@ System.register('flarum/tags/addTagComposer', ['flarum/extend', 'flarum/componen
       }));
     };
 
+    // DFSKLARD stripping some of this out.
+    // We only want to show the session name, which is the secondary tag.
     // Add a tag-selection menu to the discussion composer's header, after the
     // title.
+    // Originally, the outer element was an A with this onclick:
+    //     onclick={this.chooseTags.bind(this)}
     extend(DiscussionComposer.prototype, 'headerItems', function (items) {
       items.add('tags', m(
-        'a',
-        { className: 'DiscussionComposer-changeTags', onclick: this.chooseTags.bind(this) },
-        this.tags.length ? tagsLabel(this.tags) : m(
+        'div',
+        { className: 'DiscussionComposer-changeTags' },
+        this.tags.length ? tagsLabel(this.tags.slice(1)) : m(
           'span',
           { className: 'TagLabel untagged' },
           app.translator.trans('flarum-tags.forum.composer_discussion.choose_tags_link')
