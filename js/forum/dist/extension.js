@@ -905,6 +905,7 @@ System.register('flarum/tags/components/TagHero', ['flarum/Component'], function
 												var tag = this.props.tag;
 												var color = tag.color();
 												var parent = app.store.getById('tags', tag.data.relationships.parent.data.id);
+												var leader = app.store.getById('users', parent.data.attributes.leaderUserId);
 
 												return m(
 														'table',
@@ -926,7 +927,12 @@ System.register('flarum/tags/components/TagHero', ['flarum/Component'], function
 																				m(
 																						'div',
 																						{ 'class': 'group-leader-name' },
-																						'[name of this group\'s leader]'
+																						parent.data.attributes.leaderUserId
+																				),
+																				m(
+																						'div',
+																						{ 'class': 'group-leader-name' },
+																						leader.data.attributes.displayName
 																				),
 																				m(
 																						'div',
@@ -1390,6 +1396,8 @@ System.register('flarum/tags/models/Tag', ['flarum/Model', 'flarum/utils/mixin',
 
         linkDestination: Model.attribute('linkDestination'),
         backgroundImage: Model.attribute('backgroundImage'),
+
+        leaderUserId: Model.attribute('leaderUserId'),
 
         position: Model.attribute('position'),
         parent: Model.hasOne('parent'),

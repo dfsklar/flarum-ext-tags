@@ -12,8 +12,10 @@ export default class Tag extends mixin(Model, {
   backgroundMode: Model.attribute('backgroundMode'),
 
   linkDestination: Model.attribute('linkDestination'),
-  backgroundImage: Model.attribute('backgroundImage'),  
+  backgroundImage: Model.attribute('backgroundImage'),
 
+  leaderUserId: Model.attribute('leaderUserId'),  
+  
   position: Model.attribute('position'),
   parent: Model.hasOne('parent'),
   defaultSort: Model.attribute('defaultSort'),

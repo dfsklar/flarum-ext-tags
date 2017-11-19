@@ -50,7 +50,8 @@ class CreateTagHandler
             array_get($data, 'attributes.color'),
             array_get($data, 'attributes.isHidden'),
             array_get($data, 'attributes.backgroundImage'),
-            array_get($data, 'attributes.linkDestination')
+            array_get($data, 'attributes.linkDestination'),
+            array_get($data, 'attributes.leaderUserId')
         );
 
         $parentId = array_get($data, 'relationships.parent.data.id');

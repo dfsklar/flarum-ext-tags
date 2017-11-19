@@ -44,6 +44,7 @@ class TagSerializer extends AbstractSerializer
             'canAddToDiscussion' => $this->actor->can('addToDiscussion', $tag),
             'backgroundImage'    => $tag->background_image,
             'linkDestination'    => $tag->link_destination,
+            'leaderUserId'       => $tag->leader_user_id,
         ];
 
         if ($this->actor->isAdmin()) {
