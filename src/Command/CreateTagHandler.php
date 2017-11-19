@@ -56,7 +56,8 @@ class CreateTagHandler
         $parentId = array_get($data, 'relationships.parent.data.id');
 
         if ($parentId !== null) {
-            $rootTags = Tag::whereNull('parent_id')->whereNotNull('position');
+            // DFSKLARD: I do not want to require that all parent tags have a position!
+            $rootTags = Tag::whereNull('parent_id'); //->whereNotNull('position');
 
             if ($parentId === 0) {
                 $tag->position = $rootTags->max('position') + 1;

@@ -880,9 +880,9 @@ System.register('flarum/tags/components/TagDiscussionModal', ['flarum/components
     }
   };
 });;
-"use strict";
+'use strict';
 
-System.register("flarum/tags/components/TagHero", ["flarum/Component"], function (_export, _context) {
+System.register('flarum/tags/components/TagHero', ['flarum/Component'], function (_export, _context) {
 		"use strict";
 
 		var Component, TagHero;
@@ -900,52 +900,48 @@ System.register("flarum/tags/components/TagHero", ["flarum/Component"], function
 								}
 
 								babelHelpers.createClass(TagHero, [{
-										key: "view",
+										key: 'view',
 										value: function view() {
 												var tag = this.props.tag;
 												var color = tag.color();
+												var parent = app.store.getById('tags', tag.data.relationships.parent.data.id);
 
 												return m(
-														"table",
-														{ "class": "marketing-block" },
+														'table',
+														{ 'class': 'marketing-block' },
 														m(
-																"tbody",
+																'tbody',
 																null,
 																m(
-																		"tr",
-																		{ "class": "marketing-block" },
+																		'tr',
+																		{ 'class': 'marketing-block' },
 																		m(
-																				"td",
-																				{ "class": "leftside" },
+																				'td',
+																				{ 'class': 'leftside' },
 																				m(
-																						"div",
-																						{ "class": "group-name" },
-																						"The YOUNG MARRIEDS Group"
+																						'div',
+																						{ 'class': 'group-name' },
+																						parent.data.attributes.name
 																				),
 																				m(
-																						"div",
-																						{ "class": "group-leader-name" },
-																						"[name of this group's leader]"
+																						'div',
+																						{ 'class': 'group-leader-name' },
+																						'[name of this group\'s leader]'
 																				),
 																				m(
-																						"div",
-																						{ "class": "group-summary" },
-																						"This hero area is hardwired for demo - it is not yet dynamic!  Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis."
-																				),
-																				m(
-																						"div",
-																						{ "class": "button-join-group" },
-																						" JOIN GROUP button (if you are not a member yet)"
+																						'div',
+																						{ 'class': 'group-summary' },
+																						parent.data.attributes.description
 																				)
 																		),
 																		m(
-																				"td",
-																				{ "class": "rightside" },
-																				m("img", { src: tag.data.attributes.backgroundImage }),
+																				'td',
+																				{ 'class': 'rightside' },
+																				m('img', { src: tag.data.attributes.backgroundImage }),
 																				m(
-																						"div",
-																						{ "class": "commentary" },
-																						"This is a thumbnail and \"play-launcher\" for whatever is the media item for the currently-selected SESSION! "
+																						'div',
+																						{ 'class': 'commentary' },
+																						'Coming soon: this will be clickable! '
 																				)
 																		)
 																)
@@ -956,7 +952,7 @@ System.register("flarum/tags/components/TagHero", ["flarum/Component"], function
 								return TagHero;
 						}(Component);
 
-						_export("default", TagHero);
+						_export('default', TagHero);
 				}
 		};
 });;
@@ -1409,8 +1405,9 @@ System.register('flarum/tags/models/Tag', ['flarum/Model', 'flarum/utils/mixin',
         canStartDiscussion: Model.attribute('canStartDiscussion'),
         canAddToDiscussion: Model.attribute('canAddToDiscussion'),
 
+        // DFSKLARD; I removed any dependency on the value of "position"
         isPrimary: computed('position', 'parent', function (position, parent) {
-          return position !== null && parent === false;
+          return parent === false;
         })
       }));
 

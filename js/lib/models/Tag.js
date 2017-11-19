@@ -28,5 +28,6 @@ export default class Tag extends mixin(Model, {
   canStartDiscussion: Model.attribute('canStartDiscussion'),
   canAddToDiscussion: Model.attribute('canAddToDiscussion'),
 
-  isPrimary: computed('position', 'parent', (position, parent) => position !== null && parent === false)
+  // DFSKLARD; I removed any dependency on the value of "position"
+  isPrimary: computed('position', 'parent', (position, parent) => (parent === false))
 }) {}
