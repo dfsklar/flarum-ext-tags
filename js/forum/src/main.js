@@ -14,6 +14,8 @@ import addTagComposer from 'flarum/tags/addTagComposer';
 
 app.initializers.add('flarum-tags', function(app) {
   app.routes.tags = {path: '/tags', component: TagsPage.component()};
+
+  // DFSKLARD: This is the ROUTE that is our go-to-commgroup homepage.
   app.routes.tag = {path: '/t/:tags', component: IndexPage.component()};
 
   app.route.tag = tag => app.route('tag', {tags: tag.slug()});

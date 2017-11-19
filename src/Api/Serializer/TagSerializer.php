@@ -42,7 +42,8 @@ class TagSerializer extends AbstractSerializer
             'lastTime'           => $this->formatDate($tag->last_time),
             'canStartDiscussion' => $this->actor->can('startDiscussion', $tag),
             'canAddToDiscussion' => $this->actor->can('addToDiscussion', $tag),
-            'backgroundImage'    => $tag->background_image
+            'backgroundImage'    => $tag->background_image,
+            'linkDestination'    => $tag->link_destination,
         ];
 
         if ($this->actor->isAdmin()) {

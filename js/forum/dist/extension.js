@@ -1335,6 +1335,8 @@ System.register('flarum/tags/main', ['flarum/Model', 'flarum/models/Discussion',
 
       app.initializers.add('flarum-tags', function (app) {
         app.routes.tags = { path: '/tags', component: TagsPage.component() };
+
+        // DFSKLARD: This is the ROUTE that is our go-to-commgroup homepage.
         app.routes.tag = { path: '/t/:tags', component: IndexPage.component() };
 
         app.route.tag = function (tag) {
@@ -1389,6 +1391,9 @@ System.register('flarum/tags/models/Tag', ['flarum/Model', 'flarum/utils/mixin',
         color: Model.attribute('color'),
         backgroundUrl: Model.attribute('backgroundUrl'),
         backgroundMode: Model.attribute('backgroundMode'),
+
+        linkDestination: Model.attribute('linkDestination'),
+        backgroundImage: Model.attribute('backgroundImage'),
 
         position: Model.attribute('position'),
         parent: Model.hasOne('parent'),
