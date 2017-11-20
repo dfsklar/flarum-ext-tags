@@ -907,6 +907,14 @@ System.register('flarum/tags/components/TagHero', ['flarum/Component'], function
 												var parent = app.store.getById('tags', tag.data.relationships.parent.data.id);
 												var leader = app.store.getById('users', parent.data.attributes.leaderUserId);
 
+												// If the leader's full info is not yet fetched from API, start that process and set up the
+												// promise to force a redraw of this component.
+												if (!leader) {
+														app.store.find('users', parent.data.attributes.leaderUserId).then(function () {
+																m.redraw();
+														});
+												}
+
 												return m(
 														'table',
 														{ 'class': 'marketing-block' },
@@ -927,12 +935,7 @@ System.register('flarum/tags/components/TagHero', ['flarum/Component'], function
 																				m(
 																						'div',
 																						{ 'class': 'group-leader-name' },
-																						parent.data.attributes.leaderUserId
-																				),
-																				m(
-																						'div',
-																						{ 'class': 'group-leader-name' },
-																						leader.data.attributes.displayName
+																						leader ? "This group's leader is: " + leader.data.attributes.displayName : ''
 																				),
 																				m(
 																						'div',
