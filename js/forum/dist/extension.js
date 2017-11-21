@@ -882,13 +882,15 @@ System.register('flarum/tags/components/TagDiscussionModal', ['flarum/components
 });;
 'use strict';
 
-System.register('flarum/tags/components/TagHero', ['flarum/Component'], function (_export, _context) {
+System.register('flarum/tags/components/TagHero', ['flarum/Component', 'flarum/helpers/icon'], function (_export, _context) {
 		"use strict";
 
-		var Component, TagHero;
+		var Component, icon, TagHero;
 		return {
 				setters: [function (_flarumComponent) {
 						Component = _flarumComponent.default;
+				}, function (_flarumHelpersIcon) {
+						icon = _flarumHelpersIcon.default;
 				}],
 				execute: function () {
 						TagHero = function (_Component) {
@@ -948,9 +950,9 @@ System.register('flarum/tags/components/TagHero', ['flarum/Component'], function
 																				{ 'class': 'rightside' },
 																				m('img', { src: tag.data.attributes.backgroundImage }),
 																				m(
-																						'div',
-																						{ 'class': 'commentary' },
-																						'Coming soon: this will be clickable! '
+																						'a',
+																						{ href: tag.data.attributes.linkDestination, target: '_fromflarumtoformed' },
+																						icon('play-circle', { className: 'play-icon' })
 																				)
 																		)
 																)

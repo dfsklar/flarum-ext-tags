@@ -1,4 +1,5 @@
 import Component from 'flarum/Component';
+import icon from 'flarum/helpers/icon';
 
 export default class TagHero extends Component {
   view() {
@@ -25,7 +26,9 @@ export default class TagHero extends Component {
 				</td>
 	      <td class="rightside">
 	        <img src={tag.data.attributes.backgroundImage}></img>
-					<div class='commentary'>Coming soon: this will be clickable! </div>
+					<a href={tag.data.attributes.linkDestination} target='_fromflarumtoformed'>
+						 {icon('play-circle', {className: 'play-icon'})}
+				  </a>
 				</td>
 	      </tr>
 	      </tbody></table>
