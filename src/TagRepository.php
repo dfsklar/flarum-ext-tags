@@ -37,7 +37,11 @@ class TagRepository
      */
     public function findOrFail($id, User $actor = null)
     {
-        $query = Tag::where('id', $id);
+        // DFSKLARD: Allow lookup of group by either numeric auto-assigned ID *or* app-assigned SLUG (string UUID).
+        $query = Tag::where('slug', $id);
+        if (! $query->first()) {
+            $query = Tag::where('id', $id);
+        }
 
         return $this->scopeVisibleTo($query, $actor)->firstOrFail();
     }

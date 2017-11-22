@@ -16,9 +16,9 @@ use Flarum\Core\User;
 class EditTag
 {
     /**
-     * The ID of the tag to edit.
+     * The SLUG (string) or ID (string repr of an int) of the tag to edit.
      *
-     * @var int
+     * @var string
      */
     public $tagId;
 

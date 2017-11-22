@@ -56,10 +56,18 @@ class ListTagsController extends AbstractCollectionController
      */
     protected function data(ServerRequestInterface $request, Document $document)
     {
+        $slug_or_id = array_get($request->getQueryParams(), 'id');  // NOT REQUIRED!
         $actor = $request->getAttribute('actor');
         $include = $this->extractInclude($request);
 
-        $tags = $this->tags->whereVisibleTo($actor)->withStateFor($actor)->get();
+        if ( ! $slug_or_id)
+            $tags = $this->tags->whereVisibleTo($actor)->withStateFor($actor)->get();
+        else {
+            $tags = $this->tags->where('slug', $slug_or_id)->get();
+            if (count($tags) < 1) {
+                $tags = $this->tags->where('id', $slug_or_id)->get();                
+            }
+        }
 
         return $tags->load($include);
     }
