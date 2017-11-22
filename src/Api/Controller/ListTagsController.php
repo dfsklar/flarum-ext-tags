@@ -63,7 +63,7 @@ class ListTagsController extends AbstractCollectionController
         if ( ! $slug_or_id)
             $tags = $this->tags->whereVisibleTo($actor)->withStateFor($actor)->get();
         else {
-            $tags = $this->tags->where('slug', $slug_or_id)->get();
+            $tags = $this->tags->where('slug', 'like', $slug_or_id.'%')->get();
             if (count($tags) < 1) {
                 $tags = $this->tags->where('id', $slug_or_id)->get();                
             }
