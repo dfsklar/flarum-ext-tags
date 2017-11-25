@@ -20,9 +20,9 @@ export default class TagHero extends Component {
 	      <table class="marketing-block">
 	      <tbody><tr class="marketing-block">
 	      <td class="leftside">
-	      <div class="group-name">{parent.data.attributes.name}</div>
+	      <div class="group-name">{m.trust(parent.data.attributes.name)}</div>
 	      <div class="group-leader-name">{leader ? ("This group's leader is: " + leader.data.attributes.displayName) : ''}</div>
-	      <div class="group-summary">{parent.data.attributes.description}</div>
+	      <div class="group-summary">{m.trust(parent.data.attributes.description)}</div>
 				</td>
 	      <td class="rightside">
 	        <img src={tag.data.attributes.backgroundImage}></img>

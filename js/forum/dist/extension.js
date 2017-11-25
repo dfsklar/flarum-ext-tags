@@ -932,7 +932,7 @@ System.register('flarum/tags/components/TagHero', ['flarum/Component', 'flarum/h
 																				m(
 																						'div',
 																						{ 'class': 'group-name' },
-																						parent.data.attributes.name
+																						m.trust(parent.data.attributes.name)
 																				),
 																				m(
 																						'div',
@@ -942,7 +942,7 @@ System.register('flarum/tags/components/TagHero', ['flarum/Component', 'flarum/h
 																				m(
 																						'div',
 																						{ 'class': 'group-summary' },
-																						parent.data.attributes.description
+																						m.trust(parent.data.attributes.description)
 																				)
 																		),
 																		m(
