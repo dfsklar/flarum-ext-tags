@@ -8,6 +8,10 @@ export default function sortTags(tags) {
     // tells us about their relative "birth" times.
     // DFSKLARD changed this from previous sort-by-discussion-count.
     if (a.data.attributes.isChild && b.data.attributes.isChild) {
+      console.log('-------');
+      console.log(a.data.id);
+      console.log(b.data.id);
+      console.log(b.data.id - a.data.id);
       return b.data.id - a.data.id;
     }
 

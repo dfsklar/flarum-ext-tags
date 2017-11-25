@@ -315,9 +315,18 @@ System.register('flarum/tags/addTagList', ['flarum/extend', 'flarum/components/I
         }
       };
 
-      sortTags(tags).filter(function (tag) {
+      // DFSKLARD: The vertical listing of sessions.  We are having problems with the sorting presentation.
+      // Original code was:
+      /*
+      sortTags(tags)
+        .filter(tag => tag.position() !== null && (!tag.isChild() || (currentTag && (tag.parent() === currentTag || tag.parent() === currentTag.parent()))))
+        .forEach(addTag);*/
+
+      // My repair attempt:
+      var filtered_tags = tags.filter(function (tag) {
         return tag.position() !== null && (!tag.isChild() || currentTag && (tag.parent() === currentTag || tag.parent() === currentTag.parent()));
-      }).forEach(addTag);
+      });
+      filtered_tags.reverse().forEach(addTag);
 
       /*
        I SEE NO REASON FOR THIS.
@@ -1428,9 +1437,9 @@ System.register('flarum/tags/models/Tag', ['flarum/Model', 'flarum/utils/mixin',
     }
   };
 });;
-"use strict";
+'use strict';
 
-System.register("flarum/tags/utils/sortTags", [], function (_export, _context) {
+System.register('flarum/tags/utils/sortTags', [], function (_export, _context) {
   "use strict";
 
   function sortTags(tags) {
@@ -1442,6 +1451,10 @@ System.register("flarum/tags/utils/sortTags", [], function (_export, _context) {
       // tells us about their relative "birth" times.
       // DFSKLARD changed this from previous sort-by-discussion-count.
       if (a.data.attributes.isChild && b.data.attributes.isChild) {
+        console.log('-------');
+        console.log(a.data.id);
+        console.log(b.data.id);
+        console.log(b.data.id - a.data.id);
         return b.data.id - a.data.id;
       }
 
@@ -1472,7 +1485,7 @@ System.register("flarum/tags/utils/sortTags", [], function (_export, _context) {
     });
   }
 
-  _export("default", sortTags);
+  _export('default', sortTags);
 
   return {
     setters: [],

@@ -51,9 +51,21 @@ export default function() {
       }
     };
 
+    // DFSKLARD: The vertical listing of sessions.  We are having problems with the sorting presentation.
+    // Original code used sortTags which would sometimes fail:
+    /*
     sortTags(tags)
       .filter(tag => tag.position() !== null && (!tag.isChild() || (currentTag && (tag.parent() === currentTag || tag.parent() === currentTag.parent()))))
-      .forEach(addTag);
+      .forEach(addTag);*/
+
+    // My repair attempt -- just use reverse()
+    let filtered_tags = 
+      tags
+      .filter(tag => tag.position() !== null && (!tag.isChild() || (currentTag && (tag.parent() === currentTag || tag.parent() === currentTag.parent()))));
+    filtered_tags.reverse().forEach(addTag);
+
+
+
 
     /*
 
