@@ -13,16 +13,20 @@
 
 
 
-
+.holder-marketing-block {
+    padding-top: 15px;
+    padding-bottom: 15px;
+}
 
 table.marketing-block {
+    width: 100%;
 
    tr.marketing-block {
 
         td.leftside {
             position: relative;
             vertical-align: top;
-            background-color: navy;
+            padding: 15px;
             color: white;   
             .button-join-group {
                 cursor: pointer;
@@ -37,10 +41,16 @@ table.marketing-block {
                 background-color: rgb(228, 157, 36);
             }
             .group-name {
-                padding-top: 23px;
-                font-size: 30px;
+                font-size: 24px;
                 text-align: center;
-                padding-bottom: 18px;
+                padding-bottom: 14px;
+            }
+            .session-name {
+                font-size: 16px;
+                font-weight: bold;
+            }
+            .session-description {
+                font-size: 14px;
             }
             .group-discussion {
                 text-align: center;
@@ -57,25 +67,21 @@ table.marketing-block {
             }
         } 
 
-        td.rightside {
-            background-color: black;
+        td.rightside-imageholder  {
+            padding: 15px;
             position: relative;
-            max-width: 480px;
+            width: 350px;
+            background-size: contain;
+            background-position: center;
+            background-repeat: no-repeat;
+            text-align: center;
             a {
                 .icon.fa.play-icon {
                     display: block;
-                    position: absolute;
-                    font-size: 130px;
+                    font-size: 50px;
                     color: white;
-                    top: 20px;
-                    left: 20px;
                     cursor: pointer;
                 }
-            }
-            img {
-                opacity: 0.5;
-                width: 500px;
-                height: 282px;
             }
             .commentary {
                 position: absolute;

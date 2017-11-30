@@ -316,13 +316,13 @@ System.register('flarum/tags/addTagList', ['flarum/extend', 'flarum/components/I
       };
 
       // DFSKLARD: The vertical listing of sessions.  We are having problems with the sorting presentation.
-      // Original code was:
+      // Original code used sortTags which would sometimes fail:
       /*
       sortTags(tags)
         .filter(tag => tag.position() !== null && (!tag.isChild() || (currentTag && (tag.parent() === currentTag || tag.parent() === currentTag.parent()))))
         .forEach(addTag);*/
 
-      // My repair attempt:
+      // My repair attempt -- just use reverse()
       var filtered_tags = tags.filter(function (tag) {
         return tag.position() !== null && (!tag.isChild() || currentTag && (tag.parent() === currentTag || tag.parent() === currentTag.parent()));
       });
@@ -916,52 +916,60 @@ System.register('flarum/tags/components/TagHero', ['flarum/Component', 'flarum/h
 												var tag = this.props.tag;
 												var color = tag.color();
 												var parent = app.store.getById('tags', tag.data.relationships.parent.data.id);
-												var leader = app.store.getById('users', parent.data.attributes.leaderUserId);
 
-												// If the leader's full info is not yet fetched from API, start that process and set up the
-												// promise to force a redraw of this component.
-												if (!leader) {
-														app.store.find('users', parent.data.attributes.leaderUserId).then(function () {
-																m.redraw();
-														});
-												}
+												/*	IF WE EVER WANT TO SHOW LEADER'S IDENTITY HERE.
+            		var leader = app.store.getById('users', parent.data.attributes.leaderUserId);
+            
+            		// If the leader's full info is not yet fetched from API, start that process and set up the
+            		// promise to force a redraw of this component.
+            		if (!leader) {
+            			app.store.find('users', parent.data.attributes.leaderUserId).then(function(){
+            				m.redraw();
+            			})
+            		}
+            
+            		<div class="group-leader-name">{leader ? ("This group's leader is: " + leader.data.attributes.displayName) : ''}</div>
+            */
 
 												return m(
-														'table',
-														{ 'class': 'marketing-block' },
+														'div',
+														{ 'class': 'holder-marketing-block container', style: { "background-color": parent.data.attributes.color } },
 														m(
-																'tbody',
-																null,
+																'table',
+																{ 'class': 'marketing-block' },
 																m(
-																		'tr',
-																		{ 'class': 'marketing-block' },
+																		'tbody',
+																		null,
 																		m(
-																				'td',
-																				{ 'class': 'leftside' },
+																				'tr',
+																				{ 'class': 'marketing-block' },
 																				m(
-																						'div',
-																						{ 'class': 'group-name' },
-																						m.trust(parent.data.attributes.name)
+																						'td',
+																						{ 'class': 'leftside' },
+																						m(
+																								'div',
+																								{ 'class': 'group-name' },
+																								m.trust(parent.data.attributes.name)
+																						),
+																						m(
+																								'div',
+																								{ 'class': 'session-name' },
+																								m.trust(tag.data.attributes.name)
+																						),
+																						m(
+																								'div',
+																								{ 'class': 'session-description' },
+																								m.trust(tag.data.attributes.description)
+																						)
 																				),
 																				m(
-																						'div',
-																						{ 'class': 'group-leader-name' },
-																						leader ? "This group's leader is: " + leader.data.attributes.displayName : ''
-																				),
-																				m(
-																						'div',
-																						{ 'class': 'group-summary' },
-																						m.trust(parent.data.attributes.description)
-																				)
-																		),
-																		m(
-																				'td',
-																				{ 'class': 'rightside' },
-																				m('img', { src: tag.data.attributes.backgroundImage }),
-																				m(
-																						'a',
-																						{ href: tag.data.attributes.linkDestination, target: '_fromflarumtoformed' },
-																						icon('play-circle', { className: 'play-icon' })
+																						'td',
+																						{ 'class': 'rightside-imageholder', style: { "background-image": "url(" + tag.data.attributes.backgroundImage + ")" } },
+																						m(
+																								'a',
+																								{ href: tag.data.attributes.linkDestination, target: '_fromflarumtoformed' },
+																								icon('play-circle', { className: 'play-icon' })
+																						)
 																				)
 																		)
 																)
