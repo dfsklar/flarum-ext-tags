@@ -988,7 +988,12 @@ System.register('flarum/tags/components/TagHero', ['flarum/Component', 'flarum/h
 																				)
 																		)
 																)
-														)
+														),
+														!isMemberOfGroup ? m(
+																'div',
+																{ className: 'button-letme-join-group' },
+																'JOIN!'
+														) : ''
 												);
 										}
 								}]);

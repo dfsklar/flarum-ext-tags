@@ -40,6 +40,7 @@ export default class TagHero extends Component {
 
     return (
 			  <div class="holder-marketing-block container" style={{"background-color": parent.data.attributes.color}}>
+
 	      <table class="marketing-block">
 	      <tbody><tr class="marketing-block">
 	      <td class="leftside">
@@ -53,7 +54,13 @@ export default class TagHero extends Component {
 				  </a>
 				</td>
 	      </tr>
-	      </tbody></table></div>
+	      </tbody></table>
+				
+				{!isMemberOfGroup ? (
+              <div className="button-letme-join-group">JOIN!</div>
+ 				 ) : ''}
+
+				</div>
     );
   }
 }
