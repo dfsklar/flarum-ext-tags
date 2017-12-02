@@ -892,117 +892,131 @@ System.register('flarum/tags/components/TagDiscussionModal', ['flarum/components
 'use strict';
 
 System.register('flarum/tags/components/TagHero', ['flarum/Component', 'flarum/helpers/icon'], function (_export, _context) {
-		"use strict";
+	"use strict";
 
-		var Component, icon, TagHero;
-		return {
-				setters: [function (_flarumComponent) {
-						Component = _flarumComponent.default;
-				}, function (_flarumHelpersIcon) {
-						icon = _flarumHelpersIcon.default;
-				}],
-				execute: function () {
-						TagHero = function (_Component) {
-								babelHelpers.inherits(TagHero, _Component);
+	var Component, icon, TagHero;
+	return {
+		setters: [function (_flarumComponent) {
+			Component = _flarumComponent.default;
+		}, function (_flarumHelpersIcon) {
+			icon = _flarumHelpersIcon.default;
+		}],
+		execute: function () {
+			TagHero = function (_Component) {
+				babelHelpers.inherits(TagHero, _Component);
 
-								function TagHero() {
-										babelHelpers.classCallCheck(this, TagHero);
-										return babelHelpers.possibleConstructorReturn(this, (TagHero.__proto__ || Object.getPrototypeOf(TagHero)).apply(this, arguments));
-								}
-
-								babelHelpers.createClass(TagHero, [{
-										key: 'view',
-										value: function view() {
-												var tag = this.props.tag;
-												var color = tag.color();
-												var parent = app.store.getById('tags', tag.data.relationships.parent.data.id);
-
-												// TRY TO OBTAIN INFO ABOUT THE *GROUP* THAT MATCHES THE PARENT TAG
-												// DFSKLAR Friday 10:03pm
-
-												var matchingGroup = app.store.getBy('groups', 'slug', parent.slug());
-												console.log(matchingGroup);
-
-												// So now you want to obtain the USER object for the currentyly logged in user.
-												// In that user object you'll find:
-												//   data.relationships.groups.data which is an array.
-												//     Each record in that array has a "id" object, string repr of a number.
-												// The current user's ID is in:  app.data.session.userId
-												var loggedinUserMembershipList = app.session.user.data.relationships.groups.data;
-
-												var isMemberOfGroup = loggedinUserMembershipList.some(function (group) {
-														return group.id == matchingGroup.data.id;
-												});
-
-												/*	IF WE EVER WANT TO SHOW LEADER'S IDENTITY HERE.
-            var leader = app.store.getById('users', parent.data.attributes.leaderUserId);
-            // If the leader's full info is not yet fetched from API, start that process and set up the
-            // promise to force a redraw of this component.
-            if (!leader) {
-            app.store.find('users', parent.data.attributes.leaderUserId).then(function(){
-            m.redraw();
-            })
-            }
-            <div class="group-leader-name">{leader ? ("This group's leader is: " + leader.data.attributes.displayName) : ''}</div>
-            */
-
-												return m(
-														'div',
-														{ 'class': 'holder-marketing-block container', style: { "background-color": parent.data.attributes.color } },
-														m(
-																'table',
-																{ 'class': 'marketing-block' },
-																m(
-																		'tbody',
-																		null,
-																		m(
-																				'tr',
-																				{ 'class': 'marketing-block' },
-																				m(
-																						'td',
-																						{ 'class': 'leftside' },
-																						m(
-																								'div',
-																								{ 'class': 'group-name' },
-																								m.trust(parent.data.attributes.name)
-																						),
-																						m(
-																								'div',
-																								{ 'class': 'session-name' },
-																								m.trust(tag.data.attributes.name)
-																						),
-																						m(
-																								'div',
-																								{ 'class': 'session-description' },
-																								m.trust(tag.data.attributes.description)
-																						)
-																				),
-																				m(
-																						'td',
-																						{ 'class': 'rightside-imageholder', style: { "background-image": "url(" + tag.data.attributes.backgroundImage + ")" } },
-																						m(
-																								'a',
-																								{ href: tag.data.attributes.linkDestination, target: '_fromflarumtoformed' },
-																								icon('play-circle', { className: 'play-icon' })
-																						)
-																				)
-																		)
-																)
-														),
-														!isMemberOfGroup ? m(
-																'div',
-																{ className: 'button-letme-join-group' },
-																'JOIN!'
-														) : ''
-												);
-										}
-								}]);
-								return TagHero;
-						}(Component);
-
-						_export('default', TagHero);
+				function TagHero() {
+					babelHelpers.classCallCheck(this, TagHero);
+					return babelHelpers.possibleConstructorReturn(this, (TagHero.__proto__ || Object.getPrototypeOf(TagHero)).apply(this, arguments));
 				}
-		};
+
+				babelHelpers.createClass(TagHero, [{
+					key: 'init',
+					value: function init() {
+						var _this2 = this;
+
+						this.tag = this.props.tag;
+						this.color = this.tag.color();
+						this.parent = app.store.getById('tags', this.tag.data.relationships.parent.data.id);
+
+						// TRY TO OBTAIN INFO ABOUT THE *GROUP* THAT MATCHES THE PARENT TAG
+						this.matchingGroup = app.store.getBy('groups', 'slug', this.parent.slug());
+						// So now you want to obtain the USER object for the currently logged-in user.
+						// In that user object you'll find:
+						//   data.relationships.groups.data which is an array.
+						//     Each record in that array has a "id" object, string repr of a number.
+						// The current user's ID is in:  app.data.session.userId
+						this.loggedinUserMembershipList = app.session.user.data.relationships.groups.data;
+						this.isMemberOfGroup = this.loggedinUserMembershipList.some(function (group) {
+							return group.id == _this2.matchingGroup.data.id;
+						});
+					}
+				}, {
+					key: 'join',
+					value: function join() {
+						// So: let's try to effect the actual joining of a group from here.
+						this.loggedinUserMembershipList.push({ type: "groups", id: this.matchingGroup.data.id });
+						app.session.user.save({ relationships: app.session.user.data.relationships }).then(function () {
+							console.log("good");
+							m.redraw();
+						}).catch(function () {
+							console.log("bad");
+							m.redraw();
+						});
+					}
+				}, {
+					key: 'view',
+					value: function view() {
+
+						/*	IF WE EVER WANT TO SHOW LEADER'S IDENTITY HERE.
+      var leader = app.store.getById('users', parent.data.attributes.leaderUserId);
+      // If the leader's full info is not yet fetched from API, start that process and set up the
+      // promise to force a redraw of this component.
+      if (!leader) {
+      app.store.find('users', parent.data.attributes.leaderUserId).then(function(){
+      m.redraw();
+      })
+      }
+      <div class="group-leader-name">{leader ? ("This group's leader is: " + leader.data.attributes.displayName) : ''}</div>
+      */
+
+						return m(
+							'div',
+							{ 'class': 'holder-marketing-block container', style: { "background-color": this.parent.data.attributes.color } },
+							m(
+								'table',
+								{ 'class': 'marketing-block' },
+								m(
+									'tbody',
+									null,
+									m(
+										'tr',
+										{ 'class': 'marketing-block' },
+										m(
+											'td',
+											{ 'class': 'leftside' },
+											m(
+												'div',
+												{ 'class': 'group-name' },
+												m.trust(this.parent.data.attributes.name)
+											),
+											m(
+												'div',
+												{ 'class': 'session-name' },
+												m.trust(this.tag.data.attributes.name)
+											),
+											m(
+												'div',
+												{ 'class': 'session-description' },
+												m.trust(this.tag.data.attributes.description)
+											)
+										),
+										m(
+											'td',
+											{ 'class': 'rightside-imageholder', style: { "background-image": "url(" + this.tag.data.attributes.backgroundImage + ")" } },
+											m(
+												'a',
+												{ href: this.tag.data.attributes.linkDestination, target: '_fromflarumtoformed' },
+												icon('play-circle', { className: 'play-icon' })
+											)
+										)
+									)
+								)
+							),
+							!this.isMemberOfGroup ? m(
+								'div',
+								{ className: 'button-letme-join-group', onclick: this.join.bind(this) },
+								'JOIN!'
+							) : ''
+						);
+					}
+				}]);
+				return TagHero;
+			}(Component);
+
+			_export('default', TagHero);
+		}
+	};
 });;
 'use strict';
 
