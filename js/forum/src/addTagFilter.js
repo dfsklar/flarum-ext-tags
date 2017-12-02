@@ -7,8 +7,23 @@ import TagHero from 'flarum/tags/components/TagHero';
 export default function() {
   IndexPage.prototype.currentTag = function() {
     const slug = this.params().tags;
-
-    if (slug) return app.store.getBy('tags', 'slug', slug);
+    if (slug) {
+      var current_tag = app.store.getBy('tags', 'slug', slug);
+      if ( ! (current_tag.data.attributes.isChild)) {
+        // SO: we have a situation where we want to reroute to the "latest-added"
+        // subchild of this tag.
+        // How to find subtags?
+        const children = app.store.all('tags').filter(child => child.parent() === current_tag);          
+        // 
+        if (children) {
+          if (children.length > 0) {
+            const latest_child = children[children.length-1];
+            current_tag = latest_child;
+          }
+        }
+      }
+      return current_tag;
+    }
   };
 
   // If currently viewing a tag, insert a tag hero at the top of the view.

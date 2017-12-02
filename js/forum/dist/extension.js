@@ -141,8 +141,25 @@ System.register('flarum/tags/addTagFilter', ['flarum/extend', 'flarum/components
   _export('default', function () {
     IndexPage.prototype.currentTag = function () {
       var slug = this.params().tags;
-
-      if (slug) return app.store.getBy('tags', 'slug', slug);
+      if (slug) {
+        var current_tag = app.store.getBy('tags', 'slug', slug);
+        if (!current_tag.data.attributes.isChild) {
+          // SO: we have a situation where we want to reroute to the "latest-added"
+          // subchild of this tag.
+          // How to find subtags?
+          var children = app.store.all('tags').filter(function (child) {
+            return child.parent() === current_tag;
+          });
+          // 
+          if (children) {
+            if (children.length > 0) {
+              var latest_child = children[children.length - 1];
+              current_tag = latest_child;
+            }
+          }
+        }
+        return current_tag;
+      }
     };
 
     // If currently viewing a tag, insert a tag hero at the top of the view.
