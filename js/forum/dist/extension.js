@@ -917,18 +917,33 @@ System.register('flarum/tags/components/TagHero', ['flarum/Component', 'flarum/h
 												var color = tag.color();
 												var parent = app.store.getById('tags', tag.data.relationships.parent.data.id);
 
+												// TRY TO OBTAIN INFO ABOUT THE *GROUP* THAT MATCHES THE PARENT TAG
+												// DFSKLAR Friday 10:03pm
+
+												var matchingGroup = app.store.getBy('groups', 'slug', parent.slug());
+												console.log(matchingGroup);
+
+												// So now you want to obtain the USER object for the currentyly logged in user.
+												// In that user object you'll find:
+												//   data.relationships.groups.data which is an array.
+												//     Each record in that array has a "id" object, string repr of a number.
+												// The current user's ID is in:  app.data.session.userId
+												var loggedinUserMembershipList = app.session.user.data.relationships.groups.data;
+
+												var isMemberOfGroup = loggedinUserMembershipList.some(function (group) {
+														return group.id == matchingGroup.data.id;
+												});
+
 												/*	IF WE EVER WANT TO SHOW LEADER'S IDENTITY HERE.
-            		var leader = app.store.getById('users', parent.data.attributes.leaderUserId);
-            
-            		// If the leader's full info is not yet fetched from API, start that process and set up the
-            		// promise to force a redraw of this component.
-            		if (!leader) {
-            			app.store.find('users', parent.data.attributes.leaderUserId).then(function(){
-            				m.redraw();
-            			})
-            		}
-            
-            		<div class="group-leader-name">{leader ? ("This group's leader is: " + leader.data.attributes.displayName) : ''}</div>
+            var leader = app.store.getById('users', parent.data.attributes.leaderUserId);
+            // If the leader's full info is not yet fetched from API, start that process and set up the
+            // promise to force a redraw of this component.
+            if (!leader) {
+            app.store.find('users', parent.data.attributes.leaderUserId).then(function(){
+            m.redraw();
+            })
+            }
+            <div class="group-leader-name">{leader ? ("This group's leader is: " + leader.data.attributes.displayName) : ''}</div>
             */
 
 												return m(

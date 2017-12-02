@@ -7,7 +7,24 @@ export default class TagHero extends Component {
 		const color = tag.color();
 		const parent = app.store.getById('tags', tag.data.relationships.parent.data.id);
 
-/*	IF WE EVER WANT TO SHOW LEADER'S IDENTITY HERE.
+		// TRY TO OBTAIN INFO ABOUT THE *GROUP* THAT MATCHES THE PARENT TAG
+		// DFSKLAR Friday 10:03pm
+
+		const matchingGroup = app.store.getBy('groups', 'slug', parent.slug());
+		console.log(matchingGroup);
+
+		// So now you want to obtain the USER object for the currentyly logged in user.
+		// In that user object you'll find:
+		//   data.relationships.groups.data which is an array.
+		//     Each record in that array has a "id" object, string repr of a number.
+		// The current user's ID is in:  app.data.session.userId
+		const loggedinUserMembershipList = app.session.user.data.relationships.groups.data;
+
+		const isMemberOfGroup = loggedinUserMembershipList.some(group => (group.id == matchingGroup.data.id));
+    
+
+
+    /*	IF WE EVER WANT TO SHOW LEADER'S IDENTITY HERE.
 		var leader = app.store.getById('users', parent.data.attributes.leaderUserId);
 
 		// If the leader's full info is not yet fetched from API, start that process and set up the
