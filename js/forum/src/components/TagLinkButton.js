@@ -11,16 +11,18 @@ export default class TagLinkButton extends LinkButton {
 
     // DFSKLARD removed hasIcon class from below
     return (
-      <a className={'TagLinkButton ' + (active ? 'active ':'inactive') + (isChild ? 'child' : '')} href={this.props.href} config={m.route}
-        style={active && tag ? {color: tag.color()} : ''}
-        title={description || ''}>
-        <img className='TagLinkButtonImage' src={tag.data.attributes.backgroundImage}></img>
-        <div className='holder'>
-          {this.props.children}
-        </div>
-      </a>
+      <div className='TagLinkButton'>
+        <div className='label'> {this.props.children} </div>
+        <a className={'launcher-image ' + (active ? 'active ':'inactive') + (isChild ? 'child' : '')} 
+          href={this.props.href}
+          config={m.route}
+          style={{"background-image":"url("+tag.data.attributes.backgroundImage+")"}}
+          title={description || ''}>
+        </a>
+      </div>
     );
   }
+
 
   static initProps(props) {
     const tag = props.tag;

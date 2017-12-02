@@ -13,29 +13,27 @@
 }
 
 
-.TagLinkButton {
-  img {
-    width: 100%;
-  }
-  .holder {
-    font-size: 13px;
-  }
-
-  &.inactive {
-    opacity: 0.5;
-  }
-  
-}
-
 .Dropdown-menu {
   .sessions-list-header {
     font-weight: bold;
-    font-size: 15px;
-
+    font-size: 19px;
+    margin-bottom: 20px;
   }
 }
-.Dropdown-menu > li > a.TagLinkButton {
-  padding-left: 0px !important;
+
+.Dropdown-menu > li > .TagLinkButton {
+  a.launcher-image {
+    display: block;
+    padding-left: 0px !important;
+    height: 100px;
+    width: 100px;
+    margin-bottom: 28px;
+    background-size: contain !important;
+    background-repeat: no-repeat !important;
+    &.inactive {
+      opacity: 0.5;
+    }
+  }
 }
 
 .TagLinkButton.child {

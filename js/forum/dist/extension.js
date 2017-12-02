@@ -1016,16 +1016,20 @@ System.register('flarum/tags/components/TagLinkButton', ['flarum/components/Link
 
             // DFSKLARD removed hasIcon class from below
             return m(
-              'a',
-              { className: 'TagLinkButton ' + (active ? 'active ' : 'inactive') + (isChild ? 'child' : ''), href: this.props.href, config: m.route,
-                style: active && tag ? { color: tag.color() } : '',
-                title: description || '' },
-              m('img', { className: 'TagLinkButtonImage', src: tag.data.attributes.backgroundImage }),
+              'div',
+              { className: 'TagLinkButton' },
               m(
                 'div',
-                { className: 'holder' },
-                this.props.children
-              )
+                { className: 'label' },
+                ' ',
+                this.props.children,
+                ' '
+              ),
+              m('a', { className: 'launcher-image ' + (active ? 'active ' : 'inactive') + (isChild ? 'child' : ''),
+                href: this.props.href,
+                config: m.route,
+                style: { "background-image": "url(" + tag.data.attributes.backgroundImage + ")" },
+                title: description || '' })
             );
           }
         }], [{
