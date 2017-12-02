@@ -28,6 +28,7 @@ export default class TagHero extends Component {
 		this.loggedinUserMembershipList.push({type:"groups", id: this.matchingGroup.data.id});
 		app.session.user.save({relationships: app.session.user.data.relationships})
 		.then(() => {
+			this.isMemberOfGroup = true;
 			console.log("good");
 			m.redraw();
 		})
