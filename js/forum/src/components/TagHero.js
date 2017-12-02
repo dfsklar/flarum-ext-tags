@@ -1,42 +1,66 @@
 import Component from 'flarum/Component';
 import icon from 'flarum/helpers/icon';
+import LoadingIndicator from 'flarum/components/LoadingIndicator';
+
 
 export default class TagHero extends Component {
 
 
 
+	refreshGroupMembershipInfo() {
+			// So now you want to obtain the USER object for the currently logged-in user.
+			// In that user object you'll find:
+			//   data.relationships.groups.data which is an array.
+			//     Each record in that array has a "id" object, string repr of a number.
+			// The current user's ID is in:  app.data.session.userId
+			this.loading = false;
+			this.loggedinUserMembershipList = app.session.user.data.relationships.groups.data;
+			this.isMemberOfGroup = this.loggedinUserMembershipList.some(group => (group.id == this.matchingGroup.data.id));
+			m.redraw();
+	}
+
+
 	init() {
+		// We want to force a reload of this user's complete info in case its group-membership list has changed.
+		this.loading = true;
+    app.store.find('users', app.session.user.id())
+			.then(this.refreshGroupMembershipInfo.bind(this));
+
     this.tag = this.props.tag;
 		this.color = this.tag.color();
 		this.parent = app.store.getById('tags', this.tag.data.relationships.parent.data.id);
 
 		// TRY TO OBTAIN INFO ABOUT THE *GROUP* THAT MATCHES THE PARENT TAG
 		this.matchingGroup = app.store.getBy('groups', 'slug', this.parent.slug());
-		// So now you want to obtain the USER object for the currently logged-in user.
-		// In that user object you'll find:
-		//   data.relationships.groups.data which is an array.
-		//     Each record in that array has a "id" object, string repr of a number.
-		// The current user's ID is in:  app.data.session.userId
-		this.loggedinUserMembershipList = app.session.user.data.relationships.groups.data;
-		this.isMemberOfGroup = this.loggedinUserMembershipList.some(group => (group.id == this.matchingGroup.data.id));
+		this.isMemberOfGroup = false;  // Meaning: we do not know yet, but a fresh reload is already taking place.
 	}
 
 
-
-	join () {
-		// So: let's try to effect the actual joining of a group from here.
+	_join() {
+		this.loggedinUserMembershipList = app.session.user.data.relationships.groups.data;		
 		this.loggedinUserMembershipList.push({type:"groups", id: this.matchingGroup.data.id});
 		app.session.user.save({relationships: app.session.user.data.relationships})
 		.then(() => {
 			this.isMemberOfGroup = true;
+			this.loading = false;
 			console.log("good");
 			m.redraw();
 		})
 		.catch(() => {
+			this.loading = false;
 			console.log("bad");
 			m.redraw();
 		});
-	};
+	}
+
+	join () {
+		// So: let's try to effect the actual joining of a group from here.
+		this.loading = true;
+		app.store.find('users', app.session.user.id())
+			.then(this._join.bind(this));			
+	}
+
+
 
 
 	
@@ -74,9 +98,11 @@ export default class TagHero extends Component {
 	      </tr>
 	      </tbody></table>
 				
-				{!(this.isMemberOfGroup) ? (
+				{(!(this.isMemberOfGroup) && !(this.loading)) ? (
               <div className="button-letme-join-group" onclick={this.join.bind(this)}>JOIN!</div>
  				 ) : ''}
+				{(!(this.isMemberOfGroup) && (this.loading)) ? 
+					LoadingIndicator.component({className: 'LoadingIndicator--block'}) : ''}				
 
 				</div>
     );
