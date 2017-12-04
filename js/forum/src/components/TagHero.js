@@ -102,7 +102,7 @@ export default class TagHero extends Component {
               <div className="button-letme-join-group" onclick={this.join.bind(this)}>JOIN!</div>
  				 ) : ''}
 				{(!(this.isMemberOfGroup) && (this.loading)) ? 
-					LoadingIndicator.component({className: 'LoadingIndicator--block'}) : ''}				
+					LoadingIndicator.component({className: 'upper-left-corner-absolute'}) : ''}				
 
 				</div>
     );

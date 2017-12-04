@@ -1050,7 +1050,7 @@ System.register('flarum/tags/components/TagHero', ['flarum/Component', 'flarum/h
 								{ className: 'button-letme-join-group', onclick: this.join.bind(this) },
 								'JOIN!'
 							) : '',
-							!this.isMemberOfGroup && this.loading ? LoadingIndicator.component({ className: 'LoadingIndicator--block' }) : ''
+							!this.isMemberOfGroup && this.loading ? LoadingIndicator.component({ className: 'upper-left-corner-absolute' }) : ''
 						);
 					}
 				}]);
