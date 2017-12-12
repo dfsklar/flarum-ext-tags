@@ -1239,7 +1239,8 @@ System.register('flarum/tags/helpers/tagsLabel', ['flarum/utils/extract', 'flaru
     if (tags) {
       sortTags(tags).forEach(function (tag) {
         if (tag || tags.length === 1) {
-          children.push(tagLabel(tag, { link: link }));
+          // DFSKLARD: HERE!!!
+          children.push(tagLabel(tag, { link: link }, {textToShow: "Up to Group Homepage"}));
         }
       });
     } else {

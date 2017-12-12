@@ -1324,6 +1324,7 @@ System.register('flarum/tags/helpers/tagLabel', ['flarum/utils/extract'], functi
   var extract;
   function tagLabel(tag) {
     var attrs = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+    var options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
 
     attrs.style = attrs.style || {};
     attrs.className = 'TagLabel ' + (attrs.className || '');
@@ -1346,10 +1347,12 @@ System.register('flarum/tags/helpers/tagLabel', ['flarum/utils/extract'], functi
       attrs.className += ' untagged';
     }
 
+    var textToShow = options.textToShow ? options.textToShow : tag ? tag.name() : app.translator.trans('flarum-tags.lib.deleted_tag_text');
+
     return m(link ? 'a' : 'span', attrs, m(
       'span',
       { className: 'TagLabel-text' },
-      tag ? tag.name() : app.translator.trans('flarum-tags.lib.deleted_tag_text')
+      textToShow
     ));
   }
 
@@ -1379,7 +1382,8 @@ System.register('flarum/tags/helpers/tagsLabel', ['flarum/utils/extract', 'flaru
     if (tags) {
       sortTags(tags).forEach(function (tag) {
         if (tag || tags.length === 1) {
-          children.push(tagLabel(tag, { link: link }));
+          // DFSKLARD: We only want emission for the primary tag (repr the group as a whole)
+          if (tag.data.attributes.isChild === false) children.push(tagLabel(tag, { link: link }, { textToShow: "Up to Group Home" }));
         }
       });
     } else {

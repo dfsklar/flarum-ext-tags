@@ -11,7 +11,9 @@ export default function tagsLabel(tags, attrs = {}) {
   if (tags) {
     sortTags(tags).forEach(tag => {
       if (tag || tags.length === 1) {
-        children.push(tagLabel(tag, {link}));
+        // DFSKLARD: We only want emission for the primary tag (repr the group as a whole)
+        if (tag.data.attributes.isChild === false)
+          children.push(tagLabel(tag, { link: link }, {textToShow: "Up to Group Home"}));
       }
     });
   } else {
