@@ -44,12 +44,10 @@
 table.marketing-block {
     width: 100%;
 
-   tr.marketing-block {
-
         td.leftside {
             position: relative;
             vertical-align: top;
-            padding: 15px;
+            padding-right: 10px;
             color: white;   
             .button-join-group {
                 cursor: pointer;
@@ -64,16 +62,16 @@ table.marketing-block {
                 background-color: rgb(228, 157, 36);
             }
             .group-name {
-                font-size: 24px;
-                text-align: center;
+                font-size: 18px;
+                text-align: left;
                 padding-bottom: 14px;
             }
             .session-name {
-                font-size: 16px;
+                font-size: 14px;
                 font-weight: bold;
             }
             .session-description {
-                font-size: 14px;
+                font-size: 12px;
             }
             .group-discussion {
                 text-align: center;
@@ -93,7 +91,7 @@ table.marketing-block {
         td.rightside-imageholder  {
             padding: 15px;
             position: relative;
-            width: 350px;
+            width: 20%;
             background-size: contain;
             background-position: center;
             background-repeat: no-repeat;
@@ -116,6 +114,21 @@ table.marketing-block {
 
 
         }
+}
 
+@media @desktop-up {
+  table.marketing-block {
+    td.leftside {
+        .group-name {
+            font-size: 25px;
+            text-align: center;
+        }
+        .session-name {
+            font-size: 19px;
+        }
+        .session-description {
+            font-size: 15px;
+        }
     }
+  }
 }

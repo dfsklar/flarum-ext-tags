@@ -63,7 +63,13 @@ li.item-tags {
   opacity: 1;
 }
 
-
+@media @phone-up {
+  .IndexPage, .UserPage {
+    .DiscussionListItem-info > .item-tags {
+      display: none !important;
+    }
+  }  
+}
 
 @media @tablet-up {
   .IndexPage, .UserPage {
