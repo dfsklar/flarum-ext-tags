@@ -1383,7 +1383,7 @@ System.register('flarum/tags/helpers/tagsLabel', ['flarum/utils/extract', 'flaru
       sortTags(tags).forEach(function (tag) {
         if (tag || tags.length === 1) {
           // DFSKLARD: We only want emission for the primary tag (repr the group as a whole)
-          if (tag.data.attributes.isChild === false) children.push(tagLabel(tag, { link: link }, { textToShow: "Up to Group Home" }));
+          if (tag.data.attributes.isChild === true) children.push(tagLabel(tag, { link: link }, { textToShow: "Up to Group Home" }));
         }
       });
     } else {
