@@ -318,15 +318,14 @@ System.register('flarum/tags/addTagList', ['flarum/extend', 'flarum/components/I
 
       var currentPrimaryTag = currentTag ? currentTag.isChild() ? currentTag.parent() : currentTag : null;
 
-      var addTag = function addTag(tag) {
+      // AVARAE
+      var addTag = function addTag(tag, indexSeq, fullArray) {
         var active = currentTag === tag;
 
         if (!active && currentTag) {
           active = currentTag.parent() === tag;
         }
 
-        // DFSKLARD: my own attempts at a custom list of secondary tags to provide a list of sessions.
-        // ACTUALLY, I ONLY SHOW THE subtags OF THE active primary tag.
         if (tag.isChild() && tag.parent() === currentPrimaryTag) {
           items.add('tag' + tag.id(), TagLinkButton.component({ tag: tag, params: params, active: active }), -10);
         }
@@ -340,8 +339,11 @@ System.register('flarum/tags/addTagList', ['flarum/extend', 'flarum/components/I
         .forEach(addTag);*/
 
       // My repair attempt -- just use reverse()
+
+      // DFSKLARD: my own attempts at a custom list of secondary tags to provide a list of sessions.
+      // ACTUALLY, I ONLY SHOW THE subtags OF THE active primary tag.
       var filtered_tags = tags.filter(function (tag) {
-        return tag.position() !== null && (!tag.isChild() || currentTag && (tag.parent() === currentTag || tag.parent() === currentTag.parent()));
+        return tag.position() !== null && tag.isChild() && tag.parent() === currentPrimaryTag;
       });
       filtered_tags.reverse().forEach(addTag);
 

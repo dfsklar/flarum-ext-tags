@@ -37,15 +37,14 @@ export default function() {
         : 
         null;
 
-    const addTag = tag => {
+    // AVARAE
+    const addTag = function(tag, indexSeq, fullArray) {
       let active = (currentTag === tag);
 
       if (!active && currentTag) {
         active = (currentTag.parent() === tag);
       }
 
-      // DFSKLARD: my own attempts at a custom list of secondary tags to provide a list of sessions.
-      // ACTUALLY, I ONLY SHOW THE subtags OF THE active primary tag.
       if (tag.isChild() && (tag.parent() === currentPrimaryTag)) {
         items.add('tag' + tag.id(), TagLinkButton.component({tag, params, active}), -10);
       }
@@ -59,9 +58,17 @@ export default function() {
       .forEach(addTag);*/
 
     // My repair attempt -- just use reverse()
+
+    // DFSKLARD: my own attempts at a custom list of secondary tags to provide a list of sessions.
+    // ACTUALLY, I ONLY SHOW THE subtags OF THE active primary tag.
     let filtered_tags = 
       tags
-      .filter(tag => tag.position() !== null && (!tag.isChild() || (currentTag && (tag.parent() === currentTag || tag.parent() === currentTag.parent()))));
+      .filter(tag => 
+        (tag.position() !== null) 
+        &&
+        tag.isChild() 
+        &&
+        (tag.parent() === currentPrimaryTag));
     filtered_tags.reverse().forEach(addTag);
 
 
