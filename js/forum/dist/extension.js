@@ -987,6 +987,37 @@ System.register('flarum/tags/components/TagHero', ['flarum/Component', 'flarum/h
 						app.store.find('users', app.session.user.id()).then(this._join.bind(this));
 					}
 				}, {
+					key: '_unjoin',
+					value: function _unjoin() {
+						var _this4 = this;
+
+						this.loggedinUserMembershipList = app.session.user.data.relationships.groups.data;
+						var _find = function _find(element) {
+							return element.type == 'groups' && element.id == this.matchingGroup.data.id;
+						};
+
+						var idxToDelete = this.loggedinUserMembershipList.findIndex(_find.bind(this));
+						if (idxToDelete >= 0) {
+							this.loggedinUserMembershipList.splice(idxToDelete, 1);
+						}
+						app.session.user.save({ relationships: app.session.user.data.relationships }).then(function () {
+							_this4.isMemberOfGroup = false;
+							_this4.loading = false;
+							m.redraw();
+						}).catch(function () {
+							_this4.loading = false;
+							alert("Removal from group failed.");
+							m.redraw();
+						});
+					}
+				}, {
+					key: 'unjoin',
+					value: function unjoin() {
+						// So: let's try to effect the actual unjoining of a group from here.
+						this.loading = true;
+						app.store.find('users', app.session.user.id()).then(this._unjoin.bind(this));
+					}
+				}, {
 					key: 'view',
 					value: function view() {
 
@@ -1050,7 +1081,13 @@ System.register('flarum/tags/components/TagHero', ['flarum/Component', 'flarum/h
 								{ className: 'button-letme-join-group', onclick: this.join.bind(this) },
 								'JOIN!'
 							) : '',
-							!this.isMemberOfGroup && this.loading ? LoadingIndicator.component({ className: 'upper-left-corner-absolute' }) : ''
+							!this.isMemberOfGroup && this.loading ? LoadingIndicator.component({ className: 'upper-left-corner-absolute' }) : '',
+							this.isMemberOfGroup && !this.loading ? m(
+								'div',
+								{ className: 'button-letme-join-group', onclick: this.unjoin.bind(this) },
+								'Leave!'
+							) : '',
+							this.isMemberOfGroup && this.loading ? LoadingIndicator.component({ className: 'upper-left-corner-absolute' }) : ''
 						);
 					}
 				}]);

@@ -8,25 +8,25 @@ export default class TagHero extends Component {
 
 
 	refreshGroupMembershipInfo() {
-			// So now you want to obtain the USER object for the currently logged-in user.
-			// In that user object you'll find:
-			//   data.relationships.groups.data which is an array.
-			//     Each record in that array has a "id" object, string repr of a number.
-			// The current user's ID is in:  app.data.session.userId
-			this.loading = false;
-			this.loggedinUserMembershipList = app.session.user.data.relationships.groups.data;
-			this.isMemberOfGroup = this.loggedinUserMembershipList.some(group => (group.id == this.matchingGroup.data.id));
-			m.redraw();
+		// So now you want to obtain the USER object for the currently logged-in user.
+		// In that user object you'll find:
+		//   data.relationships.groups.data which is an array.
+		//     Each record in that array has a "id" object, string repr of a number.
+		// The current user's ID is in:  app.data.session.userId
+		this.loading = false;
+		this.loggedinUserMembershipList = app.session.user.data.relationships.groups.data;
+		this.isMemberOfGroup = this.loggedinUserMembershipList.some(group => (group.id == this.matchingGroup.data.id));
+		m.redraw();
 	}
 
 
 	init() {
 		// We want to force a reload of this user's complete info in case its group-membership list has changed.
 		this.loading = true;
-    app.store.find('users', app.session.user.id())
+	    app.store.find('users', app.session.user.id())
 			.then(this.refreshGroupMembershipInfo.bind(this));
 
-    this.tag = this.props.tag;
+    	this.tag = this.props.tag;
 		this.color = this.tag.color();
 		this.parent = app.store.getById('tags', this.tag.data.relationships.parent.data.id);
 
@@ -63,6 +63,40 @@ export default class TagHero extends Component {
 
 
 
+
+	_unjoin() {
+		this.loggedinUserMembershipList = app.session.user.data.relationships.groups.data;
+		const _find = function(element) {
+			return (element.type=='groups' && element.id == this.matchingGroup.data.id);
+		}
+
+		const idxToDelete = this.loggedinUserMembershipList.findIndex(_find.bind(this));
+		if (idxToDelete >= 0) {
+			this.loggedinUserMembershipList.splice(idxToDelete, 1);
+		}
+		app.session.user.save({relationships: app.session.user.data.relationships})
+		.then(() => {
+			this.isMemberOfGroup = false;
+			this.loading = false;
+			m.redraw();
+		})
+		.catch(() => {
+			this.loading = false;
+			alert("Removal from group failed.");
+			m.redraw();
+		});
+	}
+
+	unjoin () {
+		// So: let's try to effect the actual unjoining of a group from here.
+		this.loading = true;
+		app.store.find('users', app.session.user.id())
+			.then(this._unjoin.bind(this));			
+	}
+
+
+
+
 	
   view() {		
 
@@ -81,7 +115,7 @@ export default class TagHero extends Component {
 */
 
     return (
-			  <div class="holder-marketing-block container" style={{"background-color": this.parent.data.attributes.color}}>
+		<div class="holder-marketing-block container" style={{"background-color": this.parent.data.attributes.color}}>
 
 	      <table class="marketing-block">
 	      <tbody><tr class="marketing-block">
@@ -97,14 +131,21 @@ export default class TagHero extends Component {
 				</td>
 	      </tr>
 	      </tbody></table>
-				
-				{(!(this.isMemberOfGroup) && !(this.loading)) ? (
+
+  		  {(!(this.isMemberOfGroup) && !(this.loading)) ? (
               <div className="button-letme-join-group" onclick={this.join.bind(this)}>JOIN!</div>
  				 ) : ''}
 				{(!(this.isMemberOfGroup) && (this.loading)) ? 
 					LoadingIndicator.component({className: 'upper-left-corner-absolute'}) : ''}				
+			  
+  		  {((this.isMemberOfGroup) && !(this.loading)) ? (
+              <div className="button-letme-join-group" onclick={this.unjoin.bind(this)}>Leave!</div>
+ 				 ) : ''}
+				{((this.isMemberOfGroup) && (this.loading)) ? 
+					LoadingIndicator.component({className: 'upper-left-corner-absolute'}) : ''}				
 
-				</div>
+
+		</div>
     );
   }
 }
