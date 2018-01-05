@@ -318,7 +318,6 @@ System.register('flarum/tags/addTagList', ['flarum/extend', 'flarum/components/I
 
       var currentPrimaryTag = currentTag ? currentTag.isChild() ? currentTag.parent() : currentTag : null;
 
-      // AVARAE
       var addTag = function addTag(tag, indexSeq, fullArray) {
         var active = currentTag === tag;
 
@@ -327,21 +326,17 @@ System.register('flarum/tags/addTagList', ['flarum/extend', 'flarum/components/I
         }
 
         if (tag.isChild() && tag.parent() === currentPrimaryTag) {
-          items.add('tag' + tag.id(), TagLinkButton.component({ tag: tag, params: params, active: active }), -10);
+          items.add('tag' + tag.id(), TagLinkButton.component({
+            label: 'Session ' + String(indexSeq + 1) + " of " + String(fullArray.length),
+            tag: tag,
+            params: params,
+            active: active }), -10);
         }
       };
 
-      // DFSKLARD: The vertical listing of sessions.  We are having problems with the sorting presentation.
-      // Original code used sortTags which would sometimes fail:
-      /*
-      sortTags(tags)
-        .filter(tag => tag.position() !== null && (!tag.isChild() || (currentTag && (tag.parent() === currentTag || tag.parent() === currentTag.parent()))))
-        .forEach(addTag);*/
-
-      // My repair attempt -- just use reverse()
-
+      // DFSKLARD: The listing of sessions.
       // DFSKLARD: my own attempts at a custom list of secondary tags to provide a list of sessions.
-      // ACTUALLY, I ONLY SHOW THE subtags OF THE active primary tag.
+      // I ONLY SHOW THE subtags OF THE active primary tag.
       var filtered_tags = tags.filter(function (tag) {
         return tag.position() !== null && tag.isChild() && tag.parent() === currentPrimaryTag;
       });
