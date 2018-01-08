@@ -327,7 +327,7 @@ System.register('flarum/tags/addTagList', ['flarum/extend', 'flarum/components/I
 
         if (tag.isChild() && tag.parent() === currentPrimaryTag) {
           items.add('tag' + tag.id(), TagLinkButton.component({
-            label: 'Session ' + String(indexSeq + 1) + " of " + String(fullArray.length),
+            label: 'Session ' + String(fullArray.length - indexSeq + 1) + " of " + String(fullArray.length),
             tag: tag,
             params: params,
             active: active }), -10);

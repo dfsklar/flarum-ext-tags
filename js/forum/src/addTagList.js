@@ -46,7 +46,7 @@ export default function() {
 
       if (tag.isChild() && (tag.parent() === currentPrimaryTag)) {
         items.add('tag' + tag.id(), TagLinkButton.component({
-          label: 'Session ' + String(indexSeq+1) + " of " + String(fullArray.length),
+          label: 'Session ' + String(fullArray.length-indexSeq) + " of " + String(fullArray.length),
           tag, 
           params, 
           active}), -10);
