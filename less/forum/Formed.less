@@ -14,25 +14,11 @@
 
 
 .holder-marketing-block {
-    padding-top: 15px;
-    padding-bottom: 15px;
+    padding-left: 0px !important;
+    padding-right: 0px !important;
+    padding-bottom: 0px !important;
+    padding-top: 20px !important;
     position: relative;
-    .button-letme-join-group {
-        background-color: orange;
-        display: inline-block;
-        color: navy;
-        font-weight: bold;
-        padding-left: 7px;
-        padding-right: 7px;
-        padding-top: 3px;
-        padding-bottom: 3px;
-        font-weight: 16px;
-        border-radius: 10px;
-        position: absolute;
-        top: 6px;
-        left: 6px;
-        cursor: pointer;
-    }
     .upper-left-corner-absolute {
         position: absolute;
         top: 8px;
@@ -41,26 +27,32 @@
     }
 }
 
+table.marketing-block-footer {
+    width: 100%;
+    background-color: rgba(255, 255, 255, 0.1);
+    margin-top: 13px;
+    color: white;
+    td {
+        padding-left: 17px;
+        padding-right: 17px;
+        padding-top: 5px;
+        padding-bottom: 5px;
+        border-right: 1px solid white;
+        &.join-or-leave {
+            cursor: pointer;
+        }
+    }
+}
+
 table.marketing-block {
     width: 100%;
 
         td.leftside {
+            padding-left: 20px;
             position: relative;
             vertical-align: top;
             padding-right: 10px;
-            color: white;   
-            .button-join-group {
-                cursor: pointer;
-                position: absolute;
-                padding-top: 4px;
-                padding-bottom: 4px;
-                padding-left: 10px;
-                padding-right: 10px;
-                color: white;
-                right: 10px;
-                bottom: 10px;
-                background-color: rgb(228, 157, 36);
-            }
+            color: white;
             .group-name {
                 font-size: 18px;
                 text-align: left;

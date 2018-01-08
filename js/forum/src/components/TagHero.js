@@ -132,18 +132,29 @@ export default class TagHero extends Component {
 	      </tr>
 	      </tbody></table>
 
-  		  {(!(this.isMemberOfGroup) && !(this.loading)) ? (
-              <div className="button-letme-join-group" onclick={this.join.bind(this)}>JOIN!</div>
- 				 ) : ''}
-				{(!(this.isMemberOfGroup) && (this.loading)) ? 
-					LoadingIndicator.component({className: 'upper-left-corner-absolute'}) : ''}				
-			  
-  		  {((this.isMemberOfGroup) && !(this.loading)) ? (
-              <div className="button-letme-join-group" onclick={this.unjoin.bind(this)}>Leave!</div>
- 				 ) : ''}
-				{((this.isMemberOfGroup) && (this.loading)) ? 
-					LoadingIndicator.component({className: 'upper-left-corner-absolute'}) : ''}				
-
+		  <table class="marketing-block-footer">
+		    <tbody>
+				<tr>
+					<td class="join-or-leave">
+						{(!(this.isMemberOfGroup) && !(this.loading)) ? (
+							<div onclick={this.join.bind(this)}>Join Group</div>
+								) : ''}
+								{(!(this.isMemberOfGroup) && (this.loading)) ? 
+									LoadingIndicator.component({className: 'upper-left-corner-absolute'}) : ''}
+						{((this.isMemberOfGroup) && !(this.loading)) ? (
+							<div onclick={this.unjoin.bind(this)}>Leave Group</div>
+								) : ''}
+								{((this.isMemberOfGroup) && (this.loading)) ? 
+									LoadingIndicator.component({className: 'upper-left-corner-absolute'}) : ''}				
+					</td>
+					<td class="num-of-members">
+					  7 members
+					</td>
+					<td class="session-chooser">
+					</td>
+				</tr>
+			</tbody>
+	      </table>
 
 		</div>
     );

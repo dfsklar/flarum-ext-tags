@@ -327,7 +327,7 @@ System.register('flarum/tags/addTagList', ['flarum/extend', 'flarum/components/I
 
         if (tag.isChild() && tag.parent() === currentPrimaryTag) {
           items.add('tag' + tag.id(), TagLinkButton.component({
-            label: 'Session ' + String(fullArray.length - indexSeq + 1) + " of " + String(fullArray.length),
+            label: 'Session ' + String(fullArray.length - indexSeq) + " of " + String(fullArray.length),
             tag: tag,
             params: params,
             active: active }), -10);
@@ -1073,18 +1073,40 @@ System.register('flarum/tags/components/TagHero', ['flarum/Component', 'flarum/h
 									)
 								)
 							),
-							!this.isMemberOfGroup && !this.loading ? m(
-								'div',
-								{ className: 'button-letme-join-group', onclick: this.join.bind(this) },
-								'JOIN!'
-							) : '',
-							!this.isMemberOfGroup && this.loading ? LoadingIndicator.component({ className: 'upper-left-corner-absolute' }) : '',
-							this.isMemberOfGroup && !this.loading ? m(
-								'div',
-								{ className: 'button-letme-join-group', onclick: this.unjoin.bind(this) },
-								'Leave!'
-							) : '',
-							this.isMemberOfGroup && this.loading ? LoadingIndicator.component({ className: 'upper-left-corner-absolute' }) : ''
+							m(
+								'table',
+								{ 'class': 'marketing-block-footer' },
+								m(
+									'tbody',
+									null,
+									m(
+										'tr',
+										null,
+										m(
+											'td',
+											{ 'class': 'join-or-leave' },
+											!this.isMemberOfGroup && !this.loading ? m(
+												'div',
+												{ onclick: this.join.bind(this) },
+												'Join Group'
+											) : '',
+											!this.isMemberOfGroup && this.loading ? LoadingIndicator.component({ className: 'upper-left-corner-absolute' }) : '',
+											this.isMemberOfGroup && !this.loading ? m(
+												'div',
+												{ onclick: this.unjoin.bind(this) },
+												'Leave Group'
+											) : '',
+											this.isMemberOfGroup && this.loading ? LoadingIndicator.component({ className: 'upper-left-corner-absolute' }) : ''
+										),
+										m(
+											'td',
+											{ 'class': 'num-of-members' },
+											'7 members'
+										),
+										m('td', { 'class': 'session-chooser' })
+									)
+								)
+							)
 						);
 					}
 				}]);
