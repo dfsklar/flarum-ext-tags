@@ -1,11 +1,10 @@
 import Component from 'flarum/Component';
 import icon from 'flarum/helpers/icon';
 import LoadingIndicator from 'flarum/components/LoadingIndicator';
+import SelectDropdown from 'flarum/components/SelectDropdown';
 
 
 export default class TagHero extends Component {
-
-
 
 	refreshGroupMembershipInfo() {
 		// So now you want to obtain the USER object for the currently logged-in user.
@@ -151,6 +150,13 @@ export default class TagHero extends Component {
 					  7 members
 					</td>
 					<td class="session-chooser">
+					{
+						SelectDropdown.component({
+							children: [],//this.navItems(this).toArray(),
+							buttonClassName: 'Button',
+							className: 'App-titleControl'
+						})
+					}
 					</td>
 				</tr>
 			</tbody>

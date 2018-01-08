@@ -905,10 +905,10 @@ System.register('flarum/tags/components/TagDiscussionModal', ['flarum/components
 });;
 'use strict';
 
-System.register('flarum/tags/components/TagHero', ['flarum/Component', 'flarum/helpers/icon', 'flarum/components/LoadingIndicator'], function (_export, _context) {
+System.register('flarum/tags/components/TagHero', ['flarum/Component', 'flarum/helpers/icon', 'flarum/components/LoadingIndicator', 'flarum/components/SelectDropdown'], function (_export, _context) {
 	"use strict";
 
-	var Component, icon, LoadingIndicator, TagHero;
+	var Component, icon, LoadingIndicator, SelectDropdown, TagHero;
 	return {
 		setters: [function (_flarumComponent) {
 			Component = _flarumComponent.default;
@@ -916,6 +916,8 @@ System.register('flarum/tags/components/TagHero', ['flarum/Component', 'flarum/h
 			icon = _flarumHelpersIcon.default;
 		}, function (_flarumComponentsLoadingIndicator) {
 			LoadingIndicator = _flarumComponentsLoadingIndicator.default;
+		}, function (_flarumComponentsSelectDropdown) {
+			SelectDropdown = _flarumComponentsSelectDropdown.default;
 		}],
 		execute: function () {
 			TagHero = function (_Component) {
@@ -1103,7 +1105,15 @@ System.register('flarum/tags/components/TagHero', ['flarum/Component', 'flarum/h
 											{ 'class': 'num-of-members' },
 											'7 members'
 										),
-										m('td', { 'class': 'session-chooser' })
+										m(
+											'td',
+											{ 'class': 'session-chooser' },
+											SelectDropdown.component({
+												children: [], //this.navItems(this).toArray(),
+												buttonClassName: 'Button',
+												className: 'App-titleControl'
+											})
+										)
 									)
 								)
 							)
