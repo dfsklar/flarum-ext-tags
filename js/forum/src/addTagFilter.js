@@ -30,7 +30,10 @@ export default function() {
   override(IndexPage.prototype, 'hero', function(original) {
     const tag = this.currentTag();
 
-    if (tag) return TagHero.component({tag});
+    if (tag) return TagHero.component({
+      tag: tag,
+      params: this.stickyParams() 
+    });
 
     return original();
   });

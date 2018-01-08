@@ -166,7 +166,10 @@ System.register('flarum/tags/addTagFilter', ['flarum/extend', 'flarum/components
     override(IndexPage.prototype, 'hero', function (original) {
       var tag = this.currentTag();
 
-      if (tag) return TagHero.component({ tag: tag });
+      if (tag) return TagHero.component({
+        tag: tag,
+        params: this.stickyParams()
+      });
 
       return original();
     });
@@ -905,10 +908,10 @@ System.register('flarum/tags/components/TagDiscussionModal', ['flarum/components
 });;
 'use strict';
 
-System.register('flarum/tags/components/TagHero', ['flarum/Component', 'flarum/helpers/icon', 'flarum/components/LoadingIndicator', 'flarum/components/SelectDropdown'], function (_export, _context) {
+System.register('flarum/tags/components/TagHero', ['flarum/Component', 'flarum/helpers/icon', 'flarum/components/LoadingIndicator', 'flarum/components/SelectDropdown', 'flarum/utils/ItemList', 'flarum/tags/components/TagLinkButton'], function (_export, _context) {
 	"use strict";
 
-	var Component, icon, LoadingIndicator, SelectDropdown, TagHero;
+	var Component, icon, LoadingIndicator, SelectDropdown, ItemList, TagLinkButton, TagHero;
 	return {
 		setters: [function (_flarumComponent) {
 			Component = _flarumComponent.default;
@@ -918,6 +921,10 @@ System.register('flarum/tags/components/TagHero', ['flarum/Component', 'flarum/h
 			LoadingIndicator = _flarumComponentsLoadingIndicator.default;
 		}, function (_flarumComponentsSelectDropdown) {
 			SelectDropdown = _flarumComponentsSelectDropdown.default;
+		}, function (_flarumUtilsItemList) {
+			ItemList = _flarumUtilsItemList.default;
+		}, function (_flarumTagsComponentsTagLinkButton) {
+			TagLinkButton = _flarumTagsComponentsTagLinkButton.default;
 		}],
 		execute: function () {
 			TagHero = function (_Component) {
@@ -953,12 +960,15 @@ System.register('flarum/tags/components/TagHero', ['flarum/Component', 'flarum/h
 						app.store.find('users', app.session.user.id()).then(this.refreshGroupMembershipInfo.bind(this));
 
 						this.tag = this.props.tag;
+						this.params = this.props.params; // IndexPage's stickyParams
+
 						this.color = this.tag.color();
 						this.parent = app.store.getById('tags', this.tag.data.relationships.parent.data.id);
 
 						// TRY TO OBTAIN INFO ABOUT THE *GROUP* THAT MATCHES THE PARENT TAG
 						this.matchingGroup = app.store.getBy('groups', 'slug', this.parent.slug());
 						this.isMemberOfGroup = false; // Meaning: we do not know yet, but a fresh reload is already taking place.
+
 					}
 				}, {
 					key: '_join',
@@ -1015,6 +1025,42 @@ System.register('flarum/tags/components/TagHero', ['flarum/Component', 'flarum/h
 						// So: let's try to effect the actual unjoining of a group from here.
 						this.loading = true;
 						app.store.find('users', app.session.user.id()).then(this._unjoin.bind(this));
+					}
+				}, {
+					key: 'list_of_sessions',
+					value: function list_of_sessions() {
+						var tags = app.store.all('tags');
+						var currentTag = this.tag;
+
+						var items = new ItemList();
+
+						var currentPrimaryTag = currentTag ? currentTag.isChild() ? currentTag.parent() : currentTag : null;
+
+						var addTag = function addTag(tag, indexSeq, fullArray) {
+							var active = currentTag === tag;
+
+							if (!active && currentTag) {
+								active = currentTag.parent() === tag;
+							}
+
+							if (tag.isChild() && tag.parent() === currentPrimaryTag) {
+								items.add('tag' + tag.id(), TagLinkButton.component({
+									label: 'Session ' + String(fullArray.length - indexSeq) + " of " + String(fullArray.length),
+									tag: tag,
+									params: this.params,
+									active: active }), -10);
+							}
+						};
+
+						// DFSKLARD: The listing of sessions.
+						// DFSKLARD: my own attempts at a custom list of secondary tags to provide a list of sessions.
+						// I ONLY SHOW THE subtags OF THE active primary tag.
+						var filtered_tags = tags.filter(function (tag) {
+							return tag.position() !== null && tag.isChild() && tag.parent() === currentPrimaryTag;
+						});
+						filtered_tags.reverse().forEach(addTag.bind(this));
+
+						return items;
 					}
 				}, {
 					key: 'view',
@@ -1109,7 +1155,7 @@ System.register('flarum/tags/components/TagHero', ['flarum/Component', 'flarum/h
 											'td',
 											{ 'class': 'session-chooser' },
 											SelectDropdown.component({
-												children: [], //this.navItems(this).toArray(),
+												children: this.list_of_sessions().toArray(),
 												buttonClassName: 'Button',
 												className: 'App-titleControl'
 											})

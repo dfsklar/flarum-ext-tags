@@ -2,6 +2,9 @@ import Component from 'flarum/Component';
 import icon from 'flarum/helpers/icon';
 import LoadingIndicator from 'flarum/components/LoadingIndicator';
 import SelectDropdown from 'flarum/components/SelectDropdown';
+import ItemList from 'flarum/utils/ItemList';
+import TagLinkButton from 'flarum/tags/components/TagLinkButton';
+
 
 
 export default class TagHero extends Component {
@@ -25,13 +28,17 @@ export default class TagHero extends Component {
 	    app.store.find('users', app.session.user.id())
 			.then(this.refreshGroupMembershipInfo.bind(this));
 
-    	this.tag = this.props.tag;
+		this.tag = this.props.tag;
+		this.params = this.props.params;  // IndexPage's stickyParams
+
 		this.color = this.tag.color();
 		this.parent = app.store.getById('tags', this.tag.data.relationships.parent.data.id);
 
 		// TRY TO OBTAIN INFO ABOUT THE *GROUP* THAT MATCHES THE PARENT TAG
 		this.matchingGroup = app.store.getBy('groups', 'slug', this.parent.slug());
 		this.isMemberOfGroup = false;  // Meaning: we do not know yet, but a fresh reload is already taking place.
+
+
 	}
 
 
@@ -95,6 +102,49 @@ export default class TagHero extends Component {
 
 
 
+  list_of_sessions() {
+	const tags = app.store.all('tags');
+	const currentTag = this.tag;
+	
+    const items = new ItemList();
+
+    const currentPrimaryTag = 
+       currentTag ? 
+        ( (currentTag.isChild() ? currentTag.parent() : currentTag) ) 
+        : 
+        null;
+
+    const addTag = function(tag, indexSeq, fullArray) {
+      let active = (currentTag === tag);
+
+      if (!active && currentTag) {
+        active = (currentTag.parent() === tag);
+      }
+
+      if (tag.isChild() && (tag.parent() === currentPrimaryTag)) {
+        items.add('tag' + tag.id(), TagLinkButton.component({
+          label: 'Session ' + String(fullArray.length-indexSeq) + " of " + String(fullArray.length),
+          tag: tag, 
+          params: this.params, 
+          active: active}), -10);
+      }
+    };
+
+    // DFSKLARD: The listing of sessions.
+    // DFSKLARD: my own attempts at a custom list of secondary tags to provide a list of sessions.
+    // I ONLY SHOW THE subtags OF THE active primary tag.
+    let filtered_tags = 
+      tags
+      .filter(tag => 
+        (tag.position() !== null) 
+        &&
+        tag.isChild() 
+        &&
+        (tag.parent() === currentPrimaryTag));
+    filtered_tags.reverse().forEach(addTag.bind(this));
+ 
+	return items;
+  }
 
 	
   view() {		
@@ -152,7 +202,7 @@ export default class TagHero extends Component {
 					<td class="session-chooser">
 					{
 						SelectDropdown.component({
-							children: [],//this.navItems(this).toArray(),
+							children: this.list_of_sessions().toArray(),
 							buttonClassName: 'Button',
 							className: 'App-titleControl'
 						})
