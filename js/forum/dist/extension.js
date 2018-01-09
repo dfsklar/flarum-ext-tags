@@ -1127,6 +1127,7 @@ System.register('flarum/tags/components/TagHero', ['flarum/Component', 'flarum/h
 								m(
 									'tbody',
 									null,
+									m('tr', { 'class': 'spacer' }),
 									m(
 										'tr',
 										null,
@@ -1149,7 +1150,8 @@ System.register('flarum/tags/components/TagHero', ['flarum/Component', 'flarum/h
 										m(
 											'td',
 											{ 'class': 'num-of-members' },
-											'7 members'
+											'3 members',
+											m('i', { 'class': 'icon fa fa-sort Button-caret' })
 										),
 										m(
 											'td',
@@ -1160,7 +1162,8 @@ System.register('flarum/tags/components/TagHero', ['flarum/Component', 'flarum/h
 												className: 'App-titleControl'
 											})
 										)
-									)
+									),
+									m('tr', { 'class': 'spacer' })
 								)
 							)
 						);

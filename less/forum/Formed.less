@@ -32,14 +32,34 @@ table.marketing-block-footer {
     background-color: rgba(255, 255, 255, 0.1);
     margin-top: 13px;
     color: white;
+    tr.spacer {
+        height: 11px;
+    }
     td {
         padding-left: 17px;
         padding-right: 17px;
-        padding-top: 5px;
-        padding-bottom: 5px;
+        padding-top: 1px;
+        padding-bottom: 1px;
         border-right: 1px solid white;
-        &.join-or-leave {
+        &.join-or-leave, &.num-of-members {
+            width: 130px;
             cursor: pointer;
+        }
+        &.session-chooser {
+            text-align: right;
+            border-right: none;
+            .ButtonGroup.open {
+                button {
+                    background-color: white !important;
+                    color: navy !important;
+                }
+            }
+            button {
+                background-color: rgba(255, 255, 255, 0);
+                color: white;
+                padding-top: 0px;
+                padding-bottom: 0px;
+            }
         }
     }
 }

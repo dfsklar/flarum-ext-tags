@@ -183,6 +183,7 @@ export default class TagHero extends Component {
 
 		  <table class="marketing-block-footer">
 		    <tbody>
+				<tr class="spacer"></tr>
 				<tr>
 					<td class="join-or-leave">
 						{(!(this.isMemberOfGroup) && !(this.loading)) ? (
@@ -197,7 +198,8 @@ export default class TagHero extends Component {
 									LoadingIndicator.component({className: 'upper-left-corner-absolute'}) : ''}				
 					</td>
 					<td class="num-of-members">
-					  7 members
+					  3 members
+					  <i class="icon fa fa-sort Button-caret"></i>
 					</td>
 					<td class="session-chooser">
 					{
@@ -209,6 +211,7 @@ export default class TagHero extends Component {
 					}
 					</td>
 				</tr>
+				<tr class="spacer"></tr>
 			</tbody>
 	      </table>
 
