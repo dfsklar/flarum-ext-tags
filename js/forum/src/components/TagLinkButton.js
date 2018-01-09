@@ -10,16 +10,22 @@ export default class TagLinkButton extends LinkButton {
     const isChild = false;  // tag.isChild()
 
     // DFSKLARD removed hasIcon class from below
-    return (
-      <div className='TagLinkButton'>
-        <div className='label'> {this.props.children} </div>
+    // DFSKLARD removed the entire launcher image thumbnail that used to be a sibling of the div.label:
+    /*
         <a className={'launcher-image ' + (active ? 'active ':'inactive') + (isChild ? 'child' : '')} 
           href={this.props.href}
           config={m.route}
           style={{"background-image":"url("+tag.data.attributes.backgroundImage+")"}}
           title={description || ''}>
         </a>
-      </div>
+    */
+    return (
+      <a className='TagLinkButton'
+         href={this.props.href}
+         config={m.route}
+      >
+        <div className='label'> {this.props.children} </div>
+      </a>
     );
   }
 

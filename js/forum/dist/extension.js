@@ -1207,21 +1207,28 @@ System.register('flarum/tags/components/TagLinkButton', ['flarum/components/Link
             var isChild = false; // tag.isChild()
 
             // DFSKLARD removed hasIcon class from below
+            // DFSKLARD removed the entire launcher image thumbnail that used to be a sibling of the div.label:
+            /*
+                <a className={'launcher-image ' + (active ? 'active ':'inactive') + (isChild ? 'child' : '')} 
+                  href={this.props.href}
+                  config={m.route}
+                  style={{"background-image":"url("+tag.data.attributes.backgroundImage+")"}}
+                  title={description || ''}>
+                </a>
+            */
             return m(
-              'div',
-              { className: 'TagLinkButton' },
+              'a',
+              { className: 'TagLinkButton',
+                href: this.props.href,
+                config: m.route
+              },
               m(
                 'div',
                 { className: 'label' },
                 ' ',
                 this.props.children,
                 ' '
-              ),
-              m('a', { className: 'launcher-image ' + (active ? 'active ' : 'inactive') + (isChild ? 'child' : ''),
-                href: this.props.href,
-                config: m.route,
-                style: { "background-image": "url(" + tag.data.attributes.backgroundImage + ")" },
-                title: description || '' })
+              )
             );
           }
         }], [{
