@@ -2,6 +2,7 @@ import Component from 'flarum/Component';
 import icon from 'flarum/helpers/icon';
 import LoadingIndicator from 'flarum/components/LoadingIndicator';
 import SelectDropdown from 'flarum/components/SelectDropdown';
+import UserRosterDropdown from 'flarum/components/UserRosterDropdown';
 import ItemList from 'flarum/utils/ItemList';
 import TagLinkButton from 'flarum/tags/components/TagLinkButton';
 
@@ -26,6 +27,7 @@ export default class TagHero extends Component {
 		this.groupMembershipRoster = r.data.relationships.users.data;
 		m.redraw();
 	}
+
 
 	init() {
 		// We want to force a reload of this user's complete info in case its group-membership list has changed.
@@ -206,11 +208,9 @@ export default class TagHero extends Component {
 					</td>
 					<td class="num-of-members">
 						{this.groupMembershipRoster ? 
-							 (String(this.groupMembershipRoster.length) + 
-  							 (this.groupMembershipRoster.length==1 ? ' member' : ' members'))
-							 :
-							 ' '} 
-					  <i class="icon fa fa-sort Button-caret"></i>
+						   UserRosterDropdown.component({
+								 userList: this.groupMembershipRoster
+							 }) : ' '}
 					</td>
 					<td class="session-chooser">
 					{

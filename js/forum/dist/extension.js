@@ -908,10 +908,10 @@ System.register('flarum/tags/components/TagDiscussionModal', ['flarum/components
 });;
 'use strict';
 
-System.register('flarum/tags/components/TagHero', ['flarum/Component', 'flarum/helpers/icon', 'flarum/components/LoadingIndicator', 'flarum/components/SelectDropdown', 'flarum/utils/ItemList', 'flarum/tags/components/TagLinkButton'], function (_export, _context) {
+System.register('flarum/tags/components/TagHero', ['flarum/Component', 'flarum/helpers/icon', 'flarum/components/LoadingIndicator', 'flarum/components/SelectDropdown', 'flarum/components/UserRosterDropdown', 'flarum/utils/ItemList', 'flarum/tags/components/TagLinkButton'], function (_export, _context) {
 	"use strict";
 
-	var Component, icon, LoadingIndicator, SelectDropdown, ItemList, TagLinkButton, TagHero;
+	var Component, icon, LoadingIndicator, SelectDropdown, UserRosterDropdown, ItemList, TagLinkButton, TagHero;
 	return {
 		setters: [function (_flarumComponent) {
 			Component = _flarumComponent.default;
@@ -921,6 +921,8 @@ System.register('flarum/tags/components/TagHero', ['flarum/Component', 'flarum/h
 			LoadingIndicator = _flarumComponentsLoadingIndicator.default;
 		}, function (_flarumComponentsSelectDropdown) {
 			SelectDropdown = _flarumComponentsSelectDropdown.default;
+		}, function (_flarumComponentsUserRosterDropdown) {
+			UserRosterDropdown = _flarumComponentsUserRosterDropdown.default;
 		}, function (_flarumUtilsItemList) {
 			ItemList = _flarumUtilsItemList.default;
 		}, function (_flarumTagsComponentsTagLinkButton) {
@@ -1162,8 +1164,9 @@ System.register('flarum/tags/components/TagHero', ['flarum/Component', 'flarum/h
 										m(
 											'td',
 											{ 'class': 'num-of-members' },
-											this.groupMembershipRoster ? String(this.groupMembershipRoster.length) + (this.groupMembershipRoster.length == 1 ? ' member' : ' members') : ' ',
-											m('i', { 'class': 'icon fa fa-sort Button-caret' })
+											this.groupMembershipRoster ? UserRosterDropdown.component({
+												userList: this.groupMembershipRoster
+											}) : ' '
 										),
 										m(
 											'td',
