@@ -22,6 +22,11 @@ export default class TagHero extends Component {
 	}
 
 
+	recordGroupRoster(r) {
+		this.groupMembershipRoster = r.data.relationships.users.data;
+		m.redraw();
+	}
+
 	init() {
 		// We want to force a reload of this user's complete info in case its group-membership list has changed.
 		this.loading = true;
@@ -38,7 +43,8 @@ export default class TagHero extends Component {
 		this.matchingGroup = app.store.getBy('groups', 'slug', this.parent.slug());
 		this.isMemberOfGroup = false;  // Meaning: we do not know yet, but a fresh reload is already taking place.
 
-
+		app.store.find('groups', this.matchingGroup.data.id)
+		  .then(this.recordGroupRoster.bind(this));
 	}
 
 
@@ -178,6 +184,7 @@ export default class TagHero extends Component {
 						 {icon('play-circle', {className: 'play-icon'})}
 				  </a>
 				</td>
+				<td class='rightside-shim'>&nbsp;</td>
 	      </tr>
 	      </tbody></table>
 
@@ -198,7 +205,11 @@ export default class TagHero extends Component {
 									LoadingIndicator.component({className: 'upper-left-corner-absolute'}) : ''}				
 					</td>
 					<td class="num-of-members">
-					  3 members
+						{this.groupMembershipRoster ? 
+							 (String(this.groupMembershipRoster.length) + 
+  							 (this.groupMembershipRoster.length==1 ? ' member' : ' members'))
+							 :
+							 ' '} 
 					  <i class="icon fa fa-sort Button-caret"></i>
 					</td>
 					<td class="session-chooser">

@@ -953,6 +953,12 @@ System.register('flarum/tags/components/TagHero', ['flarum/Component', 'flarum/h
 						m.redraw();
 					}
 				}, {
+					key: 'recordGroupRoster',
+					value: function recordGroupRoster(r) {
+						this.groupMembershipRoster = r.data.relationships.users.data;
+						m.redraw();
+					}
+				}, {
 					key: 'init',
 					value: function init() {
 						// We want to force a reload of this user's complete info in case its group-membership list has changed.
@@ -969,6 +975,7 @@ System.register('flarum/tags/components/TagHero', ['flarum/Component', 'flarum/h
 						this.matchingGroup = app.store.getBy('groups', 'slug', this.parent.slug());
 						this.isMemberOfGroup = false; // Meaning: we do not know yet, but a fresh reload is already taking place.
 
+						app.store.find('groups', this.matchingGroup.data.id).then(this.recordGroupRoster.bind(this));
 					}
 				}, {
 					key: '_join',
@@ -1117,6 +1124,11 @@ System.register('flarum/tags/components/TagHero', ['flarum/Component', 'flarum/h
 												{ href: this.tag.data.attributes.linkDestination, target: '_fromflarumtoformed' },
 												icon('play-circle', { className: 'play-icon' })
 											)
+										),
+										m(
+											'td',
+											{ 'class': 'rightside-shim' },
+											'\xA0'
 										)
 									)
 								)
@@ -1150,7 +1162,7 @@ System.register('flarum/tags/components/TagHero', ['flarum/Component', 'flarum/h
 										m(
 											'td',
 											{ 'class': 'num-of-members' },
-											'3 members',
+											this.groupMembershipRoster ? String(this.groupMembershipRoster.length) + (this.groupMembershipRoster.length == 1 ? ' member' : ' members') : ' ',
 											m('i', { 'class': 'icon fa fa-sort Button-caret' })
 										),
 										m(
