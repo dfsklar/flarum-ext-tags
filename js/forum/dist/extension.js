@@ -978,6 +978,10 @@ System.register('flarum/tags/components/TagHero', ['flarum/Component', 'flarum/h
 						this.isMemberOfGroup = false; // Meaning: we do not know yet, but a fresh reload is already taking place.
 
 						app.store.find('groups', this.matchingGroup.data.id).then(this.recordGroupRoster.bind(this));
+
+						// Am "I" the leader of this group?
+						var groupLeaderUserID = this.tag.data.attributes.leaderUserId;
+						this.yesIAmTheLeaderOfThisGroup = String(groupLeaderUserID) == String(app.session.user.data.id);
 					}
 				}, {
 					key: '_join',
@@ -1168,6 +1172,15 @@ System.register('flarum/tags/components/TagHero', ['flarum/Component', 'flarum/h
 												userList: this.groupMembershipRoster
 											}) : ' '
 										),
+										this.yesIAmTheLeaderOfThisGroup ? m(
+											'td',
+											{ 'class': 'edit-launcher' },
+											m(
+												'a',
+												{ href: app.siteSpecifics.fetchFormedURL() + "/dashboard?tab=customContent" },
+												'Edit Group/Session'
+											)
+										) : '',
 										m(
 											'td',
 											{ 'class': 'session-chooser' },

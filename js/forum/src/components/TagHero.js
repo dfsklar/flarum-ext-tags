@@ -46,7 +46,11 @@ export default class TagHero extends Component {
 		this.isMemberOfGroup = false;  // Meaning: we do not know yet, but a fresh reload is already taking place.
 
 		app.store.find('groups', this.matchingGroup.data.id)
-		  .then(this.recordGroupRoster.bind(this));
+			.then(this.recordGroupRoster.bind(this));
+			
+		// Am "I" the leader of this group?
+		const groupLeaderUserID = this.tag.data.attributes.leaderUserId;
+		this.yesIAmTheLeaderOfThisGroup = (String(groupLeaderUserID) == String(app.session.user.data.id));
 	}
 
 
@@ -212,6 +216,12 @@ export default class TagHero extends Component {
 								 userList: this.groupMembershipRoster
 							 }) : ' '}
 					</td>
+					{this.yesIAmTheLeaderOfThisGroup ? (
+						<td class="edit-launcher">
+							<a href={app.siteSpecifics.fetchFormedURL()+"/dashboard?tab=customContent"}>
+							   Edit Group/Session</a></td>
+						  ) : ''
+					}
 					<td class="session-chooser">
 					{
 						SelectDropdown.component({
