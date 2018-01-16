@@ -35,42 +35,6 @@ export default class TagsPage extends Page {
       <div className="TagsPage">
         <div className="TagsPage-header">
           <div className="container">
-            <p>
-              {app.translator.trans('flarum-tags.admin.tags.about_tags_text')}
-            </p>
-            {Button.component({
-              className: 'Button Button--primary',
-              icon: 'plus',
-              children: app.translator.trans('flarum-tags.admin.tags.create_tag_button'),
-              onclick: () => app.modal.show(new EditTagModal())
-            })}
-            {Button.component({
-              className: 'Button',
-              children: app.translator.trans('flarum-tags.admin.tags.settings_button'),
-              onclick: () => app.modal.show(new TagSettingsModal())
-            })}
-          </div>
-        </div>
-        <div className="TagsPage-list">
-          <div className="container">
-            <div className="TagGroup">
-              <label>{app.translator.trans('flarum-tags.admin.tags.primary_heading')}</label>
-              <ol className="TagList TagList--primary">
-                {sortTags(app.store.all('tags'))
-                  .filter(tag => tag.position() !== null && !tag.isChild())
-                  .map(tagItem)}
-              </ol>
-            </div>
-
-            <div className="TagGroup">
-              <label>{app.translator.trans('flarum-tags.admin.tags.secondary_heading')}</label>
-              <ul className="TagList">
-                {app.store.all('tags')
-                  .filter(tag => tag.position() === null)
-                  .sort((a, b) => a.name().localeCompare(b.name()))
-                  .map(tagItem)}
-              </ul>
-            </div>
           </div>
         </div>
       </div>
