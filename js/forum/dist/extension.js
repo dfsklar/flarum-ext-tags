@@ -329,8 +329,10 @@ System.register('flarum/tags/addTagList', ['flarum/extend', 'flarum/components/I
         }
 
         if (tag.isChild() && tag.parent() === currentPrimaryTag) {
+          // CAREFUL: similar logic is found in TagHero.js !!!!
           items.add('tag' + tag.id(), TagLinkButton.component({
             label: 'Session ' + String(fullArray.length - indexSeq) + " of " + String(fullArray.length),
+            idx: fullArray.length - indexSeq,
             tag: tag,
             params: params,
             active: active }), -10);
@@ -1056,9 +1058,11 @@ System.register('flarum/tags/components/TagHero', ['flarum/Component', 'flarum/h
 								active = currentTag.parent() === tag;
 							}
 
+							// CAREFUL: similar logic is found in addTagList.js !!!!
 							if (tag.isChild() && tag.parent() === currentPrimaryTag) {
 								items.add('tag' + tag.id(), TagLinkButton.component({
 									label: 'Session ' + String(fullArray.length - indexSeq) + " of " + String(fullArray.length),
+									idx: fullArray.length - indexSeq,
 									tag: tag,
 									params: this.params,
 									active: active }), -10);
@@ -1266,7 +1270,7 @@ System.register('flarum/tags/components/TagLinkButton', ['flarum/components/Link
 
             props.params.tags = tag ? tag.slug() : 'untagged';
             props.href = app.route('tag', props.params);
-            props.children = tag ? tag.name() : app.translator.trans('flarum-tags.forum.index.untagged_link');
+            props.children = tag ? String(props.idx) + ': ' + tag.name() : app.translator.trans('flarum-tags.forum.index.untagged_link');
           }
         }]);
         return TagLinkButton;

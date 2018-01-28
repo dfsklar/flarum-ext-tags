@@ -45,8 +45,10 @@ export default function() {
       }
 
       if (tag.isChild() && (tag.parent() === currentPrimaryTag)) {
+        // CAREFUL: similar logic is found in TagHero.js !!!!
         items.add('tag' + tag.id(), TagLinkButton.component({
           label: 'Session ' + String(fullArray.length-indexSeq) + " of " + String(fullArray.length),
+          idx: fullArray.length - indexSeq,
           tag, 
           params, 
           active}), -10);

@@ -133,9 +133,11 @@ export default class TagHero extends Component {
         active = (currentTag.parent() === tag);
       }
 
+	  // CAREFUL: similar logic is found in addTagList.js !!!!
       if (tag.isChild() && (tag.parent() === currentPrimaryTag)) {
         items.add('tag' + tag.id(), TagLinkButton.component({
-          label: 'Session ' + String(fullArray.length-indexSeq) + " of " + String(fullArray.length),
+		  label: 'Session ' + String(fullArray.length-indexSeq) + " of " + String(fullArray.length),
+		  idx: fullArray.length - indexSeq,
           tag: tag, 
           params: this.params, 
           active: active}), -10);
