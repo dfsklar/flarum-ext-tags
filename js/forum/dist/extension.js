@@ -910,10 +910,10 @@ System.register('flarum/tags/components/TagDiscussionModal', ['flarum/components
 });;
 'use strict';
 
-System.register('flarum/tags/components/TagHero', ['flarum/Component', 'flarum/helpers/icon', 'flarum/components/LoadingIndicator', 'flarum/components/SelectDropdown', 'flarum/components/Dropdown', 'flarum/components/UserRosterDropdown', 'flarum/utils/ItemList', 'flarum/tags/components/TagLinkButton', 'flarum/components/Button'], function (_export, _context) {
+System.register('flarum/tags/components/TagHero', ['flarum/Component', 'flarum/helpers/icon', 'flarum/components/LoadingIndicator', 'flarum/components/SelectDropdown', 'flarum/components/Dropdown', 'flarum/components/UserRosterDropdown', 'flarum/utils/ItemList', 'flarum/tags/components/TagLinkButton', 'flarum/components/Button', 'flarum/components/LinkButton'], function (_export, _context) {
 	"use strict";
 
-	var Component, icon, LoadingIndicator, SelectDropdown, Dropdown, UserRosterDropdown, ItemList, TagLinkButton, Button, TagHero;
+	var Component, icon, LoadingIndicator, SelectDropdown, Dropdown, UserRosterDropdown, ItemList, TagLinkButton, Button, LinkButton, TagHero;
 	return {
 		setters: [function (_flarumComponent) {
 			Component = _flarumComponent.default;
@@ -933,6 +933,8 @@ System.register('flarum/tags/components/TagHero', ['flarum/Component', 'flarum/h
 			TagLinkButton = _flarumTagsComponentsTagLinkButton.default;
 		}, function (_flarumComponentsButton) {
 			Button = _flarumComponentsButton.default;
+		}, function (_flarumComponentsLinkButton) {
+			LinkButton = _flarumComponentsLinkButton.default;
 		}],
 		execute: function () {
 			TagHero = function (_Component) {
@@ -1090,15 +1092,22 @@ System.register('flarum/tags/components/TagHero', ['flarum/Component', 'flarum/h
 
 						// EDIT (only for the leader)
 						if (this.yesIAmTheLeaderOfThisGroup) {
-							items.add('edit', Button.component({
-								children: ['Edit']
-							}));
+							items.add('edit', m("a", { href: app.siteSpecifics.fetchFormedURL() + "/dashboard?tab=customContent" }, 'Edit'));
 						}
+						/*		
+      		m('a'LinkButton.component({
+      			children: [ 'Edit' ],
+      			href: ,
+      			target: '_top'
+      		}));
+      	}
+      */
 
 						// LEAVE GROUP (only if currently enrolled)
 						if (this.isMemberOfGroup) {
 							items.add('leave', Button.component({
-								children: ['Leave group']
+								children: ['Leave group'],
+								onclick: this.unjoin.bind(this)
 							}));
 						}
 

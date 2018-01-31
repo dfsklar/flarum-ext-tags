@@ -7,6 +7,7 @@ import UserRosterDropdown from 'flarum/components/UserRosterDropdown';
 import ItemList from 'flarum/utils/ItemList';
 import TagLinkButton from 'flarum/tags/components/TagLinkButton';
 import Button from 'flarum/components/Button';
+import LinkButton from 'flarum/components/LinkButton';
 
 
 
@@ -172,15 +173,23 @@ export default class TagHero extends Component {
 
 	// EDIT (only for the leader)
 	if (this.yesIAmTheLeaderOfThisGroup) {
-		items.add('edit', Button.component({
-			children: [ 'Edit' ]
+		items.add('edit', 
+			m("a", {href: app.siteSpecifics.fetchFormedURL()+"/dashboard?tab=customContent"}, 'Edit'));
+	}
+/*		
+		m('a'LinkButton.component({
+			children: [ 'Edit' ],
+			href: ,
+			target: '_top'
 		}));
 	}
+*/
 
 	// LEAVE GROUP (only if currently enrolled)
 	if (this.isMemberOfGroup) {
 		items.add('leave', Button.component({
-			children: [ 'Leave group' ]
+			children: [ 'Leave group' ],
+			onclick: this.unjoin.bind(this)
 		}));
 	}
 
