@@ -910,10 +910,10 @@ System.register('flarum/tags/components/TagDiscussionModal', ['flarum/components
 });;
 'use strict';
 
-System.register('flarum/tags/components/TagHero', ['flarum/Component', 'flarum/helpers/icon', 'flarum/components/LoadingIndicator', 'flarum/components/SelectDropdown', 'flarum/components/UserRosterDropdown', 'flarum/utils/ItemList', 'flarum/tags/components/TagLinkButton'], function (_export, _context) {
+System.register('flarum/tags/components/TagHero', ['flarum/Component', 'flarum/helpers/icon', 'flarum/components/LoadingIndicator', 'flarum/components/SelectDropdown', 'flarum/components/Dropdown', 'flarum/components/UserRosterDropdown', 'flarum/utils/ItemList', 'flarum/tags/components/TagLinkButton', 'flarum/components/Button'], function (_export, _context) {
 	"use strict";
 
-	var Component, icon, LoadingIndicator, SelectDropdown, UserRosterDropdown, ItemList, TagLinkButton, TagHero;
+	var Component, icon, LoadingIndicator, SelectDropdown, Dropdown, UserRosterDropdown, ItemList, TagLinkButton, Button, TagHero;
 	return {
 		setters: [function (_flarumComponent) {
 			Component = _flarumComponent.default;
@@ -923,12 +923,16 @@ System.register('flarum/tags/components/TagHero', ['flarum/Component', 'flarum/h
 			LoadingIndicator = _flarumComponentsLoadingIndicator.default;
 		}, function (_flarumComponentsSelectDropdown) {
 			SelectDropdown = _flarumComponentsSelectDropdown.default;
+		}, function (_flarumComponentsDropdown) {
+			Dropdown = _flarumComponentsDropdown.default;
 		}, function (_flarumComponentsUserRosterDropdown) {
 			UserRosterDropdown = _flarumComponentsUserRosterDropdown.default;
 		}, function (_flarumUtilsItemList) {
 			ItemList = _flarumUtilsItemList.default;
 		}, function (_flarumTagsComponentsTagLinkButton) {
 			TagLinkButton = _flarumTagsComponentsTagLinkButton.default;
+		}, function (_flarumComponentsButton) {
+			Button = _flarumComponentsButton.default;
 		}],
 		execute: function () {
 			TagHero = function (_Component) {
@@ -1080,6 +1084,18 @@ System.register('flarum/tags/components/TagHero', ['flarum/Component', 'flarum/h
 						return items;
 					}
 				}, {
+					key: 'controlsForActionDropdown',
+					value: function controlsForActionDropdown() {
+						var items = new ItemList();
+
+						items.add('settings', Button.component({
+							icon: 'cog',
+							children: ['menuitem1']
+						}));
+
+						return items;
+					}
+				}, {
 					key: 'view',
 					value: function view() {
 
@@ -1094,6 +1110,8 @@ System.register('flarum/tags/components/TagHero', ['flarum/Component', 'flarum/h
       }
       <div class="group-leader-name">{leader ? ("This group's leader is: " + leader.data.attributes.displayName) : ''}</div>
       */
+
+						var controlsForActionDropdown = this.controlsForActionDropdown().toArray();
 
 						return m(
 							'div',
@@ -1163,6 +1181,19 @@ System.register('flarum/tags/components/TagHero', ['flarum/Component', 'flarum/h
 										buttonClassName: 'Button',
 										className: 'App-titleControl'
 									})
+								),
+								m(
+									'div',
+									{ 'class': 'more-options' },
+									m(
+										Dropdown,
+										{
+											className: 'ExtensionListItem-controls',
+											buttonClassName: 'Button Button--icon Button--flat',
+											menuClassName: 'Dropdown-menu--right',
+											icon: 'ellipsis-h' },
+										controlsForActionDropdown
+									)
 								),
 								m(
 									'div',

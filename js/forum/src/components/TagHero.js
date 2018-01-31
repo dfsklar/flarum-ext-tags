@@ -2,9 +2,11 @@ import Component from 'flarum/Component';
 import icon from 'flarum/helpers/icon';
 import LoadingIndicator from 'flarum/components/LoadingIndicator';
 import SelectDropdown from 'flarum/components/SelectDropdown';
+import Dropdown from 'flarum/components/Dropdown';
 import UserRosterDropdown from 'flarum/components/UserRosterDropdown';
 import ItemList from 'flarum/utils/ItemList';
 import TagLinkButton from 'flarum/tags/components/TagLinkButton';
+import Button from 'flarum/components/Button';
 
 
 
@@ -114,6 +116,8 @@ export default class TagHero extends Component {
 
 
 
+
+
   list_of_sessions() {
 	const tags = app.store.all('tags');
 	const currentTag = this.tag;
@@ -160,6 +164,22 @@ export default class TagHero extends Component {
 	return items;
   }
 
+
+
+
+  controlsForActionDropdown() {
+	const items = new ItemList();
+
+	items.add('settings', Button.component({
+        icon: 'cog',
+        children: [ 'menuitem1' ]
+      }));
+
+	return items;
+  }
+
+
+
 	
   view() {		
 
@@ -176,6 +196,8 @@ export default class TagHero extends Component {
 
 		<div class="group-leader-name">{leader ? ("This group's leader is: " + leader.data.attributes.displayName) : ''}</div>
 */
+
+	const controlsForActionDropdown = this.controlsForActionDropdown().toArray();
 
     return (
 		<div class="holder-marketing-block container" style={{"background-color": this.parent.data.attributes.color}}>
@@ -198,10 +220,18 @@ export default class TagHero extends Component {
 
 		  <div class="marketing-block-footer">
 					{this.yesIAmTheLeaderOfThisGroup ? (
-						<td class="edit-launcher">
-							<a href={app.siteSpecifics.fetchFormedURL()+"/dashboard?tab=customContent"}>
-							   Edit Group/Session</a></td>
-						  ) : ''
+						<div class="more-options">
+						{
+							<Dropdown
+								className="ExtensionListItem-controls"
+								buttonClassName="Button Button--icon Button--flat"
+								menuClassName="Dropdown-menu--right"
+								label="More"
+								icon="ellipsis-h">
+									{controlsForActionDropdown}
+							</Dropdown>
+						}
+						</div> ) : ''
 					}
 					<div class="session-chooser">
 					{
