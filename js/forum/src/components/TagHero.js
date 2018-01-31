@@ -176,17 +176,9 @@ export default class TagHero extends Component {
 		items.add('edit', 
 			m("a", {href: app.siteSpecifics.fetchFormedURL()+"/dashboard?tab=customContent"}, 'Edit'));
 	}
-/*		
-		m('a'LinkButton.component({
-			children: [ 'Edit' ],
-			href: ,
-			target: '_top'
-		}));
-	}
-*/
 
-	// LEAVE GROUP (only if currently enrolled)
-	if (this.isMemberOfGroup) {
+	// LEAVE GROUP (only if currently enrolled -- leaders are not allowed to leave)
+	if (this.isMemberOfGroup && (!this.yesIAmTheLeaderOfThisGroup)) {
 		items.add('leave', Button.component({
 			children: [ 'Leave group' ],
 			onclick: this.unjoin.bind(this)
