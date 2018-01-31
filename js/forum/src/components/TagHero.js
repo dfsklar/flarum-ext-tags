@@ -170,10 +170,19 @@ export default class TagHero extends Component {
   controlsForActionDropdown() {
 	const items = new ItemList();
 
-	items.add('settings', Button.component({
-        icon: 'cog',
-        children: [ 'menuitem1' ]
-      }));
+	// EDIT (only for the leader)
+	if (this.yesIAmTheLeaderOfThisGroup) {
+		items.add('edit', Button.component({
+			children: [ 'Edit' ]
+		}));
+	}
+
+	// LEAVE GROUP (only if currently enrolled)
+	if (this.isMemberOfGroup) {
+		items.add('leave', Button.component({
+			children: [ 'Leave group' ]
+		}));
+	}
 
 	return items;
   }
@@ -219,7 +228,7 @@ export default class TagHero extends Component {
 	      </tbody></table>
 
 		  <div class="marketing-block-footer">
-					{this.yesIAmTheLeaderOfThisGroup ? (
+					{controlsForActionDropdown.length ? (
 						<div class="more-options">
 						{
 							<Dropdown
@@ -249,16 +258,11 @@ export default class TagHero extends Component {
 							 }) : ' '}
 					</div>
 
-						{(!(this.isMemberOfGroup) && !(this.loading)) ? (
-							<div class="join-or-leave" onclick={this.join.bind(this)}>JOIN</div>
-								) : ''}
-								{(!(this.isMemberOfGroup) && (this.loading)) ? 
-									LoadingIndicator.component({className: 'upper-left-corner-absolute'}) : ''}
-						{((this.isMemberOfGroup) && !(this.loading)) ? (
-							<div class="join-or-leave" onclick={this.unjoin.bind(this)}>LEAVE</div>
-								) : ''}
-								{((this.isMemberOfGroup) && (this.loading)) ? 
-									LoadingIndicator.component({className: 'upper-left-corner-absolute'}) : ''}				
+					{(!(this.isMemberOfGroup) && !(this.loading)) ? (
+						<div class="join-or-leave" onclick={this.join.bind(this)}>JOIN</div>
+							) : ''}
+							{(!(this.isMemberOfGroup) && (this.loading)) ? 
+								LoadingIndicator.component({className: 'upper-left-corner-absolute'}) : ''}			
 
 	      </div>
 

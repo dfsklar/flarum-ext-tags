@@ -1088,10 +1088,19 @@ System.register('flarum/tags/components/TagHero', ['flarum/Component', 'flarum/h
 					value: function controlsForActionDropdown() {
 						var items = new ItemList();
 
-						items.add('settings', Button.component({
-							icon: 'cog',
-							children: ['menuitem1']
-						}));
+						// EDIT (only for the leader)
+						if (this.yesIAmTheLeaderOfThisGroup) {
+							items.add('edit', Button.component({
+								children: ['Edit']
+							}));
+						}
+
+						// LEAVE GROUP (only if currently enrolled)
+						if (this.isMemberOfGroup) {
+							items.add('leave', Button.component({
+								children: ['Leave group']
+							}));
+						}
 
 						return items;
 					}
@@ -1164,13 +1173,18 @@ System.register('flarum/tags/components/TagHero', ['flarum/Component', 'flarum/h
 							m(
 								'div',
 								{ 'class': 'marketing-block-footer' },
-								this.yesIAmTheLeaderOfThisGroup ? m(
-									'td',
-									{ 'class': 'edit-launcher' },
+								controlsForActionDropdown.length ? m(
+									'div',
+									{ 'class': 'more-options' },
 									m(
-										'a',
-										{ href: app.siteSpecifics.fetchFormedURL() + "/dashboard?tab=customContent" },
-										'Edit Group/Session'
+										Dropdown,
+										{
+											className: 'ExtensionListItem-controls',
+											buttonClassName: 'Button Button--icon Button--flat',
+											menuClassName: 'Dropdown-menu--right',
+											label: 'More',
+											icon: 'ellipsis-h' },
+										controlsForActionDropdown
 									)
 								) : '',
 								m(
@@ -1184,19 +1198,6 @@ System.register('flarum/tags/components/TagHero', ['flarum/Component', 'flarum/h
 								),
 								m(
 									'div',
-									{ 'class': 'more-options' },
-									m(
-										Dropdown,
-										{
-											className: 'ExtensionListItem-controls',
-											buttonClassName: 'Button Button--icon Button--flat',
-											menuClassName: 'Dropdown-menu--right',
-											icon: 'ellipsis-h' },
-										controlsForActionDropdown
-									)
-								),
-								m(
-									'div',
 									{ 'class': 'num-of-members' },
 									this.groupMembershipRoster ? UserRosterDropdown.component({
 										userList: this.groupMembershipRoster
@@ -1207,13 +1208,7 @@ System.register('flarum/tags/components/TagHero', ['flarum/Component', 'flarum/h
 									{ 'class': 'join-or-leave', onclick: this.join.bind(this) },
 									'JOIN'
 								) : '',
-								!this.isMemberOfGroup && this.loading ? LoadingIndicator.component({ className: 'upper-left-corner-absolute' }) : '',
-								this.isMemberOfGroup && !this.loading ? m(
-									'div',
-									{ 'class': 'join-or-leave', onclick: this.unjoin.bind(this) },
-									'LEAVE'
-								) : '',
-								this.isMemberOfGroup && this.loading ? LoadingIndicator.component({ className: 'upper-left-corner-absolute' }) : ''
+								!this.isMemberOfGroup && this.loading ? LoadingIndicator.component({ className: 'upper-left-corner-absolute' }) : ''
 							)
 						);
 					}
