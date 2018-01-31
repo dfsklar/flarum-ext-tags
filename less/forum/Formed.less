@@ -29,9 +29,11 @@
 
 .marketing-block-footer {
     width: 100%;
+    text-align: right;
     background-color: rgb(240, 240, 240);
     margin-top: 13px;
     color: rgb(129, 131, 134);
+    position: relative;
     div {
         display: inline-block;
         .Dropdown-menu {
@@ -39,16 +41,18 @@
                 color: black;
             }
         }
-        padding-left: 17px;
-        padding-right: 17px;
-        padding-top: 1px;
-        padding-bottom: 1px;
+        padding-left: 0px;
+        padding-right: 0px;
+        padding-top: 4px;
+        padding-bottom: 4px;
         &.join-or-leave, &.num-of-members {
             cursor: pointer;
         }
-        &.session-chooser {
-            text-align: right;
-            border-right: none;
+        &.join-or-leave {
+            vertical-align: bottom;
+            padding-bottom: 7px;
+            padding-right: 10px;
+            padding-left: 8px;
         }
         a {
             color: rgb(129, 131, 134);

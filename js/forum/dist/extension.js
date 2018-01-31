@@ -1171,22 +1171,18 @@ System.register('flarum/tags/components/TagHero', ['flarum/Component', 'flarum/h
 										userList: this.groupMembershipRoster
 									}) : ' '
 								),
-								m(
+								!this.isMemberOfGroup && !this.loading ? m(
 									'div',
-									{ 'class': 'join-or-leave' },
-									!this.isMemberOfGroup && !this.loading ? m(
-										'div',
-										{ onclick: this.join.bind(this) },
-										'JOIN'
-									) : '',
-									!this.isMemberOfGroup && this.loading ? LoadingIndicator.component({ className: 'upper-left-corner-absolute' }) : '',
-									this.isMemberOfGroup && !this.loading ? m(
-										'div',
-										{ onclick: this.unjoin.bind(this) },
-										'LEAVE'
-									) : '',
-									this.isMemberOfGroup && this.loading ? LoadingIndicator.component({ className: 'upper-left-corner-absolute' }) : ''
-								)
+									{ 'class': 'join-or-leave', onclick: this.join.bind(this) },
+									'JOIN'
+								) : '',
+								!this.isMemberOfGroup && this.loading ? LoadingIndicator.component({ className: 'upper-left-corner-absolute' }) : '',
+								this.isMemberOfGroup && !this.loading ? m(
+									'div',
+									{ 'class': 'join-or-leave', onclick: this.unjoin.bind(this) },
+									'LEAVE'
+								) : '',
+								this.isMemberOfGroup && this.loading ? LoadingIndicator.component({ className: 'upper-left-corner-absolute' }) : ''
 							)
 						);
 					}

@@ -218,18 +218,18 @@ export default class TagHero extends Component {
 								 userList: this.groupMembershipRoster
 							 }) : ' '}
 					</div>
-					<div class="join-or-leave">
+
 						{(!(this.isMemberOfGroup) && !(this.loading)) ? (
-							<div onclick={this.join.bind(this)}>JOIN</div>
+							<div class="join-or-leave" onclick={this.join.bind(this)}>JOIN</div>
 								) : ''}
 								{(!(this.isMemberOfGroup) && (this.loading)) ? 
 									LoadingIndicator.component({className: 'upper-left-corner-absolute'}) : ''}
 						{((this.isMemberOfGroup) && !(this.loading)) ? (
-							<div onclick={this.unjoin.bind(this)}>LEAVE</div>
+							<div class="join-or-leave" onclick={this.unjoin.bind(this)}>LEAVE</div>
 								) : ''}
 								{((this.isMemberOfGroup) && (this.loading)) ? 
 									LoadingIndicator.component({className: 'upper-left-corner-absolute'}) : ''}				
-					</div>
+
 	      </div>
 
 		</div>
