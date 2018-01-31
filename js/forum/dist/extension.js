@@ -1144,58 +1144,48 @@ System.register('flarum/tags/components/TagHero', ['flarum/Component', 'flarum/h
 								)
 							),
 							m(
-								'table',
+								'div',
 								{ 'class': 'marketing-block-footer' },
-								m(
-									'tbody',
-									null,
-									m('tr', { 'class': 'spacer' }),
+								this.yesIAmTheLeaderOfThisGroup ? m(
+									'td',
+									{ 'class': 'edit-launcher' },
 									m(
-										'tr',
-										null,
-										m(
-											'td',
-											{ 'class': 'join-or-leave' },
-											!this.isMemberOfGroup && !this.loading ? m(
-												'div',
-												{ onclick: this.join.bind(this) },
-												'Join Group'
-											) : '',
-											!this.isMemberOfGroup && this.loading ? LoadingIndicator.component({ className: 'upper-left-corner-absolute' }) : '',
-											this.isMemberOfGroup && !this.loading ? m(
-												'div',
-												{ onclick: this.unjoin.bind(this) },
-												'Leave Group'
-											) : '',
-											this.isMemberOfGroup && this.loading ? LoadingIndicator.component({ className: 'upper-left-corner-absolute' }) : ''
-										),
-										m(
-											'td',
-											{ 'class': 'num-of-members' },
-											this.groupMembershipRoster ? UserRosterDropdown.component({
-												userList: this.groupMembershipRoster
-											}) : ' '
-										),
-										this.yesIAmTheLeaderOfThisGroup ? m(
-											'td',
-											{ 'class': 'edit-launcher' },
-											m(
-												'a',
-												{ href: app.siteSpecifics.fetchFormedURL() + "/dashboard?tab=customContent" },
-												'Edit Group/Session'
-											)
-										) : '',
-										m(
-											'td',
-											{ 'class': 'session-chooser' },
-											SelectDropdown.component({
-												children: this.list_of_sessions().toArray(),
-												buttonClassName: 'Button',
-												className: 'App-titleControl'
-											})
-										)
-									),
-									m('tr', { 'class': 'spacer' })
+										'a',
+										{ href: app.siteSpecifics.fetchFormedURL() + "/dashboard?tab=customContent" },
+										'Edit Group/Session'
+									)
+								) : '',
+								m(
+									'div',
+									{ 'class': 'session-chooser' },
+									SelectDropdown.component({
+										children: this.list_of_sessions().toArray(),
+										buttonClassName: 'Button',
+										className: 'App-titleControl'
+									})
+								),
+								m(
+									'div',
+									{ 'class': 'num-of-members' },
+									this.groupMembershipRoster ? UserRosterDropdown.component({
+										userList: this.groupMembershipRoster
+									}) : ' '
+								),
+								m(
+									'div',
+									{ 'class': 'join-or-leave' },
+									!this.isMemberOfGroup && !this.loading ? m(
+										'div',
+										{ onclick: this.join.bind(this) },
+										'JOIN'
+									) : '',
+									!this.isMemberOfGroup && this.loading ? LoadingIndicator.component({ className: 'upper-left-corner-absolute' }) : '',
+									this.isMemberOfGroup && !this.loading ? m(
+										'div',
+										{ onclick: this.unjoin.bind(this) },
+										'LEAVE'
+									) : '',
+									this.isMemberOfGroup && this.loading ? LoadingIndicator.component({ className: 'upper-left-corner-absolute' }) : ''
 								)
 							)
 						);

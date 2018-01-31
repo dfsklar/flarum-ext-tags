@@ -196,35 +196,14 @@ export default class TagHero extends Component {
 	      </tr>
 	      </tbody></table>
 
-		  <table class="marketing-block-footer">
-		    <tbody>
-				<tr class="spacer"></tr>
-				<tr>
-					<td class="join-or-leave">
-						{(!(this.isMemberOfGroup) && !(this.loading)) ? (
-							<div onclick={this.join.bind(this)}>Join Group</div>
-								) : ''}
-								{(!(this.isMemberOfGroup) && (this.loading)) ? 
-									LoadingIndicator.component({className: 'upper-left-corner-absolute'}) : ''}
-						{((this.isMemberOfGroup) && !(this.loading)) ? (
-							<div onclick={this.unjoin.bind(this)}>Leave Group</div>
-								) : ''}
-								{((this.isMemberOfGroup) && (this.loading)) ? 
-									LoadingIndicator.component({className: 'upper-left-corner-absolute'}) : ''}				
-					</td>
-					<td class="num-of-members">
-						{this.groupMembershipRoster ? 
-						   UserRosterDropdown.component({
-								 userList: this.groupMembershipRoster
-							 }) : ' '}
-					</td>
+		  <div class="marketing-block-footer">
 					{this.yesIAmTheLeaderOfThisGroup ? (
 						<td class="edit-launcher">
 							<a href={app.siteSpecifics.fetchFormedURL()+"/dashboard?tab=customContent"}>
 							   Edit Group/Session</a></td>
 						  ) : ''
 					}
-					<td class="session-chooser">
+					<div class="session-chooser">
 					{
 						SelectDropdown.component({
 							children: this.list_of_sessions().toArray(),
@@ -232,11 +211,26 @@ export default class TagHero extends Component {
 							className: 'App-titleControl'
 						})
 					}
-					</td>
-				</tr>
-				<tr class="spacer"></tr>
-			</tbody>
-	      </table>
+					</div>
+					<div class="num-of-members">
+						{this.groupMembershipRoster ? 
+						   UserRosterDropdown.component({
+								 userList: this.groupMembershipRoster
+							 }) : ' '}
+					</div>
+					<div class="join-or-leave">
+						{(!(this.isMemberOfGroup) && !(this.loading)) ? (
+							<div onclick={this.join.bind(this)}>JOIN</div>
+								) : ''}
+								{(!(this.isMemberOfGroup) && (this.loading)) ? 
+									LoadingIndicator.component({className: 'upper-left-corner-absolute'}) : ''}
+						{((this.isMemberOfGroup) && !(this.loading)) ? (
+							<div onclick={this.unjoin.bind(this)}>LEAVE</div>
+								) : ''}
+								{((this.isMemberOfGroup) && (this.loading)) ? 
+									LoadingIndicator.component({className: 'upper-left-corner-absolute'}) : ''}				
+					</div>
+	      </div>
 
 		</div>
     );
