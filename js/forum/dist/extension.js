@@ -544,7 +544,7 @@ System.register('flarum/tags/components/EditTagModal', ['flarum/components/Modal
                   ),
                   m('input', { className: 'FormControl', placeholder: app.translator.trans('flarum-tags.admin.edit_tag.name_placeholder'), value: this.name(), oninput: function oninput(e) {
                       _this2.name(e.target.value);
-                      _this2.slug(slug(e.target.value));
+                      // DFSKLARD: This was damaging the slug!  I want the slug to act as a persistent ID.
                     } })
                 ),
                 m(
@@ -629,6 +629,7 @@ System.register('flarum/tags/components/EditTagModal', ['flarum/components/Modal
 
             this.loading = true;
 
+            // DFSKLARD save tag changes
             this.tag.save(this.submitData()).then(function () {
               return _this3.hide();
             }, function (response) {

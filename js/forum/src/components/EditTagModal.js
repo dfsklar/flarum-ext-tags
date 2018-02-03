@@ -37,7 +37,7 @@ export default class EditTagModal extends Modal {
             <label>Short Title</label>
             <input className="FormControl" placeholder={app.translator.trans('flarum-tags.admin.edit_tag.name_placeholder')} value={this.name()} oninput={e => {
               this.name(e.target.value);
-              this.slug(slug(e.target.value));
+              // DFSKLARD: This was damaging the slug!  I want the slug to act as a persistent ID.
             }}/>
           </div>
 
@@ -99,6 +99,7 @@ export default class EditTagModal extends Modal {
 
     this.loading = true;
 
+    // DFSKLARD save tag changes
     this.tag.save(this.submitData()).then(
       () => this.hide(),
       response => {
