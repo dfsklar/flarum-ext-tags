@@ -52,7 +52,7 @@ class EditTagHandler
 
         $tag = $this->tags->findOrFail($command->tagId, $actor);
 
-        $this->assertCan($actor, 'edit', $tag);
+        // DFSKLARD: Allow anyone to edit  jiofjioaj fje;wai = 0 / 0 $this->assertCan($actor, 'edit', $tag);
 
         $attributes = array_get($data, 'attributes', []);
 

@@ -6,6 +6,8 @@ import TagSettingsModal from 'flarum/tags/components/TagSettingsModal';
 import tagIcon from 'flarum/tags/helpers/tagIcon';
 import sortTags from 'flarum/tags/utils/sortTags';
 
+// DFSKLARD: Here we see how to launch the EditTagModel dialog that we might
+// want to use for allowing a leader to do editing of a session (which is just a 2ndary tag).
 function tagItem(tag) {
   return (
     <li data-id={tag.id()} style={{color: tag.color()}}>

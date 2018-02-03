@@ -471,6 +471,201 @@ System.register('flarum/tags/components/DiscussionTaggedPost', ['flarum/componen
     }
   };
 });;
+'use strict';
+
+System.register('flarum/tags/components/EditTagModal', ['flarum/components/Modal', 'flarum/components/Button', 'flarum/utils/string', 'flarum/tags/helpers/tagLabel'], function (_export, _context) {
+  "use strict";
+
+  var Modal, Button, slug, tagLabel, EditTagModal;
+  return {
+    setters: [function (_flarumComponentsModal) {
+      Modal = _flarumComponentsModal.default;
+    }, function (_flarumComponentsButton) {
+      Button = _flarumComponentsButton.default;
+    }, function (_flarumUtilsString) {
+      slug = _flarumUtilsString.slug;
+    }, function (_flarumTagsHelpersTagLabel) {
+      tagLabel = _flarumTagsHelpersTagLabel.default;
+    }],
+    execute: function () {
+      EditTagModal = function (_Modal) {
+        babelHelpers.inherits(EditTagModal, _Modal);
+
+        function EditTagModal() {
+          babelHelpers.classCallCheck(this, EditTagModal);
+          return babelHelpers.possibleConstructorReturn(this, (EditTagModal.__proto__ || Object.getPrototypeOf(EditTagModal)).apply(this, arguments));
+        }
+
+        babelHelpers.createClass(EditTagModal, [{
+          key: 'init',
+          value: function init() {
+            babelHelpers.get(EditTagModal.prototype.__proto__ || Object.getPrototypeOf(EditTagModal.prototype), 'init', this).call(this);
+
+            this.tag = this.props.tag || app.store.createRecord('tags');
+
+            this.name = m.prop(this.tag.name() || '');
+            this.slug = m.prop(this.tag.slug() || '');
+            this.description = m.prop(this.tag.description() || '');
+            this.color = m.prop(this.tag.color() || '');
+            this.isHidden = m.prop(this.tag.isHidden() || false);
+          }
+        }, {
+          key: 'className',
+          value: function className() {
+            return 'EditTagModal Modal--small';
+          }
+        }, {
+          key: 'title',
+          value: function title() {
+            return this.name() ? tagLabel({
+              name: this.name,
+              color: this.color
+            }) : app.translator.trans('flarum-tags.admin.edit_tag.title');
+          }
+        }, {
+          key: 'content',
+          value: function content() {
+            var _this2 = this;
+
+            return m(
+              'div',
+              { className: 'Modal-body' },
+              m(
+                'div',
+                { className: 'Form' },
+                m(
+                  'div',
+                  { className: 'Form-group' },
+                  m(
+                    'label',
+                    null,
+                    app.translator.trans('flarum-tags.admin.edit_tag.name_label')
+                  ),
+                  m('input', { className: 'FormControl', placeholder: app.translator.trans('flarum-tags.admin.edit_tag.name_placeholder'), value: this.name(), oninput: function oninput(e) {
+                      _this2.name(e.target.value);
+                      _this2.slug(slug(e.target.value));
+                    } })
+                ),
+                m(
+                  'div',
+                  { className: 'Form-group' },
+                  m(
+                    'label',
+                    null,
+                    app.translator.trans('flarum-tags.admin.edit_tag.slug_label')
+                  ),
+                  m('input', { className: 'FormControl', value: this.slug(), oninput: m.withAttr('value', this.slug) })
+                ),
+                m(
+                  'div',
+                  { className: 'Form-group' },
+                  m(
+                    'label',
+                    null,
+                    app.translator.trans('flarum-tags.admin.edit_tag.description_label')
+                  ),
+                  m('textarea', { className: 'FormControl', value: this.description(), oninput: m.withAttr('value', this.description) })
+                ),
+                m(
+                  'div',
+                  { className: 'Form-group' },
+                  m(
+                    'label',
+                    null,
+                    app.translator.trans('flarum-tags.admin.edit_tag.color_label')
+                  ),
+                  m('input', { className: 'FormControl', placeholder: '#aaaaaa', value: this.color(), oninput: m.withAttr('value', this.color) })
+                ),
+                m(
+                  'div',
+                  { className: 'Form-group' },
+                  m(
+                    'div',
+                    null,
+                    m(
+                      'label',
+                      { className: 'checkbox' },
+                      m('input', { type: 'checkbox', value: '1', checked: this.isHidden(), onchange: m.withAttr('checked', this.isHidden) }),
+                      app.translator.trans('flarum-tags.admin.edit_tag.hide_label')
+                    )
+                  )
+                ),
+                m(
+                  'div',
+                  { className: 'Form-group' },
+                  Button.component({
+                    type: 'submit',
+                    className: 'Button Button--primary EditTagModal-save',
+                    loading: this.loading,
+                    children: app.translator.trans('flarum-tags.admin.edit_tag.submit_button')
+                  }),
+                  this.tag.exists ? m(
+                    'button',
+                    { type: 'button', className: 'Button EditTagModal-delete', onclick: this.delete.bind(this) },
+                    app.translator.trans('flarum-tags.admin.edit_tag.delete_tag_button')
+                  ) : ''
+                )
+              )
+            );
+          }
+        }, {
+          key: 'submitData',
+          value: function submitData() {
+            return {
+              name: this.name(),
+              slug: this.slug(),
+              description: this.description(),
+              color: this.color(),
+              isHidden: this.isHidden()
+            };
+          }
+        }, {
+          key: 'onsubmit',
+          value: function onsubmit(e) {
+            var _this3 = this;
+
+            e.preventDefault();
+
+            this.loading = true;
+
+            this.tag.save(this.submitData()).then(function () {
+              return _this3.hide();
+            }, function (response) {
+              _this3.loading = false;
+              _this3.handleErrors(response);
+            });
+          }
+        }, {
+          key: 'delete',
+          value: function _delete() {
+            var _this4 = this;
+
+            if (confirm(app.translator.trans('flarum-tags.admin.edit_tag.delete_tag_confirmation'))) {
+              var children = app.store.all('tags').filter(function (tag) {
+                return tag.parent() === _this4.tag;
+              });
+
+              this.tag.delete().then(function () {
+                children.forEach(function (tag) {
+                  return tag.pushData({
+                    attributes: { isChild: false },
+                    relationships: { parent: null }
+                  });
+                });
+                m.redraw();
+              });
+
+              this.hide();
+            }
+          }
+        }]);
+        return EditTagModal;
+      }(Modal);
+
+      _export('default', EditTagModal);
+    }
+  };
+});;
 "use strict";
 
 System.register("flarum/tags/components/GroupsListHeader", ["flarum/Component"], function (_export, _context) {
@@ -910,10 +1105,10 @@ System.register('flarum/tags/components/TagDiscussionModal', ['flarum/components
 });;
 'use strict';
 
-System.register('flarum/tags/components/TagHero', ['flarum/Component', 'flarum/helpers/icon', 'flarum/components/LoadingIndicator', 'flarum/components/SelectDropdown', 'flarum/components/Dropdown', 'flarum/components/UserRosterDropdown', 'flarum/utils/ItemList', 'flarum/tags/components/TagLinkButton', 'flarum/components/Button', 'flarum/components/LinkButton'], function (_export, _context) {
+System.register('flarum/tags/components/TagHero', ['flarum/Component', 'flarum/helpers/icon', 'flarum/components/LoadingIndicator', 'flarum/components/SelectDropdown', 'flarum/components/Dropdown', 'flarum/components/UserRosterDropdown', 'flarum/utils/ItemList', 'flarum/tags/components/TagLinkButton', 'flarum/tags/components/EditTagModal', 'flarum/components/Button', 'flarum/components/LinkButton'], function (_export, _context) {
 	"use strict";
 
-	var Component, icon, LoadingIndicator, SelectDropdown, Dropdown, UserRosterDropdown, ItemList, TagLinkButton, Button, LinkButton, TagHero;
+	var Component, icon, LoadingIndicator, SelectDropdown, Dropdown, UserRosterDropdown, ItemList, TagLinkButton, EditTagModal, Button, LinkButton, TagHero;
 	return {
 		setters: [function (_flarumComponent) {
 			Component = _flarumComponent.default;
@@ -931,6 +1126,8 @@ System.register('flarum/tags/components/TagHero', ['flarum/Component', 'flarum/h
 			ItemList = _flarumUtilsItemList.default;
 		}, function (_flarumTagsComponentsTagLinkButton) {
 			TagLinkButton = _flarumTagsComponentsTagLinkButton.default;
+		}, function (_flarumTagsComponentsEditTagModal) {
+			EditTagModal = _flarumTagsComponentsEditTagModal.default;
 		}, function (_flarumComponentsButton) {
 			Button = _flarumComponentsButton.default;
 		}, function (_flarumComponentsLinkButton) {
@@ -1086,13 +1283,28 @@ System.register('flarum/tags/components/TagHero', ['flarum/Component', 'flarum/h
 						return items;
 					}
 				}, {
+					key: 'launchTagEditor',
+					value: function launchTagEditor() {
+						app.modal.show(new EditTagModal({ tag: this.tag }));
+					}
+				}, {
 					key: 'controlsForActionDropdown',
 					value: function controlsForActionDropdown() {
 						var items = new ItemList();
 
 						// EDIT (only for the leader)
+						// Incarnation #1:  a link back to formed.org:
+						/*
+      if (this.yesIAmTheLeaderOfThisGroup) {
+      	items.add('edit', 
+      		m("a", {href: app.siteSpecifics.fetchFormedURL()+"/dashboard?tab=customContent"}, 'Edit'));
+      }*/
+						// Incarnation #2: opening up the "edit-tag modal" dialog
 						if (this.yesIAmTheLeaderOfThisGroup) {
-							items.add('edit', m("a", { href: app.siteSpecifics.fetchFormedURL() + "/dashboard?tab=customContent" }, 'Edit'));
+							items.add('edit', Button.component({
+								children: ['Edit'],
+								onclick: this.launchTagEditor.bind(this)
+							}));
 						}
 
 						// LEAVE GROUP (only if currently enrolled -- leaders are not allowed to leave)

@@ -6,6 +6,7 @@ import Dropdown from 'flarum/components/Dropdown';
 import UserRosterDropdown from 'flarum/components/UserRosterDropdown';
 import ItemList from 'flarum/utils/ItemList';
 import TagLinkButton from 'flarum/tags/components/TagLinkButton';
+import EditTagModal from 'flarum/tags/components/EditTagModal';
 import Button from 'flarum/components/Button';
 import LinkButton from 'flarum/components/LinkButton';
 
@@ -166,16 +167,29 @@ export default class TagHero extends Component {
   }
 
 
+  launchTagEditor() {
+	app.modal.show(new EditTagModal({tag: this.tag}));
+  }
 
 
   controlsForActionDropdown() {
 	const items = new ItemList();
 
 	// EDIT (only for the leader)
+	// Incarnation #1:  a link back to formed.org:
+	/*
 	if (this.yesIAmTheLeaderOfThisGroup) {
 		items.add('edit', 
 			m("a", {href: app.siteSpecifics.fetchFormedURL()+"/dashboard?tab=customContent"}, 'Edit'));
+	}*/
+	// Incarnation #2: opening up the "edit-tag modal" dialog
+	if (this.yesIAmTheLeaderOfThisGroup) {
+		items.add('edit', Button.component({
+			children: [ 'Edit' ],
+			onclick: this.launchTagEditor.bind(this)
+		}));
 	}
+
 
 	// LEAVE GROUP (only if currently enrolled -- leaders are not allowed to leave)
 	if (this.isMemberOfGroup && (!this.yesIAmTheLeaderOfThisGroup)) {
