@@ -52,7 +52,10 @@ class EditTagHandler
 
         $tag = $this->tags->findOrFail($command->tagId, $actor);
 
-        // DFSKLARD: Allow anyone to edit  jiofjioaj fje;wai = 0 / 0 $this->assertCan($actor, 'edit', $tag);
+        // DFSKLARD: Allow anyone to edit.
+        // This is not secure, as anyone who can get to the API endpoint with some sort of
+        // authentication (not necessarily admin) will be allowed to trash this.
+        //   *************>>>> $this->assertCan($actor, 'edit', $tag);
 
         $attributes = array_get($data, 'attributes', []);
 

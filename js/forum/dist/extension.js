@@ -517,10 +517,11 @@ System.register('flarum/tags/components/EditTagModal', ['flarum/components/Modal
         }, {
           key: 'title',
           value: function title() {
-            return this.name() ? tagLabel({
-              name: this.name,
-              color: this.color
-            }) : app.translator.trans('flarum-tags.admin.edit_tag.title');
+            return m(
+              'b',
+              null,
+              'Edit Session Title/Description'
+            );
           }
         }, {
           key: 'content',
@@ -539,7 +540,7 @@ System.register('flarum/tags/components/EditTagModal', ['flarum/components/Modal
                   m(
                     'label',
                     null,
-                    app.translator.trans('flarum-tags.admin.edit_tag.name_label')
+                    'Short Title'
                   ),
                   m('input', { className: 'FormControl', placeholder: app.translator.trans('flarum-tags.admin.edit_tag.name_placeholder'), value: this.name(), oninput: function oninput(e) {
                       _this2.name(e.target.value);
@@ -548,7 +549,7 @@ System.register('flarum/tags/components/EditTagModal', ['flarum/components/Modal
                 ),
                 m(
                   'div',
-                  { className: 'Form-group' },
+                  { className: 'Form-group hidden' },
                   m(
                     'label',
                     null,
@@ -562,13 +563,13 @@ System.register('flarum/tags/components/EditTagModal', ['flarum/components/Modal
                   m(
                     'label',
                     null,
-                    app.translator.trans('flarum-tags.admin.edit_tag.description_label')
+                    'Description'
                   ),
                   m('textarea', { className: 'FormControl', value: this.description(), oninput: m.withAttr('value', this.description) })
                 ),
                 m(
                   'div',
-                  { className: 'Form-group' },
+                  { className: 'hidden' },
                   m(
                     'label',
                     null,
@@ -578,7 +579,7 @@ System.register('flarum/tags/components/EditTagModal', ['flarum/components/Modal
                 ),
                 m(
                   'div',
-                  { className: 'Form-group' },
+                  { className: 'hidden' },
                   m(
                     'div',
                     null,
@@ -597,9 +598,9 @@ System.register('flarum/tags/components/EditTagModal', ['flarum/components/Modal
                     type: 'submit',
                     className: 'Button Button--primary EditTagModal-save',
                     loading: this.loading,
-                    children: app.translator.trans('flarum-tags.admin.edit_tag.submit_button')
+                    children: ['Submit']
                   }),
-                  this.tag.exists ? m(
+                  false && this.tag.exists ? m(
                     'button',
                     { type: 'button', className: 'Button EditTagModal-delete', onclick: this.delete.bind(this) },
                     app.translator.trans('flarum-tags.admin.edit_tag.delete_tag_button')

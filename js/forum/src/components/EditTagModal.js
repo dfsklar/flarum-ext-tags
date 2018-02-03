@@ -26,12 +26,7 @@ export default class EditTagModal extends Modal {
   }
 
   title() {
-    return this.name()
-      ? tagLabel({
-        name: this.name,
-        color: this.color
-      })
-      : app.translator.trans('flarum-tags.admin.edit_tag.title');
+    return ( <b>Edit Session Title/Description</b> );
   }
 
   content() {
@@ -39,29 +34,29 @@ export default class EditTagModal extends Modal {
       <div className="Modal-body">
         <div className="Form">
           <div className="Form-group">
-            <label>{app.translator.trans('flarum-tags.admin.edit_tag.name_label')}</label>
+            <label>Short Title</label>
             <input className="FormControl" placeholder={app.translator.trans('flarum-tags.admin.edit_tag.name_placeholder')} value={this.name()} oninput={e => {
               this.name(e.target.value);
               this.slug(slug(e.target.value));
             }}/>
           </div>
 
-          <div className="Form-group">
+          <div className="Form-group hidden">
             <label>{app.translator.trans('flarum-tags.admin.edit_tag.slug_label')}</label>
             <input className="FormControl" value={this.slug()} oninput={m.withAttr('value', this.slug)}/>
           </div>
 
           <div className="Form-group">
-            <label>{app.translator.trans('flarum-tags.admin.edit_tag.description_label')}</label>
+            <label>Description</label>
             <textarea className="FormControl" value={this.description()} oninput={m.withAttr('value', this.description)}/>
           </div>
 
-          <div className="Form-group">
+          <div className="hidden">
             <label>{app.translator.trans('flarum-tags.admin.edit_tag.color_label')}</label>
             <input className="FormControl" placeholder="#aaaaaa" value={this.color()} oninput={m.withAttr('value', this.color)}/>
           </div>
 
-          <div className="Form-group">
+          <div className="hidden">
             <div>
               <label className="checkbox">
                 <input type="checkbox" value="1" checked={this.isHidden()} onchange={m.withAttr('checked', this.isHidden)}/>
@@ -75,9 +70,10 @@ export default class EditTagModal extends Modal {
               type: 'submit',
               className: 'Button Button--primary EditTagModal-save',
               loading: this.loading,
-              children: app.translator.trans('flarum-tags.admin.edit_tag.submit_button')
+              children: [ 'Submit' ]
             })}
-            {this.tag.exists ? (
+
+            {( false && this.tag.exists) ? (
               <button type="button" className="Button EditTagModal-delete" onclick={this.delete.bind(this)}>
                 {app.translator.trans('flarum-tags.admin.edit_tag.delete_tag_button')}
               </button>
