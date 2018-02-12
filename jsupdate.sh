@@ -7,7 +7,7 @@
 # This script compiles Flarum's core assets so that they can be used in-browser.
 # It should be run from the root directory of the core.
 
-/bin/rm -f ../../assets/forum*.js
+/bin/rm -f ../../../assets/forum*.js
 
 base=$PWD
 
