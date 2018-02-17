@@ -1360,8 +1360,9 @@ System.register('flarum/tags/components/TagHero', ['flarum/Component', 'flarum/h
 											m(
 												'div',
 												{ 'class': 'session-name' },
-												m.trust(this.tag.data.attributes.name)
+												m.trust("Session X: " + this.tag.data.attributes.name)
 											),
+											m('hr', { 'class': 'under-session-name' }),
 											m(
 												'div',
 												{ 'class': 'session-description' },

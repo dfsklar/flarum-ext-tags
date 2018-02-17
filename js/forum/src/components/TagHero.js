@@ -230,7 +230,8 @@ export default class TagHero extends Component {
 	      <tbody><tr class="marketing-block">
 	      <td class="leftside">
 					<div class="group-name">{m.trust(this.parent.data.attributes.name)}</div>
-					<div class="session-name">{m.trust(this.tag.data.attributes.name)}</div>
+					<div class="session-name">{m.trust("Session X: " + this.tag.data.attributes.name)}</div>
+					<hr class="under-session-name"/>
 					<div class="session-description">{m.trust(this.tag.data.attributes.description)}</div>
 				</td>
 	      <td class="rightside-imageholder" style={{"background-image": "url("+this.tag.data.attributes.backgroundImage+")"}}>
