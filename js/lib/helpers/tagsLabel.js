@@ -1,6 +1,7 @@
 import extract from 'flarum/utils/extract';
 import tagLabel from 'flarum/tags/helpers/tagLabel';
 import sortTags from 'flarum/tags/utils/sortTags';
+import SiteSpecifics from 'flarum/SITESPECIFICS';
 
 export default function tagsLabel(tags, attrs = {}) {
   const children = [];
@@ -13,7 +14,13 @@ export default function tagsLabel(tags, attrs = {}) {
   // I am using this hook to place an anchor tag into the
   // .nav-up scaffolding.
 
-  if (tags) {
+
+  if ($('.marketing-block').length > 0) {
+    const destURL = app.siteSpecifics.fetchFormedURL() + "/home?linkId=custom-content";
+    $('.nav-up').empty().append(
+            ('<a href="' + destURL + '" class=returntoformed>&lt; Back to Community</a>'));
+  } 
+  else if (tags) {
     sortTags(tags).forEach(tag => {
       if (tag || tags.length === 1) {
         // DFSKLARD: We only want emission for the primary tag (repr the group as a whole)

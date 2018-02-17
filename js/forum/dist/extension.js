@@ -1658,10 +1658,10 @@ System.register('flarum/tags/helpers/tagLabel', ['flarum/utils/extract'], functi
 });;
 'use strict';
 
-System.register('flarum/tags/helpers/tagsLabel', ['flarum/utils/extract', 'flarum/tags/helpers/tagLabel', 'flarum/tags/utils/sortTags'], function (_export, _context) {
+System.register('flarum/tags/helpers/tagsLabel', ['flarum/utils/extract', 'flarum/tags/helpers/tagLabel', 'flarum/tags/utils/sortTags', 'flarum/SITESPECIFICS'], function (_export, _context) {
   "use strict";
 
-  var extract, tagLabel, sortTags;
+  var extract, tagLabel, sortTags, SiteSpecifics;
   function tagsLabel(tags) {
     var attrs = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
 
@@ -1675,7 +1675,11 @@ System.register('flarum/tags/helpers/tagsLabel', ['flarum/utils/extract', 'flaru
     // I am using this hook to place an anchor tag into the
     // .nav-up scaffolding.
 
-    if (tags) {
+
+    if ($('.marketing-block').length > 0) {
+      var destURL = app.siteSpecifics.fetchFormedURL() + "/home?linkId=custom-content";
+      $('.nav-up').empty().append('<a href="' + destURL + '" class=returntoformed>&lt; Back to Community</a>');
+    } else if (tags) {
       sortTags(tags).forEach(function (tag) {
         if (tag || tags.length === 1) {
           // DFSKLARD: We only want emission for the primary tag (repr the group as a whole)
@@ -1702,6 +1706,8 @@ System.register('flarum/tags/helpers/tagsLabel', ['flarum/utils/extract', 'flaru
       tagLabel = _flarumTagsHelpersTagLabel.default;
     }, function (_flarumTagsUtilsSortTags) {
       sortTags = _flarumTagsUtilsSortTags.default;
+    }, function (_flarumSITESPECIFICS) {
+      SiteSpecifics = _flarumSITESPECIFICS.default;
     }],
     execute: function () {}
   };
