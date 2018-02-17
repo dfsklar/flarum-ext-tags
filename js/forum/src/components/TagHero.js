@@ -42,6 +42,8 @@ export default class TagHero extends Component {
 		this.tag = this.props.tag;
 		this.params = this.props.params;  // IndexPage's stickyParams
 
+		this.indexPageOwner = this.props.indexPageOwner;
+
 		this.color = this.tag.color();
 		this.parent = app.store.getById('tags', this.tag.data.relationships.parent.data.id);
 
@@ -65,6 +67,7 @@ export default class TagHero extends Component {
 		.then(() => {
 			this.isMemberOfGroup = true;
 			this.loading = false;
+			this.indexPageOwner.assertMembership(true);
 			console.log("good");
 			m.redraw();
 		})
@@ -100,6 +103,7 @@ export default class TagHero extends Component {
 		.then(() => {
 			this.isMemberOfGroup = false;
 			this.loading = false;
+			this.indexPageOwner.assertMembership(false);
 			m.redraw();
 		})
 		.catch(() => {
@@ -230,7 +234,7 @@ export default class TagHero extends Component {
 	      <tbody><tr class="marketing-block">
 	      <td class="leftside">
 					<div class="group-name">{m.trust(this.parent.data.attributes.name)}</div>
-					<div class="session-name">{m.trust("Session X: " + this.tag.data.attributes.name)}</div>
+					<div class="session-name">{m.trust("Session " + String(this.tag.data.attributes.position+1) + ": " + this.tag.data.attributes.name)}</div>
 					<hr class="under-session-name"/>
 					<div class="session-description">{m.trust(this.tag.data.attributes.description)}</div>
 				</td>

@@ -32,6 +32,7 @@ export default function() {
 
     if (tag) return TagHero.component({
       tag: tag,
+      indexPageOwner: this,
       params: this.stickyParams() 
     });
 

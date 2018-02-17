@@ -168,6 +168,7 @@ System.register('flarum/tags/addTagFilter', ['flarum/extend', 'flarum/components
 
       if (tag) return TagHero.component({
         tag: tag,
+        indexPageOwner: this,
         params: this.stickyParams()
       });
 
@@ -1177,6 +1178,8 @@ System.register('flarum/tags/components/TagHero', ['flarum/Component', 'flarum/h
 						this.tag = this.props.tag;
 						this.params = this.props.params; // IndexPage's stickyParams
 
+						this.indexPageOwner = this.props.indexPageOwner;
+
 						this.color = this.tag.color();
 						this.parent = app.store.getById('tags', this.tag.data.relationships.parent.data.id);
 
@@ -1200,6 +1203,7 @@ System.register('flarum/tags/components/TagHero', ['flarum/Component', 'flarum/h
 						app.session.user.save({ relationships: app.session.user.data.relationships }).then(function () {
 							_this3.isMemberOfGroup = true;
 							_this3.loading = false;
+							_this3.indexPageOwner.assertMembership(true);
 							console.log("good");
 							m.redraw();
 						}).catch(function () {
@@ -1232,6 +1236,7 @@ System.register('flarum/tags/components/TagHero', ['flarum/Component', 'flarum/h
 						app.session.user.save({ relationships: app.session.user.data.relationships }).then(function () {
 							_this4.isMemberOfGroup = false;
 							_this4.loading = false;
+							_this4.indexPageOwner.assertMembership(false);
 							m.redraw();
 						}).catch(function () {
 							_this4.loading = false;
@@ -1360,7 +1365,7 @@ System.register('flarum/tags/components/TagHero', ['flarum/Component', 'flarum/h
 											m(
 												'div',
 												{ 'class': 'session-name' },
-												m.trust("Session X: " + this.tag.data.attributes.name)
+												m.trust("Session " + String(this.tag.data.attributes.position + 1) + ": " + this.tag.data.attributes.name)
 											),
 											m('hr', { 'class': 'under-session-name' }),
 											m(
