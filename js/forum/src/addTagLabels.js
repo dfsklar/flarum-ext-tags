@@ -28,7 +28,7 @@ export default function() {
     if (tags && tags.length) {
       const color = tags[0].color();
       if (color) {
-        view.attrs.style = {backgroundColor: color};
+        view.children[0].attrs.style = {backgroundColor: color};
         view.attrs.className += ' DiscussionHero--colored';
       }
     }

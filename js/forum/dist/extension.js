@@ -256,7 +256,7 @@ System.register('flarum/tags/addTagLabels', ['flarum/extend', 'flarum/components
       if (tags && tags.length) {
         var color = tags[0].color();
         if (color) {
-          view.attrs.style = { backgroundColor: color };
+          view.children[0].attrs.style = { backgroundColor: color };
           view.attrs.className += ' DiscussionHero--colored';
         }
       }
