@@ -1670,22 +1670,27 @@ System.register('flarum/tags/helpers/tagsLabel', ['flarum/utils/extract', 'flaru
 
     attrs.className = 'TagsLabel ' + (attrs.className || '');
 
+    // DFSKLARD: I'm really abusing this "hook" for my own purposes.
+    // I have no intent to return any real element here.
+    // I am using this hook to place an anchor tag into the
+    // .nav-up scaffolding.
+
     if (tags) {
       sortTags(tags).forEach(function (tag) {
         if (tag || tags.length === 1) {
           // DFSKLARD: We only want emission for the primary tag (repr the group as a whole)
-          if (tag.data.attributes.isChild === true) children.push(tagLabel(tag, { link: link }, { textToShow: "Up to Group Home" }));
+          if (tag.data.attributes.isChild === true) {
+            var linkelem = tagLabel(tag, { link: link }, { textToShow: "Up to Group Home" });
+            // interestirng fields:
+            // linkelem.attrs.className
+            // attrs.href
+            $('.nav-up').empty().append($('<a href="' + linkelem.attrs.href + '">&lt; Back to group</a>'));
+          }
         }
       });
-    } else {
-      children.push(tagLabel());
     }
 
-    return m(
-      'span',
-      attrs,
-      children
-    );
+    return m('span', attrs);
   }
 
   _export('default', tagsLabel);
