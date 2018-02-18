@@ -4,6 +4,7 @@ import DiscussionPage from 'flarum/components/DiscussionPage';
 import DiscussionHero from 'flarum/components/DiscussionHero';
 
 import tagsLabel from 'flarum/tags/helpers/tagsLabel';
+import tagLabel from 'flarum/tags/helpers/tagLabel';
 import sortTags from 'flarum/tags/utils/sortTags';
 
 export default function() {
@@ -11,17 +12,17 @@ export default function() {
   extend(DiscussionListItem.prototype, 'infoItems', function(items) {
     const tags = this.props.discussion.tags();
 
-    if ($('.marketing-block').length > 0) {
-      const destURL = app.siteSpecifics.fetchFormedURL();
-      $('.nav-up').empty().append(
-            ('<a href="' + destURL + '" class=returntoformed>&lt; Back to Community</a>'));
-    }
-    else if (tags && tags.length) {
+    // DFSKLARD: I'm really abusing this "hook" for my own purposes.
+    // I have no intent to return any real element here.
+    // I am using this hook to place an anchor tag into the
+    // .nav-up scaffolding.
+
+    if ( tags && tags.length && ($('.marketing-block').length == 0) ) {
       sortTags(tags).forEach(tag => {
         if (tag || tags.length === 1) {
           // DFSKLARD: We only want emission for the primary tag (repr the group as a whole)
           if (tag.data.attributes.isChild === true) {
-            const linkelem = tagLabel(tag, { link: link }, {textToShow: "Up to Group Home"});
+            const linkelem = tagLabel(tag, { link: undefined }, {textToShow: "Up to Group Home"});
             // interestirng fields:
             // linkelem.attrs.className
             // attrs.href

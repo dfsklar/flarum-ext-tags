@@ -225,6 +225,10 @@ export default class TagHero extends Component {
 		<div class="group-leader-name">{leader ? ("This group's leader is: " + leader.data.attributes.displayName) : ''}</div>
 	*/
 
+	const destURL = app.siteSpecifics.fetchFormedURL();
+	$('.nav-up').empty().append(
+		('<a href="' + destURL + '" class=returntoformed>&lt; Back to Community</a>'));
+
 	const controlsForActionDropdown = this.controlsForActionDropdown().toArray();
 
     return (

@@ -229,25 +229,27 @@ System.register('flarum/tags/addTagFilter', ['flarum/extend', 'flarum/components
 });;
 'use strict';
 
-System.register('flarum/tags/addTagLabels', ['flarum/extend', 'flarum/components/DiscussionListItem', 'flarum/components/DiscussionPage', 'flarum/components/DiscussionHero', 'flarum/tags/helpers/tagsLabel', 'flarum/tags/utils/sortTags'], function (_export, _context) {
+System.register('flarum/tags/addTagLabels', ['flarum/extend', 'flarum/components/DiscussionListItem', 'flarum/components/DiscussionPage', 'flarum/components/DiscussionHero', 'flarum/tags/helpers/tagsLabel', 'flarum/tags/helpers/tagLabel', 'flarum/tags/utils/sortTags'], function (_export, _context) {
   "use strict";
 
-  var extend, DiscussionListItem, DiscussionPage, DiscussionHero, tagsLabel, sortTags;
+  var extend, DiscussionListItem, DiscussionPage, DiscussionHero, tagsLabel, tagLabel, sortTags;
 
   _export('default', function () {
     // Add tag labels to each discussion in the discussion list.
     extend(DiscussionListItem.prototype, 'infoItems', function (items) {
       var tags = this.props.discussion.tags();
 
-      if ($('.marketing-block').length > 0) {
-        var destURL = app.siteSpecifics.fetchFormedURL();
-        $('.nav-up').empty().append('<a href="' + destURL + '" class=returntoformed>&lt; Back to Community</a>');
-      } else if (tags && tags.length) {
+      // DFSKLARD: I'm really abusing this "hook" for my own purposes.
+      // I have no intent to return any real element here.
+      // I am using this hook to place an anchor tag into the
+      // .nav-up scaffolding.
+
+      if (tags && tags.length && $('.marketing-block').length == 0) {
         sortTags(tags).forEach(function (tag) {
           if (tag || tags.length === 1) {
             // DFSKLARD: We only want emission for the primary tag (repr the group as a whole)
             if (tag.data.attributes.isChild === true) {
-              var linkelem = tagLabel(tag, { link: link }, { textToShow: "Up to Group Home" });
+              var linkelem = tagLabel(tag, { link: undefined }, { textToShow: "Up to Group Home" });
               // interestirng fields:
               // linkelem.attrs.className
               // attrs.href
@@ -298,6 +300,8 @@ System.register('flarum/tags/addTagLabels', ['flarum/extend', 'flarum/components
       DiscussionHero = _flarumComponentsDiscussionHero.default;
     }, function (_flarumTagsHelpersTagsLabel) {
       tagsLabel = _flarumTagsHelpersTagsLabel.default;
+    }, function (_flarumTagsHelpersTagLabel) {
+      tagLabel = _flarumTagsHelpersTagLabel.default;
     }, function (_flarumTagsUtilsSortTags) {
       sortTags = _flarumTagsUtilsSortTags.default;
     }],
@@ -1354,6 +1358,9 @@ System.register('flarum/tags/components/TagHero', ['flarum/Component', 'flarum/h
       <div class="group-leader-name">{leader ? ("This group's leader is: " + leader.data.attributes.displayName) : ''}</div>
       */
 
+						var destURL = app.siteSpecifics.fetchFormedURL();
+						$('.nav-up').empty().append('<a href="' + destURL + '" class=returntoformed>&lt; Back to Community</a>');
+
 						var controlsForActionDropdown = this.controlsForActionDropdown().toArray();
 
 						return m(
@@ -1675,12 +1682,6 @@ System.register('flarum/tags/helpers/tagsLabel', ['flarum/utils/extract', 'flaru
     var link = extract(attrs, 'link');
 
     attrs.className = 'TagsLabel ' + (attrs.className || '');
-
-    // DFSKLARD: I'm really abusing this "hook" for my own purposes.
-    // I have no intent to return any real element here.
-    // I am using this hook to place an anchor tag into the
-    // .nav-up scaffolding.
-
 
     return m('span', attrs);
   }

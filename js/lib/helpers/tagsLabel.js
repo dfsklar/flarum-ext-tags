@@ -9,12 +9,6 @@ export default function tagsLabel(tags, attrs = {}) {
 
   attrs.className = 'TagsLabel ' + (attrs.className || '');
 
-  // DFSKLARD: I'm really abusing this "hook" for my own purposes.
-  // I have no intent to return any real element here.
-  // I am using this hook to place an anchor tag into the
-  // .nav-up scaffolding.
-
-
 
   return <span {...attrs}></span>;
 }
