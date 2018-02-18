@@ -1669,7 +1669,7 @@ System.register('flarum/tags/helpers/tagsLabel', ['flarum/utils/extract', 'flaru
 
 
     if ($('.marketing-block').length > 0) {
-      var destURL = app.siteSpecifics.fetchFormedURL() + "/home?linkId=custom-content";
+      var destURL = app.siteSpecifics.fetchFormedURL();
       $('.nav-up').empty().append('<a href="' + destURL + '" class=returntoformed>&lt; Back to Community</a>');
     } else if (tags) {
       sortTags(tags).forEach(function (tag) {

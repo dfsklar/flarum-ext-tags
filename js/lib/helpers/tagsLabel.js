@@ -16,7 +16,7 @@ export default function tagsLabel(tags, attrs = {}) {
 
 
   if ($('.marketing-block').length > 0) {
-    const destURL = app.siteSpecifics.fetchFormedURL() + "/home?linkId=custom-content";
+    const destURL = app.siteSpecifics.fetchFormedURL();
     $('.nav-up').empty().append(
             ('<a href="' + destURL + '" class=returntoformed>&lt; Back to Community</a>'));
   } 
