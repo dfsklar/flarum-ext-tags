@@ -239,8 +239,22 @@ System.register('flarum/tags/addTagLabels', ['flarum/extend', 'flarum/components
     extend(DiscussionListItem.prototype, 'infoItems', function (items) {
       var tags = this.props.discussion.tags();
 
-      if (tags && tags.length) {
-        items.add('tags', tagsLabel(tags), 10);
+      if ($('.marketing-block').length > 0) {
+        var destURL = app.siteSpecifics.fetchFormedURL();
+        $('.nav-up').empty().append('<a href="' + destURL + '" class=returntoformed>&lt; Back to Community</a>');
+      } else if (tags && tags.length) {
+        sortTags(tags).forEach(function (tag) {
+          if (tag || tags.length === 1) {
+            // DFSKLARD: We only want emission for the primary tag (repr the group as a whole)
+            if (tag.data.attributes.isChild === true) {
+              var linkelem = tagLabel(tag, { link: link }, { textToShow: "Up to Group Home" });
+              // interestirng fields:
+              // linkelem.attrs.className
+              // attrs.href
+              $('.nav-up').empty().append($('<a href="' + linkelem.attrs.href + '">&lt; Back to group</a>'));
+            }
+          }
+        });
       }
     });
 
@@ -1667,24 +1681,6 @@ System.register('flarum/tags/helpers/tagsLabel', ['flarum/utils/extract', 'flaru
     // I am using this hook to place an anchor tag into the
     // .nav-up scaffolding.
 
-
-    if ($('.marketing-block').length > 0) {
-      var destURL = app.siteSpecifics.fetchFormedURL();
-      $('.nav-up').empty().append('<a href="' + destURL + '" class=returntoformed>&lt; Back to Community</a>');
-    } else if (tags) {
-      sortTags(tags).forEach(function (tag) {
-        if (tag || tags.length === 1) {
-          // DFSKLARD: We only want emission for the primary tag (repr the group as a whole)
-          if (tag.data.attributes.isChild === true) {
-            var linkelem = tagLabel(tag, { link: link }, { textToShow: "Up to Group Home" });
-            // interestirng fields:
-            // linkelem.attrs.className
-            // attrs.href
-            $('.nav-up').empty().append($('<a href="' + linkelem.attrs.href + '">&lt; Back to group</a>'));
-          }
-        }
-      });
-    }
 
     return m('span', attrs);
   }

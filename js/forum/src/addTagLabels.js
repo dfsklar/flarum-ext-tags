@@ -11,8 +11,26 @@ export default function() {
   extend(DiscussionListItem.prototype, 'infoItems', function(items) {
     const tags = this.props.discussion.tags();
 
-    if (tags && tags.length) {
-      items.add('tags', tagsLabel(tags), 10);
+    if ($('.marketing-block').length > 0) {
+      const destURL = app.siteSpecifics.fetchFormedURL();
+      $('.nav-up').empty().append(
+            ('<a href="' + destURL + '" class=returntoformed>&lt; Back to Community</a>'));
+    }
+    else if (tags && tags.length) {
+      sortTags(tags).forEach(tag => {
+        if (tag || tags.length === 1) {
+          // DFSKLARD: We only want emission for the primary tag (repr the group as a whole)
+          if (tag.data.attributes.isChild === true) {
+            const linkelem = tagLabel(tag, { link: link }, {textToShow: "Up to Group Home"});
+            // interestirng fields:
+            // linkelem.attrs.className
+            // attrs.href
+            $('.nav-up').empty().append(
+              $('<a href="' + linkelem.attrs.href + '">&lt; Back to group</a>')
+            );
+          }
+        }
+      });
     }
   });
 
