@@ -1346,49 +1346,41 @@ System.register('flarum/tags/components/TagHero', ['flarum/Component', 'flarum/h
 							'div',
 							{ 'class': 'holder-marketing-block container', style: { "background-color": this.parent.data.attributes.color } },
 							m(
-								'table',
+								'div',
 								{ 'class': 'marketing-block' },
 								m(
-									'tbody',
-									null,
+									'div',
+									{ 'class': 'leftside' },
 									m(
-										'tr',
-										{ 'class': 'marketing-block' },
-										m(
-											'td',
-											{ 'class': 'leftside' },
-											m(
-												'div',
-												{ 'class': 'group-name' },
-												m.trust(this.parent.data.attributes.name)
-											),
-											m(
-												'div',
-												{ 'class': 'session-name' },
-												m.trust("Session " + String(this.tag.data.attributes.position + 1) + ": " + this.tag.data.attributes.name)
-											),
-											m('hr', { 'class': 'under-session-name' }),
-											m(
-												'div',
-												{ 'class': 'session-description' },
-												m.trust(this.tag.data.attributes.description)
-											)
-										),
-										m(
-											'td',
-											{ 'class': 'rightside-imageholder', style: { "background-image": "url(" + this.tag.data.attributes.backgroundImage + ")" } },
-											m(
-												'a',
-												{ href: this.tag.data.attributes.linkDestination, target: '_fromflarumtoformed' },
-												icon('play-circle', { className: 'play-icon' })
-											)
-										),
-										m(
-											'td',
-											{ 'class': 'rightside-shim' },
-											'\xA0'
-										)
+										'div',
+										{ 'class': 'group-name' },
+										m.trust(this.parent.data.attributes.name)
+									),
+									m(
+										'div',
+										{ 'class': 'session-name' },
+										m.trust("Session " + String(this.tag.data.attributes.position + 1) + ": " + this.tag.data.attributes.name)
+									),
+									m('hr', { 'class': 'under-session-name' }),
+									m(
+										'div',
+										{ 'class': 'session-description' },
+										m.trust(this.tag.data.attributes.description)
 									)
+								),
+								m(
+									'div',
+									{ 'class': 'rightside-imageholder', style: { "background-image": "url(" + this.tag.data.attributes.backgroundImage + ")" } },
+									m(
+										'a',
+										{ href: this.tag.data.attributes.linkDestination, target: '_fromflarumtoformed' },
+										icon('play-circle', { className: 'play-icon' })
+									)
+								),
+								m(
+									'div',
+									{ 'class': 'rightside-shim' },
+									'\xA0'
 								)
 							),
 							m(

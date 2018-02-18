@@ -78,10 +78,12 @@
     }
 }
 
-table.marketing-block {
+.marketing-block {
+    display: table;
     width: 100%;
 
-        td.leftside {
+        .leftside {
+            display: table-cell;
             padding-left: 20px;
             position: relative;
             vertical-align: top;
@@ -123,11 +125,14 @@ table.marketing-block {
             }
         } 
 
-        td.rightside-shim {
+        .rightside-shim {
+            display: table-cell;
             width: 15px !important;
         }
 
-        td.rightside-imageholder  {
+        .rightside-imageholder  {
+            display: table-cell;
+            vertical-align: middle;
             padding: 10px;
             position: relative;
             width: 40%;
@@ -155,9 +160,28 @@ table.marketing-block {
         }
 }
 
+@media @phone {
+    .marketing-block {
+        .leftside, .rightside-imageholder {
+            display: block;
+            width: 100%;
+        }
+        .rightside-imageholder {
+            margin-top: 20px;
+            height: 130px;
+            i {
+                margin-top: 30px;
+            }
+        }
+        .rightside-shim {
+            display: none !important;
+        }
+    }
+}
+
 @media @desktop-up {
-  table.marketing-block {
-    td.leftside {
+  .marketing-block {
+    .leftside {
         .group-name {
             font-size: 25px;
             text-align: center;

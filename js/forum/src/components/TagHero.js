@@ -223,29 +223,27 @@ export default class TagHero extends Component {
 		}
 
 		<div class="group-leader-name">{leader ? ("This group's leader is: " + leader.data.attributes.displayName) : ''}</div>
-*/
+	*/
 
 	const controlsForActionDropdown = this.controlsForActionDropdown().toArray();
 
     return (
 		<div class="holder-marketing-block container" style={{"background-color": this.parent.data.attributes.color}}>
 
-	      <table class="marketing-block">
-	      <tbody><tr class="marketing-block">
-	      <td class="leftside">
+	      <div class="marketing-block">
+	     	 <div class="leftside">
 					<div class="group-name">{m.trust(this.parent.data.attributes.name)}</div>
 					<div class="session-name">{m.trust("Session " + String(this.tag.data.attributes.position+1) + ": " + this.tag.data.attributes.name)}</div>
 					<hr class="under-session-name"/>
 					<div class="session-description">{m.trust(this.tag.data.attributes.description)}</div>
-				</td>
-	      <td class="rightside-imageholder" style={{"background-image": "url("+this.tag.data.attributes.backgroundImage+")"}}>
+			 </div>
+	      	 <div class="rightside-imageholder" style={{"background-image": "url("+this.tag.data.attributes.backgroundImage+")"}}>
 					<a href={this.tag.data.attributes.linkDestination} target='_fromflarumtoformed'>
 						 {icon('play-circle', {className: 'play-icon'})}
-				  </a>
-				</td>
-				<td class='rightside-shim'>&nbsp;</td>
-	      </tr>
-	      </tbody></table>
+				    </a>
+			 </div>
+			 <div class='rightside-shim'>&nbsp;</div>
+	      </div>
 
 		  <div class="marketing-block-footer">
 					{controlsForActionDropdown.length ? (
