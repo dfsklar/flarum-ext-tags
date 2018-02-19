@@ -10,13 +10,9 @@ import sortTags from 'flarum/tags/utils/sortTags';
 export default function() {
   // Add tag labels to each discussion in the discussion list.
   extend(DiscussionListItem.prototype, 'infoItems', function(items) {
-    const tags = this.props.discussion.tags();
+    // const tags = this.props.discussion.tags();
 
-    // DFSKLARD: I'm really abusing this "hook" for my own purposes.
-    // I have no intent to return any real element here.
-    // I am using this hook to place an anchor tag into the
-    // .nav-up scaffolding.
-
+    /*  THIS MOVED TO core/DiscussionPage:
     if ( tags && tags.length && ($('.marketing-block').length == 0) ) {
       sortTags(tags).forEach(tag => {
         if (tag || tags.length === 1) {
@@ -33,6 +29,7 @@ export default function() {
         }
       });
     }
+    */
   });
 
   // Include a discussion's tags when fetching it.

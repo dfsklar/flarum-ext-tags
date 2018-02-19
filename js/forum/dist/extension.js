@@ -237,27 +237,26 @@ System.register('flarum/tags/addTagLabels', ['flarum/extend', 'flarum/components
   _export('default', function () {
     // Add tag labels to each discussion in the discussion list.
     extend(DiscussionListItem.prototype, 'infoItems', function (items) {
-      var tags = this.props.discussion.tags();
+      // const tags = this.props.discussion.tags();
 
-      // DFSKLARD: I'm really abusing this "hook" for my own purposes.
-      // I have no intent to return any real element here.
-      // I am using this hook to place an anchor tag into the
-      // .nav-up scaffolding.
-
-      if (tags && tags.length && $('.marketing-block').length == 0) {
-        sortTags(tags).forEach(function (tag) {
+      /*  THIS MOVED TO core/DiscussionPage:
+      if ( tags && tags.length && ($('.marketing-block').length == 0) ) {
+        sortTags(tags).forEach(tag => {
           if (tag || tags.length === 1) {
             // DFSKLARD: We only want emission for the primary tag (repr the group as a whole)
             if (tag.data.attributes.isChild === true) {
-              var linkelem = tagLabel(tag, { link: undefined }, { textToShow: "Up to Group Home" });
+              const linkelem = tagLabel(tag, { link: undefined }, {textToShow: "Up to Group Home"});
               // interestirng fields:
               // linkelem.attrs.className
               // attrs.href
-              $('.nav-up').empty().append($('<a href="' + linkelem.attrs.href + '">&lt; Back to group</a>'));
+              $('.nav-up').empty().append(
+                $('<a href="' + linkelem.attrs.href + '">&lt; Back to group</a>')
+              );
             }
           }
         });
       }
+      */
     });
 
     // Include a discussion's tags when fetching it.
