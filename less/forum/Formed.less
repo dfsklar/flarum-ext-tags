@@ -31,7 +31,7 @@
     width: 100%;
     text-align: right;
     background-color: rgb(240, 240, 240);
-    margin-top: 20px;
+    margin-top: 10px;
     color: rgb(129, 131, 134);
     position: relative;
     div {
@@ -105,7 +105,7 @@
                 width: 80%;
             }
             .session-description {
-                font-size: 12px;
+                font-size: 13px;
                 line-height: 170%;
                 text-align: center;
                 text-rendering: optimizeLegibility;
@@ -179,8 +179,14 @@
     }
 }
 
-@media @desktop-up {
+@media @tablet-up {
   .marketing-block {
+    min-height: 150px;
+  }
+}
+
+
+@media desktop-up {
     .leftside {
         .group-name {
             font-size: 25px;
@@ -193,5 +199,4 @@
             font-size: 15px;
         }
     }
-  }
 }
