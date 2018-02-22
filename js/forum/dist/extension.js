@@ -748,13 +748,81 @@ System.register('flarum/tags/components/ReorderTagsModal', ['flarum/components/M
         }
 
         babelHelpers.createClass(ReorderTagsModal, [{
+          key: 'init_draganddrop',
+          value: function init_draganddrop() {
+            var _this2 = this;
+
+            this.State = {
+              list: [{ id: 0, sortIndex: 0, name: "foo" }, { id: 1, sortIndex: 1, name: "bar" }, { id: 2, sortIndex: 2, name: "gronk" }, { id: 3, sortIndex: 3, name: "fleebles" }, { id: 4, sortIndex: 4, name: "sepulveda" }],
+              sortedList: function sortedList() {
+                return _this2.State.list.sort(function (a, b) {
+                  return a.sortIndex < b.sortIndex ? -1 : a.sortIndex > b.sortIndex ? 1 : 0;
+                });
+              }
+            };
+
+            this.dndClass = function (dnd, item) {
+              return item === dnd.drag ? 'dragging' : item === dnd.drop ? 'dropping' : '';
+            };
+
+            this.DND = {
+              controller: function controller(options) {
+                return options.dnd = { drag: null, drop: null };
+              },
+              view: function view(ctrl, options) {
+                var dnd = options.dnd;
+                if (!dnd) {
+                  debugger;
+                }
+                var list = options.list();
+                return m('.list', {
+                  ondragover: function ondragover(e) {
+                    return e.preventDefault();
+                  },
+                  ondrop: function ondrop(e) {
+                    e.stopPropagation();
+                    var draggedIdx = list.indexOf(dnd.drag);
+                    var droppedIdx = list.indexOf(dnd.drop);
+
+                    var insertionIdx = draggedIdx < droppedIdx ? droppedIdx + 1 : droppedIdx;
+                    var deletionIdx = draggedIdx > droppedIdx ? draggedIdx + 1 : draggedIdx;
+
+                    if (insertionIdx !== deletionIdx) {
+                      // your custom  code for updating the list goes here.
+                      list.splice(insertionIdx, 0, dnd.drag);
+                      list.splice(deletionIdx, 1);
+
+                      // this is horribly inefficient but suffices for demo purposes
+                      list.forEach(function (item, idx) {
+                        return item.sortIndex = idx;
+                      });
+                    }
+
+                    dnd.drag = dnd.drop = null;
+                  }
+                }, list.map(function (item) {
+                  return m('.drag-item[draggable]', {
+                    key: item.id,
+                    class: _this2.dndClass(dnd, item), // <<< dnd is UNDEFINED here
+                    ondragstart: function ondragstart() {
+                      return dnd.drag = item;
+                    },
+                    ondragover: function ondragover() {
+                      if (dnd.drag) dnd.drop = item;
+                    }
+                  }, item.name);
+                }));
+              }
+            };
+          }
+        }, {
           key: 'init',
           value: function init() {
             babelHelpers.get(ReorderTagsModal.prototype.__proto__ || Object.getPrototypeOf(ReorderTagsModal.prototype), 'init', this).call(this);
+            this.init_draganddrop();
 
             this.tag = this.props.tag || app.store.createRecord('tags');
-
-            this.currenTagList = [this.tag];
+            this.tags = this.props.tags;
           }
         }, {
           key: 'className',
@@ -769,12 +837,18 @@ System.register('flarum/tags/components/ReorderTagsModal', ['flarum/components/M
         }, {
           key: 'content',
           value: function content() {
+            return m.component(this.DND, { list: this.State.sortedList });
+          }
+        }, {
+          key: 'xxxx',
+          value: function xxxx() {
             return m(
               'div',
               { className: 'Modal-body' },
               m(
                 'div',
                 { className: 'Form' },
+                m('.dndddd', this.DND, { list: this.State.sortedList }),
                 m(
                   'div',
                   { className: 'Form-group' },
@@ -798,27 +872,27 @@ System.register('flarum/tags/components/ReorderTagsModal', ['flarum/components/M
         }, {
           key: 'onsubmit',
           value: function onsubmit(e) {
-            var _this2 = this;
+            var _this3 = this;
 
             e.preventDefault();
 
             this.loading = true;
 
             this.tag.save(this.submitData()).then(function () {
-              return _this2.hide();
+              return _this3.hide();
             }, function (response) {
-              _this2.loading = false;
-              _this2.handleErrors(response);
+              _this3.loading = false;
+              _this3.handleErrors(response);
             });
           }
         }, {
           key: 'delete',
           value: function _delete() {
-            var _this3 = this;
+            var _this4 = this;
 
             if (confirm(app.translator.trans('flarum-tags.admin.edit_tag.delete_tag_confirmation'))) {
               var children = app.store.all('tags').filter(function (tag) {
-                return tag.parent() === _this3.tag;
+                return tag.parent() === _this4.tag;
               });
 
               this.tag.delete().then(function () {
@@ -1421,17 +1495,17 @@ System.register('flarum/tags/components/TagHero', ['flarum/Component', 'flarum/h
 						// DFSKLARD: The listing of sessions.
 						// DFSKLARD: my own attempts at a custom list of secondary tags to provide a list of sessions.
 						// I ONLY SHOW THE subtags OF THE active primary tag.
-						var filtered_tags = tags.filter(function (tag) {
+						this.session_tags = tags.filter(function (tag) {
 							return tag.position() !== null && tag.isChild() && tag.parent() === currentPrimaryTag;
 						});
-						filtered_tags.reverse().forEach(addTag.bind(this));
+						this.session_tags.reverse().forEach(addTag.bind(this));
 
 						return items;
 					}
 				}, {
 					key: 'launchSessionOrderingEditor',
 					value: function launchSessionOrderingEditor() {
-						app.modal.show(new ReorderTagsModal({ tag: this.tag }));
+						app.modal.show(new ReorderTagsModal({ tags: this.session_tags, current_tag: this.tag }));
 					}
 				}, {
 					key: 'launchTagEditor',

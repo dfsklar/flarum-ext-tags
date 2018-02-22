@@ -158,7 +158,7 @@ export default class TagHero extends Component {
     // DFSKLARD: The listing of sessions.
     // DFSKLARD: my own attempts at a custom list of secondary tags to provide a list of sessions.
     // I ONLY SHOW THE subtags OF THE active primary tag.
-    let filtered_tags = 
+    this.session_tags = 
       tags
       .filter(tag => 
         (tag.position() !== null) 
@@ -166,13 +166,15 @@ export default class TagHero extends Component {
         tag.isChild() 
         &&
         (tag.parent() === currentPrimaryTag));
-    filtered_tags.reverse().forEach(addTag.bind(this));
+    this.session_tags.reverse().forEach(addTag.bind(this));
  
 	return items;
   }
 
+  
+
   launchSessionOrderingEditor() {
-	app.modal.show(new ReorderTagsModal({tag: this.tag}));
+	app.modal.show(new ReorderTagsModal({tags: this.session_tags, current_tag: this.tag}));
   }
 
   launchTagEditor() {
