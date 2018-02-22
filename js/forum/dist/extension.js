@@ -724,6 +724,126 @@ System.register("flarum/tags/components/GroupsListHeader", ["flarum/Component"],
 });;
 'use strict';
 
+System.register('flarum/tags/components/ReorderTagsModal', ['flarum/components/Modal', 'flarum/components/Button', 'flarum/utils/string', 'flarum/tags/helpers/tagLabel'], function (_export, _context) {
+  "use strict";
+
+  var Modal, Button, slug, tagLabel, ReorderTagsModal;
+  return {
+    setters: [function (_flarumComponentsModal) {
+      Modal = _flarumComponentsModal.default;
+    }, function (_flarumComponentsButton) {
+      Button = _flarumComponentsButton.default;
+    }, function (_flarumUtilsString) {
+      slug = _flarumUtilsString.slug;
+    }, function (_flarumTagsHelpersTagLabel) {
+      tagLabel = _flarumTagsHelpersTagLabel.default;
+    }],
+    execute: function () {
+      ReorderTagsModal = function (_Modal) {
+        babelHelpers.inherits(ReorderTagsModal, _Modal);
+
+        function ReorderTagsModal() {
+          babelHelpers.classCallCheck(this, ReorderTagsModal);
+          return babelHelpers.possibleConstructorReturn(this, (ReorderTagsModal.__proto__ || Object.getPrototypeOf(ReorderTagsModal)).apply(this, arguments));
+        }
+
+        babelHelpers.createClass(ReorderTagsModal, [{
+          key: 'init',
+          value: function init() {
+            babelHelpers.get(ReorderTagsModal.prototype.__proto__ || Object.getPrototypeOf(ReorderTagsModal.prototype), 'init', this).call(this);
+
+            this.tag = this.props.tag || app.store.createRecord('tags');
+
+            this.currenTagList = [this.tag];
+          }
+        }, {
+          key: 'className',
+          value: function className() {
+            return 'ReorderTagsModal Modal--small';
+          }
+        }, {
+          key: 'title',
+          value: function title() {
+            return "Reorder Sessions";
+          }
+        }, {
+          key: 'content',
+          value: function content() {
+            return m(
+              'div',
+              { className: 'Modal-body' },
+              m(
+                'div',
+                { className: 'Form' },
+                m(
+                  'div',
+                  { className: 'Form-group' },
+                  Button.component({
+                    type: 'submit',
+                    className: 'Button Button--primary EditTagModal-save',
+                    loading: this.loading,
+                    children: app.translator.trans('flarum-tags.admin.edit_tag.submit_button')
+                  })
+                )
+              )
+            );
+          }
+        }, {
+          key: 'submitData',
+          value: function submitData() {
+            return {
+              result: "TBD"
+            };
+          }
+        }, {
+          key: 'onsubmit',
+          value: function onsubmit(e) {
+            var _this2 = this;
+
+            e.preventDefault();
+
+            this.loading = true;
+
+            this.tag.save(this.submitData()).then(function () {
+              return _this2.hide();
+            }, function (response) {
+              _this2.loading = false;
+              _this2.handleErrors(response);
+            });
+          }
+        }, {
+          key: 'delete',
+          value: function _delete() {
+            var _this3 = this;
+
+            if (confirm(app.translator.trans('flarum-tags.admin.edit_tag.delete_tag_confirmation'))) {
+              var children = app.store.all('tags').filter(function (tag) {
+                return tag.parent() === _this3.tag;
+              });
+
+              this.tag.delete().then(function () {
+                children.forEach(function (tag) {
+                  return tag.pushData({
+                    attributes: { isChild: false },
+                    relationships: { parent: null }
+                  });
+                });
+                m.redraw();
+              });
+
+              this.hide();
+            }
+          }
+        }]);
+        return ReorderTagsModal;
+      }(Modal);
+
+      _export('default', ReorderTagsModal);
+    }
+  };
+});;
+'use strict';
+
 System.register('flarum/tags/components/TagDiscussionModal', ['flarum/components/Modal', 'flarum/components/DiscussionPage', 'flarum/components/Button', 'flarum/helpers/highlight', 'flarum/utils/classList', 'flarum/utils/extractText', 'flarum/utils/KeyboardNavigatable', 'flarum/tags/helpers/tagLabel', 'flarum/tags/helpers/tagIcon', 'flarum/tags/utils/sortTags'], function (_export, _context) {
   "use strict";
 
@@ -1125,10 +1245,10 @@ System.register('flarum/tags/components/TagDiscussionModal', ['flarum/components
 });;
 'use strict';
 
-System.register('flarum/tags/components/TagHero', ['flarum/Component', 'flarum/helpers/icon', 'flarum/components/LoadingIndicator', 'flarum/components/SelectDropdown', 'flarum/components/Dropdown', 'flarum/components/UserRosterDropdown', 'flarum/utils/ItemList', 'flarum/tags/components/TagLinkButton', 'flarum/tags/components/EditTagModal', 'flarum/components/Button', 'flarum/components/LinkButton'], function (_export, _context) {
+System.register('flarum/tags/components/TagHero', ['flarum/Component', 'flarum/helpers/icon', 'flarum/components/LoadingIndicator', 'flarum/components/SelectDropdown', 'flarum/components/Dropdown', 'flarum/components/UserRosterDropdown', 'flarum/utils/ItemList', 'flarum/tags/components/TagLinkButton', 'flarum/tags/components/EditTagModal', 'flarum/tags/components/ReorderTagsModal', 'flarum/components/Button', 'flarum/components/LinkButton'], function (_export, _context) {
 	"use strict";
 
-	var Component, icon, LoadingIndicator, SelectDropdown, Dropdown, UserRosterDropdown, ItemList, TagLinkButton, EditTagModal, Button, LinkButton, TagHero;
+	var Component, icon, LoadingIndicator, SelectDropdown, Dropdown, UserRosterDropdown, ItemList, TagLinkButton, EditTagModal, ReorderTagsModal, Button, LinkButton, TagHero;
 	return {
 		setters: [function (_flarumComponent) {
 			Component = _flarumComponent.default;
@@ -1148,6 +1268,8 @@ System.register('flarum/tags/components/TagHero', ['flarum/Component', 'flarum/h
 			TagLinkButton = _flarumTagsComponentsTagLinkButton.default;
 		}, function (_flarumTagsComponentsEditTagModal) {
 			EditTagModal = _flarumTagsComponentsEditTagModal.default;
+		}, function (_flarumTagsComponentsReorderTagsModal) {
+			ReorderTagsModal = _flarumTagsComponentsReorderTagsModal.default;
 		}, function (_flarumComponentsButton) {
 			Button = _flarumComponentsButton.default;
 		}, function (_flarumComponentsLinkButton) {
@@ -1307,6 +1429,11 @@ System.register('flarum/tags/components/TagHero', ['flarum/Component', 'flarum/h
 						return items;
 					}
 				}, {
+					key: 'launchSessionOrderingEditor',
+					value: function launchSessionOrderingEditor() {
+						app.modal.show(new ReorderTagsModal({ tag: this.tag }));
+					}
+				}, {
 					key: 'launchTagEditor',
 					value: function launchTagEditor() {
 						app.modal.show(new EditTagModal({ tag: this.tag }));
@@ -1325,9 +1452,15 @@ System.register('flarum/tags/components/TagHero', ['flarum/Component', 'flarum/h
       }*/
 						// Incarnation #2: opening up the "edit-tag modal" dialog
 						if (this.yesIAmTheLeaderOfThisGroup) {
+
 							items.add('edit', Button.component({
-								children: ['Edit'],
+								children: ['Edit session description'],
 								onclick: this.launchTagEditor.bind(this)
+							}));
+
+							items.add('reorder', Button.component({
+								children: ['Reorder sessions'],
+								onclick: this.launchSessionOrderingEditor.bind(this)
 							}));
 						}
 

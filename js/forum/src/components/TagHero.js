@@ -7,6 +7,7 @@ import UserRosterDropdown from 'flarum/components/UserRosterDropdown';
 import ItemList from 'flarum/utils/ItemList';
 import TagLinkButton from 'flarum/tags/components/TagLinkButton';
 import EditTagModal from 'flarum/tags/components/EditTagModal';
+import ReorderTagsModal from 'flarum/tags/components/ReorderTagsModal';
 import Button from 'flarum/components/Button';
 import LinkButton from 'flarum/components/LinkButton';
 
@@ -170,6 +171,9 @@ export default class TagHero extends Component {
 	return items;
   }
 
+  launchSessionOrderingEditor() {
+	app.modal.show(new ReorderTagsModal({tag: this.tag}));
+  }
 
   launchTagEditor() {
 	app.modal.show(new EditTagModal({tag: this.tag}));
@@ -188,10 +192,17 @@ export default class TagHero extends Component {
 	}*/
 	// Incarnation #2: opening up the "edit-tag modal" dialog
 	if (this.yesIAmTheLeaderOfThisGroup) {
+
 		items.add('edit', Button.component({
-			children: [ 'Edit' ],
+			children: [ 'Edit session description' ],
 			onclick: this.launchTagEditor.bind(this)
 		}));
+
+		items.add('reorder', Button.component({
+			children: [ 'Reorder sessions' ],
+			onclick: this.launchSessionOrderingEditor.bind(this)
+		}));
+
 	}
 
 
