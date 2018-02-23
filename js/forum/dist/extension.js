@@ -751,17 +751,21 @@ System.register('flarum/tags/components/ReorderTagsModal', ['flarum/components/M
           key: 'init_draganddrop',
           value: function init_draganddrop() {
 
-            this.app = {};
+            var scope = this.tags;
 
-            this.app.controller = function () {
+            this.DND = {};
+
+            this.DND.controller = function (options) {
               var scope = {
-                left: [{ name: 'Test1' }, { name: 'Test2' }, { name: 'Test3' }, { name: 'Test4' }, { name: 'Test5' }, { name: 'Test6' }],
-                right: [{ name: 'Test7' }, { name: 'Test8' }]
+                left: options.tags.map(function (tag) {
+                  return { name: tag.name() };
+                }),
+                right: []
               };
               return scope;
             };
 
-            this.app.view = function (scope) {
+            this.DND.view = function (scope) {
               var list = function list(items) {
                 return items.map(function (item, index) {
                   return m('li', {
@@ -794,17 +798,18 @@ System.register('flarum/tags/components/ReorderTagsModal', ['flarum/components/M
                     console.log(scope.left, scope.right);
                   });
                 }
-              }, [m('ul.left', list(scope.left)), m('ul.right', list(scope.right))]);
+              }, [m('ul.left', list(scope.left))]);
             };
           }
         }, {
           key: 'init',
           value: function init() {
             babelHelpers.get(ReorderTagsModal.prototype.__proto__ || Object.getPrototypeOf(ReorderTagsModal.prototype), 'init', this).call(this);
-            this.init_draganddrop();
 
             this.tag = this.props.tag || app.store.createRecord('tags');
             this.tags = this.props.tags;
+
+            this.init_draganddrop();
           }
         }, {
           key: 'className',
@@ -833,7 +838,7 @@ System.register('flarum/tags/components/ReorderTagsModal', ['flarum/components/M
                 m(
                   'div',
                   { id: 'mount-here' },
-                  m.component(this.app)
+                  m.component(this.DND, { tags: this.tags })
                 ),
                 m(
                   'div',

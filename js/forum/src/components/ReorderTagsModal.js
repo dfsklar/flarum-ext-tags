@@ -9,35 +9,27 @@ import tagLabel from 'flarum/tags/helpers/tagLabel';
 export default class ReorderTagsModal extends Modal {
 
 
-
-
-  // DRAG&DROP IS FROM: https://codepen.io/hendrikroth/pen/RWWrGo?editors=001
-
+  // DRAG&DROP CODE IS FROM: https://codepen.io/hendrikroth/pen/RWWrGo?editors=001
 
 
   init_draganddrop() {
 
-    this.app = {};
+    var scope = this.tags;
 
-    this.app.controller = function() {
+    this.DND = {};
+
+    this.DND.controller = function(options) {
       var scope = {
-        left: [
-          {name: 'Test1'},
-          {name: 'Test2'},
-          {name: 'Test3'},
-          {name: 'Test4'},
-          {name: 'Test5'},
-          {name: 'Test6'}
-        ],
+        left: options.tags.map(function (tag) {
+          return { name : tag.name() };
+        }),
         right: [
-          {name: 'Test7'},
-          {name: 'Test8'}
         ]
       }
       return scope
     }
     
-    this.app.view = function(scope) {
+    this.DND.view = function(scope) {
       var list = function(items) {
         return items.map(function(item, index) {
           return m('li', {
@@ -71,8 +63,7 @@ export default class ReorderTagsModal extends Modal {
           })
        }
       }, [
-        m('ul.left', list(scope.left)),
-        m('ul.right', list(scope.right))
+        m('ul.left', list(scope.left))
       ])
     }
   }
@@ -81,10 +72,11 @@ export default class ReorderTagsModal extends Modal {
 
   init() {
     super.init();
-    this.init_draganddrop();
 
     this.tag = this.props.tag || app.store.createRecord('tags');
     this.tags = this.props.tags;
+
+    this.init_draganddrop();
   }
 
   className() {
@@ -106,7 +98,7 @@ export default class ReorderTagsModal extends Modal {
         <div className="Form">
 
           <div id='mount-here'>
-            {m.component(this.app)}
+            {m.component(this.DND, {tags: this.tags})}
           </div>
 
           <div className="Form-group">
