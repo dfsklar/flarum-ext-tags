@@ -750,70 +750,51 @@ System.register('flarum/tags/components/ReorderTagsModal', ['flarum/components/M
         babelHelpers.createClass(ReorderTagsModal, [{
           key: 'init_draganddrop',
           value: function init_draganddrop() {
-            var _this2 = this;
 
-            this.State = {
-              list: [{ id: 0, sortIndex: 0, name: "foo" }, { id: 1, sortIndex: 1, name: "bar" }, { id: 2, sortIndex: 2, name: "gronk" }, { id: 3, sortIndex: 3, name: "fleebles" }, { id: 4, sortIndex: 4, name: "sepulveda" }],
-              sortedList: function sortedList() {
-                return _this2.State.list.sort(function (a, b) {
-                  return a.sortIndex < b.sortIndex ? -1 : a.sortIndex > b.sortIndex ? 1 : 0;
-                });
-              }
+            this.app = {};
+
+            this.app.controller = function () {
+              var scope = {
+                left: [{ name: 'Test1' }, { name: 'Test2' }, { name: 'Test3' }, { name: 'Test4' }, { name: 'Test5' }, { name: 'Test6' }],
+                right: [{ name: 'Test7' }, { name: 'Test8' }]
+              };
+              return scope;
             };
 
-            this.dndClass = function (dnd, item) {
-              return item === dnd.drag ? 'dragging' : item === dnd.drop ? 'dropping' : '';
-            };
-
-            this.DND = {
-              controller: function controller(options) {
-                options.dnd = { drag: null, drop: null };
-                return options;
-              },
-              view: function view(ctrl, options) {
-                var dnd = ctrl.dnd;
-                if (!dnd) {
-                  debugger;
-                }
-                var list = ctrl.list();
-                return m('.list', {
-                  ondragover: function ondragover(e) {
-                    return e.preventDefault();
-                  },
-                  ondrop: function ondrop(e) {
-                    e.stopPropagation();
-                    var draggedIdx = list.indexOf(dnd.drag);
-                    var droppedIdx = list.indexOf(dnd.drop);
-
-                    var insertionIdx = draggedIdx < droppedIdx ? droppedIdx + 1 : droppedIdx;
-                    var deletionIdx = draggedIdx > droppedIdx ? draggedIdx + 1 : draggedIdx;
-
-                    if (insertionIdx !== deletionIdx) {
-                      // your custom  code for updating the list goes here.
-                      list.splice(insertionIdx, 0, dnd.drag);
-                      list.splice(deletionIdx, 1);
-
-                      // this is horribly inefficient but suffices for demo purposes
-                      list.forEach(function (item, idx) {
-                        return item.sortIndex = idx;
-                      });
-                    }
-
-                    dnd.drag = dnd.drop = null;
-                  }
-                }, list.map(function (item) {
-                  return m('.drag-item[draggable]', {
-                    key: item.id,
-                    class: _this2.dndClass(dnd, item), // <<< dnd is UNDEFINED here
-                    ondragstart: function ondragstart() {
-                      return dnd.drag = item;
-                    },
-                    ondragover: function ondragover() {
-                      if (dnd.drag) dnd.drop = item;
-                    }
+            this.app.view = function (scope) {
+              var list = function list(items) {
+                return items.map(function (item, index) {
+                  return m('li', {
+                    index: index
                   }, item.name);
-                }));
-              }
+                });
+              };
+
+              return m('.drag', {
+                config: function config(el, isInited) {
+                  if (isInited) return;
+                  var left = el.querySelector('.left'),
+                      right = el.querySelector('.right');
+
+                  var drake = dragula([left, right]);
+                  drake.on('drop', function (element, target, source) {
+                    var i = target.getAttribute('index'),
+                        t = target.className;
+
+                    if (t === 'left') {
+                      // keep in mind. this is not ready.
+                      scope.left.push(scope.right[i]);
+                      scope.right.splice(i, 1);
+                    } else {
+                      // keep in mind. this is not ready.
+                      scope.right.push(scope.left[i]);
+                      scope.left.splice(i, 1);
+                    }
+
+                    console.log(scope.left, scope.right);
+                  });
+                }
+              }, [m('ul.left', list(scope.left)), m('ul.right', list(scope.right))]);
             };
           }
         }, {
@@ -841,15 +822,19 @@ System.register('flarum/tags/components/ReorderTagsModal', ['flarum/components/M
             return m.component(this.DND, { list: this.State.sortedList });
           }
         }, {
-          key: 'xxxx',
-          value: function xxxx() {
+          key: 'view',
+          value: function view() {
             return m(
               'div',
               { className: 'Modal-body' },
               m(
                 'div',
                 { className: 'Form' },
-                m('.dndddd', this.DND, { list: this.State.sortedList }),
+                m(
+                  'div',
+                  { id: 'mount-here' },
+                  m.component(this.app)
+                ),
                 m(
                   'div',
                   { className: 'Form-group' },
@@ -873,27 +858,27 @@ System.register('flarum/tags/components/ReorderTagsModal', ['flarum/components/M
         }, {
           key: 'onsubmit',
           value: function onsubmit(e) {
-            var _this3 = this;
+            var _this2 = this;
 
             e.preventDefault();
 
             this.loading = true;
 
             this.tag.save(this.submitData()).then(function () {
-              return _this3.hide();
+              return _this2.hide();
             }, function (response) {
-              _this3.loading = false;
-              _this3.handleErrors(response);
+              _this2.loading = false;
+              _this2.handleErrors(response);
             });
           }
         }, {
           key: 'delete',
           value: function _delete() {
-            var _this4 = this;
+            var _this3 = this;
 
             if (confirm(app.translator.trans('flarum-tags.admin.edit_tag.delete_tag_confirmation'))) {
               var children = app.store.all('tags').filter(function (tag) {
-                return tag.parent() === _this4.tag;
+                return tag.parent() === _this3.tag;
               });
 
               this.tag.delete().then(function () {

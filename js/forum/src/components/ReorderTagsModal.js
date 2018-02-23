@@ -8,75 +8,72 @@ import tagLabel from 'flarum/tags/helpers/tagLabel';
 
 export default class ReorderTagsModal extends Modal {
 
-  // DRAG&DROP IS FROM: https://codepen.io/grilchgristle/pen/rmaZag
 
 
-  // convenience
+
+  // DRAG&DROP IS FROM: https://codepen.io/hendrikroth/pen/RWWrGo?editors=001
+
+
+
   init_draganddrop() {
 
-    this.State = {
-      list:  [
-        {id: 0, sortIndex: 0, name: "foo"},
-        {id: 1, sortIndex: 1, name: "bar"},
-        {id: 2, sortIndex: 2, name: "gronk"},
-        {id: 3, sortIndex: 3, name: "fleebles"},
-        {id: 4, sortIndex: 4, name: "sepulveda"}
-      ],
-      sortedList: () => this.State.list.sort(
-        (a,b) => a.sortIndex < b.sortIndex ? -1 : a.sortIndex > b.sortIndex ? 1 : 0
-      )
-    }
+    this.app = {};
 
-    this.dndClass = 
-          (dnd, item) => item === dnd.drag ? 'dragging' : item === dnd.drop ? 'dropping' : ''
-
-    this.DND = {
-      controller: (options) => {
-        options.dnd = { drag: null, drop: null };
-        return options;
-      },
-      view: (ctrl, options) => {
-        const dnd = ctrl.dnd;
-        if (!dnd) {
-          debugger;
-        }
-        const list = ctrl.list();
-        return m('.list'
-          , {
-            ondragover: (e) => e.preventDefault(),
-            ondrop: (e) => {
-              e.stopPropagation()
-                const draggedIdx = list.indexOf(dnd.drag);
-                const droppedIdx = list.indexOf(dnd.drop);
-                
-                const insertionIdx = draggedIdx < droppedIdx ? droppedIdx + 1 : droppedIdx;
-                const deletionIdx = draggedIdx > droppedIdx ? draggedIdx + 1 : draggedIdx;
-
-                if (insertionIdx !== deletionIdx) {
-                  // your custom  code for updating the list goes here.
-                  list.splice(insertionIdx, 0, dnd.drag);
-                  list.splice(deletionIdx, 1);
-                  
-                  // this is horribly inefficient but suffices for demo purposes
-                  list.forEach( (item, idx) => item.sortIndex = idx );
-                }
-
-                dnd.drag = dnd.drop = null;
-            }
-          }
-          , list.map((item) => {
-            return m('.drag-item[draggable]'
-              , {
-                  key: item.id,
-                  class: this.dndClass(dnd, item),  // <<< dnd is UNDEFINED here
-                  ondragstart: () => dnd.drag = item,
-                  ondragover: () => { if (dnd.drag) dnd.drop = item }
-              }
-              , item.name
-            )
-          })
-        )
+    this.app.controller = function() {
+      var scope = {
+        left: [
+          {name: 'Test1'},
+          {name: 'Test2'},
+          {name: 'Test3'},
+          {name: 'Test4'},
+          {name: 'Test5'},
+          {name: 'Test6'}
+        ],
+        right: [
+          {name: 'Test7'},
+          {name: 'Test8'}
+        ]
       }
+      return scope
+    }
+    
+    this.app.view = function(scope) {
+      var list = function(items) {
+        return items.map(function(item, index) {
+          return m('li', {
+            index: index
+          }, item.name)
+        })
+      }
+      
+      return m('.drag', {
+        config: function(el, isInited) {
+          if (isInited) return
+          var left = el.querySelector('.left'),
+            right = el.querySelector('.right')
+      
+          var drake = dragula([left, right])
+          drake.on('drop', function(element, target, source) {
+            var i = target.getAttribute('index'),
+                t = target.className
+              
+            if (t === 'left') {
+              // keep in mind. this is not ready.
+              scope.left.push(scope.right[i])
+              scope.right.splice(i, 1)
+            } else {
+              // keep in mind. this is not ready.
+              scope.right.push(scope.left[i])
+              scope.left.splice(i, 1)
+            }
+            
+            console.log(scope.left, scope.right)
+          })
+       }
+      }, [
+        m('ul.left', list(scope.left)),
+        m('ul.right', list(scope.right))
+      ])
     }
   }
 
@@ -103,12 +100,14 @@ export default class ReorderTagsModal extends Modal {
   }
 
 
-  xxxx() {
+  view() {
     return (
       <div className="Modal-body">
         <div className="Form">
 
-          { m('.dndddd', this.DND, { list: this.State.sortedList }) }
+          <div id='mount-here'>
+            {m.component(this.app)}
+          </div>
 
           <div className="Form-group">
             {Button.component({
