@@ -767,14 +767,15 @@ System.register('flarum/tags/components/ReorderTagsModal', ['flarum/components/M
 
             this.DND = {
               controller: function controller(options) {
-                return options.dnd = { drag: null, drop: null };
+                options.dnd = { drag: null, drop: null };
+                return options;
               },
               view: function view(ctrl, options) {
-                var dnd = options.dnd;
+                var dnd = ctrl.dnd;
                 if (!dnd) {
                   debugger;
                 }
-                var list = options.list();
+                var list = ctrl.list();
                 return m('.list', {
                   ondragover: function ondragover(e) {
                     return e.preventDefault();

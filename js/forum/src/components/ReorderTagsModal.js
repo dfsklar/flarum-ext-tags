@@ -31,13 +31,16 @@ export default class ReorderTagsModal extends Modal {
           (dnd, item) => item === dnd.drag ? 'dragging' : item === dnd.drop ? 'dropping' : ''
 
     this.DND = {
-      controller: (options) => options.dnd = { drag: null, drop: null },
+      controller: (options) => {
+        options.dnd = { drag: null, drop: null };
+        return options;
+      },
       view: (ctrl, options) => {
-        const dnd = options.dnd;
+        const dnd = ctrl.dnd;
         if (!dnd) {
           debugger;
         }
-        const list = options.list();
+        const list = ctrl.list();
         return m('.list'
           , {
             ondragover: (e) => e.preventDefault(),
