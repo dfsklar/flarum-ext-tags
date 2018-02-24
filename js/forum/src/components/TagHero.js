@@ -157,16 +157,17 @@ export default class TagHero extends Component {
 
     // DFSKLARD: The listing of sessions.
     // DFSKLARD: my own attempts at a custom list of secondary tags to provide a list of sessions.
-    // I ONLY SHOW THE subtags OF THE active primary tag.
-    this.session_tags = 
-      tags
-      .filter(tag => 
-        (tag.position() !== null) 
-        &&
-        tag.isChild() 
-        &&
-        (tag.parent() === currentPrimaryTag));
-    this.session_tags.reverse().forEach(addTag.bind(this));
+	// I ONLY SHOW THE subtags OF THE active primary tag.
+	this.session_tags = 
+		tags
+		.filter(tag => 
+			(tag.position() !== null) 
+			&&
+			tag.isChild() 
+			&&
+			(tag.parent() === currentPrimaryTag))
+		.sort((a,b) => (b.position() - a.position()));
+	this.session_tags.forEach(addTag.bind(this));
  
 	return items;
   }

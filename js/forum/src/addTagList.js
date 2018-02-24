@@ -48,7 +48,7 @@ export default function() {
         // CAREFUL: similar logic is found in TagHero.js !!!!
         items.add('tag' + tag.id(), TagLinkButton.component({
           label: 'Session ' + String(fullArray.length-indexSeq) + " of " + String(fullArray.length),
-          idx: fullArray.length - indexSeq,
+          idx: fullArray.length - tag.position(),
           tag, 
           params, 
           active}), -10);
@@ -65,8 +65,9 @@ export default function() {
         &&
         tag.isChild() 
         &&
-        (tag.parent() === currentPrimaryTag));
-    filtered_tags.reverse().forEach(addTag);
+        (tag.parent() === currentPrimaryTag))
+      .sort((a,b) => (b.position() - a.position()));
+    filtered_tags.forEach(addTag);
 
 
 
