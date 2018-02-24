@@ -124,28 +124,55 @@ export default class ReorderTagsModal extends Modal {
 
     // Scan through this.latestOrder to determine all tags who have experienced
     // a change in position.
+    this.parentTag = null;
+    this.idsOfChildrendInOrder = [];
     this.$latestOrder.children().each(function(index, elem) {
       // index is the zero-based *new* position
       // elem.attr('index') is the zero-base *old* position
       var newIDX = index;
       var oldIDX = parseInt($(elem).attr('index'));
+      var matchingTag =
+        this.tags.find(function(x){
+          return (x.data.attributes.position == oldIDX);
+        });
+      this.parentTag = matchingTag.parent();
+      this.idsOfChildrendInOrder.push(matchingTag.id());
       if (oldIDX != newIDX) {
-        var matchingTag = 
-          this.tags.find(function(x){
-            return (x.data.attributes.position == oldIDX);
-          });
-        // Change the position number for this tag
-        matchingTag.data.attributes.position = newIDX;
-        matchingTag.save({position: newIDX}).then(
-          () => this.hide(),
-          response => {
-            this.loading = false;
-            this.handleErrors(response);
-          }
-        );
+        // Change the position number for this tag, just in local store
+        app.store.getById('tags', matchingTag.id()).pushData({
+          attributes: {
+            position: newIDX,
+            isChild: true
+          },
+          relationships: {parent: this.parentTag}
+        });
       }
     }.bind(this));
-  }
+
+    // Create an "ordering tree" that is compatible with the needs of the API, e.g.:
+    // { id: 5, children: [ 6, 7, 9 ]}
+    const orderSpec = {
+      id: this.parentTag.id(),
+      children: this.idsOfChildrendInOrder
+    };
+    app.request({
+      url: app.forum.attribute('apiUrl') + '/tags/order',
+      method: 'POST',
+      data: {order: [orderSpec]}
+    });
+
+}
+
+
+
+
+
+
+
+
+
+
+
 
   // WE MIGHT WANT TO SUPPORT DELETION SOMEDAY?
   /*
