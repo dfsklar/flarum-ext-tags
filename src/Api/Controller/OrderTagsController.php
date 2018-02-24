@@ -26,7 +26,8 @@ class OrderTagsController implements ControllerInterface
      */
     public function handle(ServerRequestInterface $request)
     {
-        $this->assertAdmin($request->getAttribute('actor'));
+        // DFSKLARD: We allow anyone to reorder sessions, so we must eliminate this:
+        // $this->assertAdmin($request->getAttribute('actor'));
 
         $order = array_get($request->getParsedBody(), 'order');
 

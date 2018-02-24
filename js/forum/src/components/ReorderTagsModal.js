@@ -136,7 +136,7 @@ export default class ReorderTagsModal extends Modal {
           return (x.data.attributes.position == oldIDX);
         });
       this.parentTag = matchingTag.parent();
-      this.idsOfChildrendInOrder.push(matchingTag.id());
+      this.idsOfChildrendInOrder.push(parseInt(matchingTag.id()));
       if (oldIDX != newIDX) {
         // Change the position number for this tag, just in local store
         app.store.getById('tags', matchingTag.id()).pushData({
@@ -152,7 +152,7 @@ export default class ReorderTagsModal extends Modal {
     // Create an "ordering tree" that is compatible with the needs of the API, e.g.:
     // { id: 5, children: [ 6, 7, 9 ]}
     const orderSpec = {
-      id: this.parentTag.id(),
+      id: parseInt(this.parentTag.id()),
       children: this.idsOfChildrendInOrder
     };
     app.request({
@@ -161,15 +161,14 @@ export default class ReorderTagsModal extends Modal {
       data: {order: [orderSpec]}
     });
 
+    this.hide();
+
+    // A diff redraw won't work here, because sortable has mucked around
+    // with the DOM which will confuse Mithril's diffing algorithm. Instead
+    // we force a full reconstruction of the DOM.
+    m.redraw.strategy('all');
+    m.redraw();
 }
-
-
-
-
-
-
-
-
 
 
 
