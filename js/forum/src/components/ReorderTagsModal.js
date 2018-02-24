@@ -20,13 +20,14 @@ export default class ReorderTagsModal extends Modal {
 
     this.DND.controller = function(options) {
       var scope = {
+        context: options.context,
         left: options.tags.reverse().map(function (tag) {
           return { name : tag.name() };
         }),
         right: [
         ]
       }
-      return scope
+      return scope;
     }
     
     this.DND.view = function(scope) {
@@ -46,21 +47,13 @@ export default class ReorderTagsModal extends Modal {
       
           var drake = dragula([left, right])
           drake.on('drop', function(element, target, source) {
-            var i = target.getAttribute('index'),
-                t = target.className
-              
-            if (t === 'left') {
-              // keep in mind. this is not ready.
-              scope.left.push(scope.right[i])
-              scope.right.splice(i, 1)
-            } else {
-              // keep in mind. this is not ready.
-              debugger;
-              scope.right.push(scope.left[i])
-              scope.left.splice(i, 1)
-            }
-            
-            console.log(scope.left, scope.right)
+            scope.context.$latestOrder = $(target);
+            // This cloning of the target is the only way to persist the
+            // order the user has chosen.  $(target) will be a jQuery 
+            // pointer to the "OL" element so:
+            // $(target).children().first().attr('index')
+            // $(target).children().each(...)   
+            // etc
           })
        }
       }, [
@@ -89,11 +82,6 @@ export default class ReorderTagsModal extends Modal {
   }
 
   content() {
-    return m.component(this.DND, { list: this.State.sortedList });
-  }
-
-
-  view() {
     return (
       <div className="Modal-body">
         <div className="Form">
@@ -101,7 +89,7 @@ export default class ReorderTagsModal extends Modal {
           <div className='instructions'>Reorder by dragging:</div>
 
           <div id='mount-here'>
-            {m.component(this.DND, {tags: this.tags})}
+            {m.component(this.DND, {tags: this.tags, context: this})}
           </div>
 
           <div className="Form-group">
@@ -128,15 +116,39 @@ export default class ReorderTagsModal extends Modal {
 
     this.loading = true;
 
-    this.tag.save(this.submitData()).then(
-      () => this.hide(),
-      response => {
-        this.loading = false;
-        this.handleErrors(response);
+    // If the user made no change at all, immediately leave.
+    if (!(this.$latestOrder)) {
+      this.hide();
+      return;
+    }
+
+    // Scan through this.latestOrder to determine all tags who have experienced
+    // a change in position.
+    this.$latestOrder.children().each(function(index, elem) {
+      // index is the zero-based *new* position
+      // elem.attr('index') is the zero-base *old* position
+      var newIDX = index;
+      var oldIDX = parseInt($(elem).attr('index'));
+      if (oldIDX != newIDX) {
+        var matchingTag = 
+          this.tags.find(function(x){
+            return (x.data.attributes.position == oldIDX);
+          });
+        // Change the position number for this tag
+        matchingTag.data.attributes.position = newIDX;
+        matchingTag.save({position: newIDX}).then(
+          () => this.hide(),
+          response => {
+            this.loading = false;
+            this.handleErrors(response);
+          }
+        );
       }
-    );
+    }.bind(this));
   }
 
+  // WE MIGHT WANT TO SUPPORT DELETION SOMEDAY?
+  /*
   delete() {
     if (confirm(app.translator.trans('flarum-tags.admin.edit_tag.delete_tag_confirmation'))) {
       const children = app.store.all('tags').filter(tag => tag.parent() === this.tag);
@@ -151,5 +163,5 @@ export default class ReorderTagsModal extends Modal {
 
       this.hide();
     }
-  }
+  } */
 }
