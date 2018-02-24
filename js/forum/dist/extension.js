@@ -757,7 +757,7 @@ System.register('flarum/tags/components/ReorderTagsModal', ['flarum/components/M
 
             this.DND.controller = function (options) {
               var scope = {
-                left: options.tags.map(function (tag) {
+                left: options.tags.reverse().map(function (tag) {
                   return { name: tag.name() };
                 }),
                 right: []
@@ -798,7 +798,7 @@ System.register('flarum/tags/components/ReorderTagsModal', ['flarum/components/M
                     console.log(scope.left, scope.right);
                   });
                 }
-              }, [m('ul.left', list(scope.left))]);
+              }, [m('ol.left', list(scope.left))]);
             };
           }
         }, {
@@ -837,6 +837,11 @@ System.register('flarum/tags/components/ReorderTagsModal', ['flarum/components/M
                 { className: 'Form' },
                 m(
                   'div',
+                  { className: 'instructions' },
+                  'Reorder by dragging:'
+                ),
+                m(
+                  'div',
                   { id: 'mount-here' },
                   m.component(this.DND, { tags: this.tags })
                 ),
@@ -847,7 +852,7 @@ System.register('flarum/tags/components/ReorderTagsModal', ['flarum/components/M
                     type: 'submit',
                     className: 'Button Button--primary EditTagModal-save',
                     loading: this.loading,
-                    children: app.translator.trans('flarum-tags.admin.edit_tag.submit_button')
+                    children: ['Submit']
                   })
                 )
               )

@@ -20,7 +20,7 @@ export default class ReorderTagsModal extends Modal {
 
     this.DND.controller = function(options) {
       var scope = {
-        left: options.tags.map(function (tag) {
+        left: options.tags.reverse().map(function (tag) {
           return { name : tag.name() };
         }),
         right: [
@@ -55,6 +55,7 @@ export default class ReorderTagsModal extends Modal {
               scope.right.splice(i, 1)
             } else {
               // keep in mind. this is not ready.
+              debugger;
               scope.right.push(scope.left[i])
               scope.left.splice(i, 1)
             }
@@ -63,7 +64,7 @@ export default class ReorderTagsModal extends Modal {
           })
        }
       }, [
-        m('ul.left', list(scope.left))
+        m('ol.left', list(scope.left))
       ])
     }
   }
@@ -97,6 +98,8 @@ export default class ReorderTagsModal extends Modal {
       <div className="Modal-body">
         <div className="Form">
 
+          <div className='instructions'>Reorder by dragging:</div>
+
           <div id='mount-here'>
             {m.component(this.DND, {tags: this.tags})}
           </div>
@@ -106,7 +109,7 @@ export default class ReorderTagsModal extends Modal {
               type: 'submit',
               className: 'Button Button--primary EditTagModal-save',
               loading: this.loading,
-              children: app.translator.trans('flarum-tags.admin.edit_tag.submit_button')
+              children: [ 'Submit' ]
             })}
           </div>
         </div>
