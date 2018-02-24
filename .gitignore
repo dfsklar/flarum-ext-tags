@@ -1,4 +1,5 @@
 /vendor
+js/*/dist/extension.js
 *~
 composer.phar
 .DS_Store
