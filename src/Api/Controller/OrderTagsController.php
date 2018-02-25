@@ -43,7 +43,9 @@ class OrderTagsController implements ControllerInterface
         foreach ($order as $i => $parent) {
             $parentId = array_get($parent, 'id');
 
-            Tag::where('id', $parentId)->update(['position' => $i]);
+            // DFSKLARD: We do not really have the concept of ordering "parent tags".
+            // We only order sessions within commgroups.  So we disable this:
+            // Tag::where('id', $parentId)->update(['position' => $i]);
 
             if (isset($parent['children']) && is_array($parent['children'])) {
                 foreach ($parent['children'] as $j => $childId) {
