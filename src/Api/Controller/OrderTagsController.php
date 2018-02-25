@@ -31,10 +31,14 @@ class OrderTagsController implements ControllerInterface
 
         $order = array_get($request->getParsedBody(), 'order');
 
+        // DFSKLARD: This appears to be a "trash the entire database and then reconstruct"
+        // action, and we do not want to require that each request rebuild the entire
+        // universe of child/parent relationships.  So this is being disabled:
+        /*
         Tag::query()->update([
             'position' => null,
             'parent_id' => null
-        ]);
+        ]); */
 
         foreach ($order as $i => $parent) {
             $parentId = array_get($parent, 'id');
