@@ -12,6 +12,7 @@ export default class ApproveWannabeMembersModal extends Modal {
     super.init();
 
     this.group = this.props.group;
+    this.users = this.props.users;
   }
 
   className() {

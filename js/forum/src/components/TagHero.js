@@ -180,7 +180,15 @@ export default class TagHero extends Component {
   }
 
   launchWannabeApprover() {
-	app.modal.show(new ApproveWannabeMembersModal({tags: this.session_tags, current_tag: this.tag}));
+	app.modal.show(new ApproveWannabeMembersModal(
+		{
+			group: this.matchingGroup,
+			users: this.matchingGroup.data.relationships.wannabeusers.data.map(
+				function (x) {
+					return app.store.getById('users', x.id);
+				}
+			)
+		}));
   }
 
   launchTagEditor() {
