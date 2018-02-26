@@ -10,7 +10,7 @@ import EditTagModal from 'flarum/tags/components/EditTagModal';
 import ReorderTagsModal from 'flarum/tags/components/ReorderTagsModal';
 import Button from 'flarum/components/Button';
 import LinkButton from 'flarum/components/LinkButton';
-
+import ApproveWannabeMembersModal from './ApproveWannabeMembersModal';
 
 
 export default class TagHero extends Component {
@@ -179,6 +179,10 @@ export default class TagHero extends Component {
 	app.modal.show(new ReorderTagsModal({tags: this.session_tags, current_tag: this.tag}));
   }
 
+  launchWannabeApprover() {
+	app.modal.show(new ApproveWannabeMembersModal({tags: this.session_tags, current_tag: this.tag}));
+  }
+
   launchTagEditor() {
 	app.modal.show(new EditTagModal({tag: this.tag}));
   }
@@ -205,6 +209,11 @@ export default class TagHero extends Component {
 		items.add('reorder', Button.component({
 			children: [ 'Reorder sessions' ],
 			onclick: this.launchSessionOrderingEditor.bind(this)
+		}));
+
+		items.add('approve', Button.component({
+			children: [ 'Approve join requests' ],
+			onclick: this.launchWannabeApprover.bind(this)
 		}));
 
 	}
