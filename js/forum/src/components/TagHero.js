@@ -62,13 +62,14 @@ export default class TagHero extends Component {
 
 
 	_join() {
-		this.loggedinUserMembershipList = app.session.user.data.relationships.groups.data;		
+		this.loggedinUserMembershipList = app.session.user.data.relationships.grouprequests.data;		
 		this.loggedinUserMembershipList.push({type:"groups", id: this.matchingGroup.data.id});
 		app.session.user.save({relationships: app.session.user.data.relationships})
 		.then(() => {
-			this.isMemberOfGroup = true;
+			this.isMemberOfGroup = false;
+			this.hasRequestedMembership = true;
 			this.loading = false;
-			this.indexPageOwner.assertMembership(true);
+			alert("Thanks for your interest!  You will receive email when your membership has been approved.");
 			console.log("good");
 			m.redraw();
 		})
