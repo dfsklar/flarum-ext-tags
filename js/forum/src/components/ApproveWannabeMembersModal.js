@@ -24,18 +24,43 @@ export default class ApproveWannabeMembersModal extends Modal {
   }
 
 
+  removeObjectByID(arr, id) {
+    return  $.grep(arr, function(x) {
+      return x.id != id; 
+    });
+  }
+
   approve (user) {
     app.store.find('users', user.data.id).then(function(user) {
-      var rels = user.data.relationships;  ///.grouprequests.data
+
+      var rels = user.data.relationships;
+      var frisbee_to_be_tossed = {type:"groups", id: this.group.data.id};
+      rels.groups.data.push(frisbee_to_be_tossed);
+      rels.grouprequests.data = this.removeObjectByID(rels.grouprequests.data, frisbee_to_be_tossed.id);
+
+      user.save({relationships: rels})
+      .then(function() {
+        alert("The user has been added to this group.");
+        var rels = this.group.data.relationships;
+        var frisbee_to_be_tossed = {type:"users", id: user.data.id};
+        rels.users.data.push(frisbee_to_be_tossed);
+        rels.wannabeusers.data = this.removeObjectByID(rels.wannabeusers.data, frisbee_to_be_tossed.id);
+          user.inGroup = 'Y';
+      }.bind(this))
+      .catch(() => {
+        alert("The change could not be made.  Try again later.");
+      });
+    }.bind(this));
+  }
+
+
+
+  reject (user) {
+    app.store.find('users', user.data.id).then(function(user) {
+      var rels = user.data.relationships;
       const frisbee_to_be_tossed = {type:"groups", id: this.group.data.id};
 
-      rels.groups.data.push(frisbee_to_be_tossed);
-
-      // Delete by doing a grep on all requests NOT matching this one.
-      rels.grouprequests.data = 
-         $.grep(rels.grouprequests.data, function(x) {
-           return x.id != frisbee_to_be_tossed.id; 
-         });
+      rels.grouprequests.data = this.removeObjectByID(rels.grouprequests.data, frisbee_to_be_tossed.id);
 
       user.save({relationships: rels})
       .then(() => {
@@ -49,7 +74,6 @@ export default class ApproveWannabeMembersModal extends Modal {
       });
     }.bind(this));
   }
-
 
   
   content() {
@@ -80,15 +104,6 @@ export default class ApproveWannabeMembersModal extends Modal {
 
           <div id='mount-here'>
             {this.users.map(x => showWannabeUser(x))}
-          </div>
-
-          <div className="Form-group">
-            {Button.component({
-              type: 'submit',
-              className: 'Button Button--primary EditTagModal-save',
-              loading: this.loading,
-              children: [ 'Submit' ]
-            })}
           </div>
         </div>
       </div>
