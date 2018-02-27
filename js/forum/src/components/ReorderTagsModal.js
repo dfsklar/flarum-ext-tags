@@ -105,12 +105,6 @@ export default class ReorderTagsModal extends Modal {
     );
   }
 
-  submitData() {
-    return {
-      result: "TBD"
-    };
-  }
-
   onsubmit(e) {
     e.preventDefault();
 

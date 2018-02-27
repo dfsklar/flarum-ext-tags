@@ -24,23 +24,62 @@ export default class ApproveWannabeMembersModal extends Modal {
   }
 
 
-  showWannabeUser(user) {
-    return (
-      <div className='wannabe-user'>
-        <input type="checkbox"/>
-        <input type="checkbox"/>
-        <div className='name'>Bob Schmo</div>
-      </div>
-    )
+  approve (user) {
+    app.store.find('users', user.data.id).then(function(user) {
+      var rels = user.data.relationships;  ///.grouprequests.data
+      const frisbee_to_be_tossed = {type:"groups", id: this.group.data.id};
+
+      rels.groups.data.push(frisbee_to_be_tossed);
+
+      // Delete by doing a grep on all requests NOT matching this one.
+      rels.grouprequests.data = 
+         $.grep(rels.grouprequests.data, function(x) {
+           return x.id != frisbee_to_be_tossed.id; 
+         });
+
+      user.save({relationships: rels})
+      .then(() => {
+        alert("The user has been added to this group.");
+        user.inGroup = 'Y';
+        console.log("good");
+      })
+      .catch(() => {
+        user.inGroup = 'N';
+        console.log("bad");
+      });
+    }.bind(this));
   }
 
 
+  
   content() {
+
+    const SELF = this;
+
+    function showWannabeUser(user) {
+      return (
+        <div className='wannabe-user'>
+          {Button.component({
+            className: 'Button Button--join-approve',
+            icon: 'check',
+            onclick: () => SELF.approve(user)
+          })}
+          {Button.component({
+            className: 'Button Button--join-reject',
+            icon: 'times-circle',
+            onclick: () => SELF.reject(user)
+          })}
+          <div className='name'>{user.data.attributes.displayName}</div>
+        </div>
+      )
+    }
+
     return (
       <div className="Modal-body">
         <div className="Form">
 
           <div id='mount-here'>
+            {this.users.map(x => showWannabeUser(x))}
           </div>
 
           <div className="Form-group">
