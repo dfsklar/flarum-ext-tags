@@ -64,8 +64,8 @@ export default class ApproveWannabeMembersModal extends Modal {
 
       user.save({relationships: rels})
       .then(() => {
-        alert("The user has been added to this group.");
-        user.inGroup = 'Y';
+        alert("The user's request has been denied.");
+        user.inGroup = 'N';
         console.log("good");
       })
       .catch(() => {
@@ -101,7 +101,7 @@ export default class ApproveWannabeMembersModal extends Modal {
     return (
       <div className="Modal-body">
         <div className="Form">
-
+          <div className='instructions'>Click on the checkmark or "X" to approve or reject:</div>
           <div id='mount-here'>
             {this.users.map(x => showWannabeUser(x))}
           </div>
