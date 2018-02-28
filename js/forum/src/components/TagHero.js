@@ -30,6 +30,7 @@ export default class TagHero extends Component {
 
 	recordGroupRoster(r) {
 		this.groupMembershipRoster = r.data.relationships.users.data;
+		this.groupWannabeRoster = r.data.relationships.wannabeusers.data;
 		m.redraw();
 	}
 
@@ -219,8 +220,18 @@ export default class TagHero extends Component {
 			onclick: this.launchSessionOrderingEditor.bind(this)
 		}));
 
+		const numWannabes = 
+		   ( this.groupWannabeRoster ?
+			 this.groupWannabeRoster.length : 0 );
 		items.add('approve', Button.component({
-			children: [ 'Approve join requests' ],
+			children: [
+				<span className='label'>
+					Manage membership requests
+					<span className='count'>
+					   {numWannabes}
+					</span>
+				</span>
+			],
 			onclick: this.launchWannabeApprover.bind(this)
 		}));
 
