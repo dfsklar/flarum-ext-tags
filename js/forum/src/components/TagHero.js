@@ -273,6 +273,10 @@ export default class TagHero extends Component {
 		<div class="group-leader-name">{leader ? ("This group's leader is: " + leader.data.attributes.displayName) : ''}</div>
 	*/
 
+	function hideSpecialGroupFlag(grouptitle) {
+		return (grouptitle[0] == '\x07') ? grouptitle.substr(1) : grouptitle;
+	}
+
 	const destURL = app.siteSpecifics.fetchFormedURL();
 	$('.nav-up').empty().append(
 		('<a href="' + destURL + '" class=returntoformed>&lt; Back to Community</a>'));
@@ -284,7 +288,7 @@ export default class TagHero extends Component {
 
 	      <div class="marketing-block">
 	     	 <div class="leftside">
-					<div class="group-name">{m.trust(this.parent.data.attributes.name)}</div>
+					<div class="group-name">{m.trust(hideSpecialGroupFlag(this.parent.data.attributes.name))}</div>
 					<div class="session-name">{m.trust("Session " + String(this.tag.data.attributes.position+1) + ": " + this.tag.data.attributes.name)}</div>
 					<hr class="under-session-name"/>
 					<div class="session-description">{m.trust(this.tag.data.attributes.description)}</div>
