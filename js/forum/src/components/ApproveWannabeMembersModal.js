@@ -13,6 +13,13 @@ export default class ApproveWannabeMembersModal extends Modal {
 
     this.group = this.props.group;
     this.users = this.props.users;
+    this.onHide = this.props.onHide;
+  }
+
+  onhide() {
+    if (this.onHide) {
+      this.onHide();
+    }
   }
 
   className() {

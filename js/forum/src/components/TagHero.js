@@ -180,9 +180,14 @@ export default class TagHero extends Component {
 	app.modal.show(new ReorderTagsModal({tags: this.session_tags, current_tag: this.tag}));
   }
 
+  refreshAfterMembershipRosterChange() {
+	this.init();
+  }
+
   launchWannabeApprover() {
 	app.modal.show(new ApproveWannabeMembersModal(
 		{
+			onHide: this.refreshAfterMembershipRosterChange.bind(this),
 			group: this.matchingGroup,
 			users: this.matchingGroup.data.relationships.wannabeusers.data.map(
 				function (x) {
