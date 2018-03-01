@@ -30,46 +30,51 @@ export default class ApproveWannabeMembersModal extends Modal {
     });
   }
 
-  approve (user) {
-    app.store.find('users', user.data.id).then(function(user) {
+  approve (_user) {
+    app.store.find('users', _user.data.id).then(function(user) {
 
       var rels = user.data.relationships;
       var frisbee_to_be_tossed = {type:"groups", id: this.group.data.id};
       rels.groups.data.push(frisbee_to_be_tossed);
       rels.grouprequests.data = this.removeObjectByID(rels.grouprequests.data, frisbee_to_be_tossed.id);
 
+      _user.inGroup = true;
+      m.redraw();
+
       user.save({relationships: rels})
       .then(function() {
-        alert("The user has been added to this group.");
         var rels = this.group.data.relationships;
         var frisbee_to_be_tossed = {type:"users", id: user.data.id};
         rels.users.data.push(frisbee_to_be_tossed);
         rels.wannabeusers.data = this.removeObjectByID(rels.wannabeusers.data, frisbee_to_be_tossed.id);
-          user.inGroup = 'Y';
       }.bind(this))
       .catch(() => {
-        alert("The change could not be made.  Try again later.");
+        alert("Membership server is not responding. Please try again later.");
+        _user.inGroup = null;
       });
     }.bind(this));
   }
 
 
 
-  reject (user) {
-    app.store.find('users', user.data.id).then(function(user) {
+  reject (_user) {
+    app.store.find('users', _user.data.id).then(function(user) {
       var rels = user.data.relationships;
       const frisbee_to_be_tossed = {type:"groups", id: this.group.data.id};
 
       rels.grouprequests.data = this.removeObjectByID(rels.grouprequests.data, frisbee_to_be_tossed.id);
+      rels.groups.data = this.removeObjectByID(rels.groups.data, frisbee_to_be_tossed.id);
+
+      _user.inGroup = false;
+      m.redraw();
 
       user.save({relationships: rels})
       .then(() => {
-        alert("The user's request has been denied.");
-        user.inGroup = 'N';
         console.log("good");
       })
       .catch(() => {
-        user.inGroup = 'N';
+        _user.inGroup = null;
+        alert("Membership server is not responding. Please try again later.");
         console.log("bad");
       });
     }.bind(this));
@@ -84,12 +89,12 @@ export default class ApproveWannabeMembersModal extends Modal {
       return (
         <div className='wannabe-user'>
           {Button.component({
-            className: 'Button Button--join-approve',
+            className: 'Button Button--join-approve' + ((user.inGroup===true)?' already-confirmed ':''),
             icon: 'check',
             onclick: () => SELF.approve(user)
           })}
           {Button.component({
-            className: 'Button Button--join-reject',
+            className: 'Button Button--join-reject' + ((user.inGroup===false)?' already-confirmed ':''),
             icon: 'times-circle',
             onclick: () => SELF.reject(user)
           })}
@@ -101,7 +106,7 @@ export default class ApproveWannabeMembersModal extends Modal {
     return (
       <div className="Modal-body">
         <div className="Form">
-          <div className='instructions'>Click on the checkmark or "X" to approve or reject:</div>
+          <div className='instructions'>Make changes using the checkmark or the red "X":</div>
           <div id='mount-here'>
             {this.users.map(x => showWannabeUser(x))}
           </div>
