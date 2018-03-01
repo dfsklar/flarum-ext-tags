@@ -38,6 +38,7 @@ export default class TagHero extends Component {
 	init() {
 		// We want to force a reload of this user's complete info in case its group-membership list has changed.
 		this.loading = true;
+		this.groupWannabeRoster = [];
 	    app.store.find('users', app.session.user.id())
 			.then(this.refreshGroupMembershipInfo.bind(this));
 
@@ -225,10 +226,9 @@ export default class TagHero extends Component {
 			onclick: this.launchSessionOrderingEditor.bind(this)
 		}));
 
-		const numWannabes = 
-		   ( this.groupWannabeRoster ?
-			 this.groupWannabeRoster.length : 0 );
+		const numWannabes = ( this.groupWannabeRoster.length );
 		items.add('approve', Button.component({
+			disabled: (numWannabes == 0),
 			children: [
 				<span className='label'>
 					Manage membership requests
@@ -296,6 +296,14 @@ export default class TagHero extends Component {
 			 </div>
 			 <div class='rightside-shim'>&nbsp;</div>
 	      </div>
+
+		  {(this.yesIAmTheLeaderOfThisGroup && this.groupWannabeRoster.length > 0) ? 
+		  (
+			<div class='please-handle-roster'>
+			   Membership requests are awaiting your consideration.  Please use the "...More" menu to handle.
+			</div>
+		  ) : ''
+		  }
 
 		  <div class="marketing-block-footer">
 					{controlsForActionDropdown.length ? (
