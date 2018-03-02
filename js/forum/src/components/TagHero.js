@@ -60,6 +60,13 @@ export default class TagHero extends Component {
 		// Am "I" the leader of this group?
 		const groupLeaderUserID = this.tag.data.attributes.leaderUserId;
 		this.yesIAmTheLeaderOfThisGroup = (String(groupLeaderUserID) == String(app.session.user.data.id));
+
+		// Extract the title and session number
+		function hideSpecialGroupFlag(grouptitle) {
+			return (grouptitle[0] == '\x07') ? grouptitle.substr(1) : grouptitle;
+		}
+		this.title = hideSpecialGroupFlag(this.parent.data.attributes.name);
+		this.sessionNumber = this.tag.data.attributes.position + 1;
 	}
 
 
@@ -198,6 +205,27 @@ export default class TagHero extends Component {
 		}));
   }
 
+  deleteSessionAfterConfirm() {
+	  // If this is the ONLY session, don't even allow it.
+	  const children = app.store.all('tags').filter(child => child.parent() === this.parent);
+	  if (children.length < 2) {
+		  alert("You cannot delete this session because it is the only session in this community group.");
+	  }
+	  else {
+		if (confirm("Are you sure you want to DELETE session #"
+					+ this.sessionNumber + " ("
+					+ this.title + ")?")
+			) 
+		{
+			const target = app.route.tag(this.parent);
+			this.tag.delete().then(() => {
+				m.route(target, null, {replace: true});
+			});
+		}
+	}
+  }
+
+
   launchTagEditor() {
 	app.modal.show(new EditTagModal({tag: this.tag}));
   }
@@ -219,6 +247,11 @@ export default class TagHero extends Component {
 		items.add('edit', Button.component({
 			children: [ 'Edit session description' ],
 			onclick: this.launchTagEditor.bind(this)
+		}));
+
+		items.add('delete', Button.component({
+			children: [ 'Delete this session' ],
+			onclick: this.deleteSessionAfterConfirm.bind(this)
 		}));
 
 		items.add('reorder', Button.component({
@@ -273,10 +306,6 @@ export default class TagHero extends Component {
 		<div class="group-leader-name">{leader ? ("This group's leader is: " + leader.data.attributes.displayName) : ''}</div>
 	*/
 
-	function hideSpecialGroupFlag(grouptitle) {
-		return (grouptitle[0] == '\x07') ? grouptitle.substr(1) : grouptitle;
-	}
-
 	const destURL = app.siteSpecifics.fetchFormedURL();
 	$('.nav-up').empty().append(
 		('<a href="' + destURL + '" class=returntoformed>&lt; Back to Community</a>'));
@@ -288,8 +317,8 @@ export default class TagHero extends Component {
 
 	      <div class="marketing-block">
 	     	 <div class="leftside">
-					<div class="group-name">{m.trust(hideSpecialGroupFlag(this.parent.data.attributes.name))}</div>
-					<div class="session-name">{m.trust("Session " + String(this.tag.data.attributes.position+1) + ": " + this.tag.data.attributes.name)}</div>
+					<div class="group-name">{m.trust(this.title)}</div>
+					<div class="session-name">{m.trust("Session " + String(this.sessionNumber) + ": " + this.tag.data.attributes.name)}</div>
 					<hr class="under-session-name"/>
 					<div class="session-description">{m.trust(this.tag.data.attributes.description)}</div>
 			 </div>
