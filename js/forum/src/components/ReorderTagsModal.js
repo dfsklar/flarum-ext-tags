@@ -32,11 +32,17 @@ export default class ReorderTagsModal extends Modal {
     
     this.DND.view = function(scope) {
       var list = function(items) {
-        return items.map(function(item, index) {
+        var retval = items.map(function(item, index) {
           return m('li', {
             index: index
           }, item.name)
-        })
+        });
+        retval.push(
+          <div class='vis-invis'>
+             <div>&#8679; VISIBLE to members &#8679;</div><hr/>
+          </div>
+        );
+        return retval;
       }
       
       return m('.drag', {
