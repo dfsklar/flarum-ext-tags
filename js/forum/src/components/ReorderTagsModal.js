@@ -22,7 +22,10 @@ export default class ReorderTagsModal extends Modal {
       var scope = {
         context: options.context,
         left: options.tags.reverse().map(function (tag) {
-          return { name : tag.name() };
+          return { 
+            name : tag.name(),
+            position: tag.data.attributes.position 
+          };
         }),
         right: [
         ]
@@ -34,7 +37,7 @@ export default class ReorderTagsModal extends Modal {
       var list = function(items) {
         var retval = items.map(function(item, index) {
           return m('li', {
-            index: index
+            position: item.position
           }, item.name)
         });
         retval.push(
@@ -126,26 +129,34 @@ export default class ReorderTagsModal extends Modal {
     // a change in position.
     this.parentTag = null;
     this.idsOfChildrendInOrder = [];
+    this.visiblePortion = true;
     this.$latestOrder.children().each(function(index, elem) {
-      // index is the zero-based *new* position
-      // elem.attr('index') is the zero-base *old* position
-      var newIDX = index;
-      var oldIDX = parseInt($(elem).attr('index'));
-      var matchingTag =
-        this.tags.find(function(x){
-          return (x.data.attributes.position == oldIDX);
-        });
-      this.parentTag = matchingTag.parent();
-      this.idsOfChildrendInOrder.push(parseInt(matchingTag.id()));
-      if (oldIDX != newIDX) {
+      if (elem.localName == 'li') {
+        // index is the zero-based *new* position
+        // elem.attr('index') is the zero-base *old* position
+        var newIDX = index;
+        var pos = parseInt($(elem).attr('position'));
+        var matchingTag =
+          this.tags.find(function(x){
+            return (x.data.attributes.position == pos);
+          });
+        this.parentTag = matchingTag.parent();
+        this.idsOfChildrendInOrder.push(
+          {
+            id: parseInt(matchingTag.id()),
+            visible: this.visiblePortion
+          }
+        );
         // Change the position number for this tag, just in local store
         app.store.getById('tags', matchingTag.id()).pushData({
-          attributes: {
-            position: newIDX,
-            isChild: true
-          },
-          relationships: {parent: this.parentTag}
+            attributes: {
+              position: newIDX,
+              isChild: true
+            },
+            relationships: {parent: this.parentTag}
         });
+      } else {
+        this.visiblePortion = false;
       }
     }.bind(this));
 
@@ -158,7 +169,7 @@ export default class ReorderTagsModal extends Modal {
     app.request({
       url: app.forum.attribute('apiUrl') + '/tags/order',
       method: 'POST',
-      data: {order: [orderSpec]}
+      data: {orderviz: [orderSpec]}
     });
 
     this.hide();
@@ -169,25 +180,4 @@ export default class ReorderTagsModal extends Modal {
     m.redraw.strategy('all');
     m.redraw();
 }
-
-
-
-
-  // WE MIGHT WANT TO SUPPORT DELETION SOMEDAY?
-  /*
-  delete() {
-    if (confirm(app.translator.trans('flarum-tags.admin.edit_tag.delete_tag_confirmation'))) {
-      const children = app.store.all('tags').filter(tag => tag.parent() === this.tag);
-
-      this.tag.delete().then(() => {
-        children.forEach(tag => tag.pushData({
-          attributes: {isChild: false},
-          relationships: {parent: null}
-        }));
-        m.redraw();
-      });
-
-      this.hide();
-    }
-  } */
 }
