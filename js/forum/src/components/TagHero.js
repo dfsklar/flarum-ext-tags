@@ -58,7 +58,7 @@ export default class TagHero extends Component {
 			.then(this.recordGroupRoster.bind(this));
 			
 		// Am "I" the leader of this group?
-		const groupLeaderUserID = this.tag.data.attributes.leaderUserId;
+		const groupLeaderUserID = this.parent.data.attributes.leaderUserId;
 		this.yesIAmTheLeaderOfThisGroup = (String(groupLeaderUserID) == String(app.session.user.data.id));
 
 		// Extract the title and session number
