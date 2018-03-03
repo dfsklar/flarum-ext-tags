@@ -24,7 +24,8 @@ export default class ReorderTagsModal extends Modal {
         left: options.tags.reverse().map(function (tag) {
           return { 
             name : tag.name(),
-            position: tag.data.attributes.position 
+            position: tag.data.attributes.position,
+            hidden: tag.data.attributes.isHidden 
           };
         }),
         right: [
@@ -34,13 +35,16 @@ export default class ReorderTagsModal extends Modal {
     }
     
     this.DND.view = function(scope) {
+      var indexLastVisibleSession = 0;
       var list = function(items) {
         var retval = items.map(function(item, index) {
+          if (!(item.hidden))
+            indexLastVisibleSession = index;
           return m('li', {
             position: item.position
           }, item.name)
         });
-        retval.push(
+        retval.splice(indexLastVisibleSession+1, 0, 
           <div class='vis-invis'>
              <div>&#8679; VISIBLE to members &#8679;</div><hr/>
           </div>
@@ -151,7 +155,8 @@ export default class ReorderTagsModal extends Modal {
         app.store.getById('tags', matchingTag.id()).pushData({
             attributes: {
               position: newIDX,
-              isChild: true
+              isChild: true,
+              isHidden: !(this.visiblePortion)
             },
             relationships: {parent: this.parentTag}
         });
