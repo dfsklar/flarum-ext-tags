@@ -29,7 +29,8 @@ export default class TagHero extends Component {
 
 
 	recordGroupRoster(r) {
-		this.groupMembershipRoster = r.data.relationships.users.data;
+		this.arrayOnlyWithLeader = [ { type: "users", id: app.session.user.data.id}];
+		this.groupMembershipRoster = r.data.relationships.users.data;  // [ {type:"users", id:"32"}, ... ]
 		this.groupWannabeRoster = r.data.relationships.wannabeusers.data;
 		m.redraw();
 	}
@@ -53,13 +54,13 @@ export default class TagHero extends Component {
 		// TRY TO OBTAIN INFO ABOUT THE *GROUP* THAT MATCHES THE PARENT TAG
 		this.matchingGroup = app.store.getBy('groups', 'slug', this.parent.slug());
 		this.isMemberOfGroup = false;  // Meaning: we do not know yet, but a fresh reload is already taking place.
+			
+		// Am "I" the leader of this group?
+		this.groupLeaderUserID = this.parent.data.attributes.leaderUserId;
+		this.yesIAmTheLeaderOfThisGroup = (String(this.groupLeaderUserID) == String(app.session.user.data.id));
 
 		app.store.find('groups', this.matchingGroup.data.id)
 			.then(this.recordGroupRoster.bind(this));
-			
-		// Am "I" the leader of this group?
-		const groupLeaderUserID = this.parent.data.attributes.leaderUserId;
-		this.yesIAmTheLeaderOfThisGroup = (String(groupLeaderUserID) == String(app.session.user.data.id));
 
 		// Extract the title and session number
 		function hideSpecialGroupFlag(grouptitle) {
@@ -365,7 +366,7 @@ export default class TagHero extends Component {
 					<div class="num-of-members">
 						{this.groupMembershipRoster ? 
 						   UserRosterDropdown.component({
-								 userList: this.groupMembershipRoster
+								 userList: this.arrayOnlyWithLeader.concat(this.groupMembershipRoster)
 							 }) : ' '}
 					</div>
 
