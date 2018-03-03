@@ -142,21 +142,24 @@ export default class TagHero extends Component {
 	
     const items = new ItemList();
 
+
     const currentPrimaryTag = 
        currentTag ? 
         ( (currentTag.isChild() ? currentTag.parent() : currentTag) ) 
         : 
         null;
 
+
     const addTag = function(tag, indexSeq, fullArray) {
-      let active = (currentTag === tag);
+	  let active = (currentTag === tag);
+	  let hidden = (!this.yesIAmTheLeaderOfThisGroup) && tag.data.attributes.isHidden;
 
       if (!active && currentTag) {
         active = (currentTag.parent() === tag);
       }
 
 	  // CAREFUL: similar logic is found in addTagList.js !!!!
-      if (tag.isChild() && (tag.parent() === currentPrimaryTag)) {
+      if (tag.isChild() && (tag.parent() === currentPrimaryTag) && (!hidden)) {
         items.add('tag' + tag.id(), TagLinkButton.component({
 		  label: 'Session ' + String(fullArray.length-indexSeq) + " of " + String(fullArray.length),
 		  idx: fullArray.length - indexSeq,
@@ -166,9 +169,12 @@ export default class TagHero extends Component {
       }
     };
 
-    // DFSKLARD: The listing of sessions.
+
+	// DFSKLARD:  THE SESSION DROPDOWN IN THE FOOTER OF THE TAGHERO !!!!!!
     // DFSKLARD: my own attempts at a custom list of secondary tags to provide a list of sessions.
 	// I ONLY SHOW THE subtags OF THE active primary tag.
+	// I do NOT hide the marked-as-hidden ones because this is currently used only for the admin-only
+	// session-reordering UI.
 	this.session_tags = 
 		tags
 		.filter(tag => 
@@ -354,6 +360,8 @@ export default class TagHero extends Component {
 						}
 						</div> ) : ''
 					}
+
+
 					<div class="session-chooser">
 					{
 						SelectDropdown.component({
@@ -363,12 +371,15 @@ export default class TagHero extends Component {
 						})
 					}
 					</div>
+
+
 					<div class="num-of-members">
 						{this.groupMembershipRoster ? 
 						   UserRosterDropdown.component({
 								 userList: this.arrayOnlyWithLeader.concat(this.groupMembershipRoster)
 							 }) : ' '}
 					</div>
+
 
 					{(!(this.isMemberOfGroup) && !(this.loading)) ? (
 						<div class="join-or-leave" onclick={this.join.bind(this)}>JOIN</div>
