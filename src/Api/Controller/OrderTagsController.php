@@ -93,7 +93,7 @@ class OrderTagsController implements ControllerInterface
                         Tag::where('id', $childId)->update([
                             'position' => $j,
                             'parent_id' => $parentId,
-                            'is_hidden' => ( ! ($x['visible']))
+                            'is_hidden' => ( $x['visible'] ? '0' : '1' )
                         ]);
                     }
                 }
