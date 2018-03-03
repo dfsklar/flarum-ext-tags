@@ -29,7 +29,7 @@ export default class TagHero extends Component {
 
 
 	recordGroupRoster(r) {
-		this.arrayOnlyWithLeader = [ { type: "users", id: app.session.user.data.id}];
+		this.arrayOnlyWithLeader = [ { type: "users", id: this.groupLeaderUserID}];
 		this.groupMembershipRoster = r.data.relationships.users.data;  // [ {type:"users", id:"32"}, ... ]
 		this.groupWannabeRoster = r.data.relationships.wannabeusers.data;
 		m.redraw();
