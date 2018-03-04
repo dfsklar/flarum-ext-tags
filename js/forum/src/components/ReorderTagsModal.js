@@ -61,6 +61,9 @@ export default class ReorderTagsModal extends Modal {
           var drake = dragula([left, right])
           drake.on('drop', function(element, target, source) {
             scope.context.$latestOrder = $(target);
+            if ($($(target).children()[0]).attr('class') == "vis-invis gu-transit") {
+              alert("Warning: Your members will be allowed to see the very first session.  Every group must have at least one visible session.");
+            }
             // This cloning of the target is the only way to persist the
             // order the user has chosen.  $(target) will be a jQuery 
             // pointer to the "OL" element so:
