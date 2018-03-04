@@ -57,7 +57,7 @@ export default class TagHero extends Component {
 			
 		// Am "I" the leader of this group?
 		this.groupLeaderUserID = this.parent.data.attributes.leaderUserId;
-		this.yesIAmTheLeaderOfThisGroup = (String(this.groupLeaderUserID) == String(app.session.user.data.id));
+		this.yesIAmTheLeaderOfThisGroup =  (String(this.groupLeaderUserID) == String(app.session.user.data.id));
 
 		app.store.find('groups', this.matchingGroup.data.id)
 			.then(this.recordGroupRoster.bind(this));
@@ -66,8 +66,9 @@ export default class TagHero extends Component {
 		function hideSpecialGroupFlag(grouptitle) {
 			return (grouptitle[0] == '\x07') ? grouptitle.substr(1) : grouptitle;
 		}
+		var ignoreMeJustNeededToRunThisMethod = this.list_of_sessions();
 		this.title = hideSpecialGroupFlag(this.parent.data.attributes.name);
-		this.sessionNumber = this.tag.data.attributes.position + 1;
+		this.sessionNumber = this.tag.sessionNumber;
 	}
 
 
@@ -160,8 +161,9 @@ export default class TagHero extends Component {
 
 	  // CAREFUL: similar logic is found in addTagList.js !!!!
       if (tag.isChild() && (tag.parent() === currentPrimaryTag) && (!hidden)) {
+		tag.sessionNumber = fullArray.length-indexSeq;
         items.add('tag' + tag.id(), TagLinkButton.component({
-		  label: 'Session ' + String(fullArray.length-indexSeq) + " of " + String(fullArray.length),
+		  label: 'Session ' + String(tag.sessionNumber) + " of " + String(fullArray.length),
 		  idx: fullArray.length - indexSeq,
           tag: tag, 
           params: this.params, 
@@ -175,15 +177,19 @@ export default class TagHero extends Component {
 	// I ONLY SHOW THE subtags OF THE active primary tag.
 	// I do NOT hide the marked-as-hidden ones because this is currently used only for the admin-only
 	// session-reordering UI.
+	let yesIAmTheLeaderOfThisGroup = this.yesIAmTheLeaderOfThisGroup;
 	this.session_tags = 
 		tags
-		.filter(tag => 
+		.filter((tag,idx) => 
 			(tag.position() !== null) 
 			&&
-			tag.isChild() 
+			tag.isChild()
 			&&
 			(tag.parent() === currentPrimaryTag))
-		.sort((a,b) => (b.position() - a.position()));
+		.sort((a,b) => (a.position() - b.position()))
+		.filter((tag,idx) => 
+			( ( ! ((!yesIAmTheLeaderOfThisGroup) && tag.data.attributes.isHidden) ) || (idx == 0) ))
+		.reverse();
 	this.session_tags.forEach(addTag.bind(this));
  
 	return items;
