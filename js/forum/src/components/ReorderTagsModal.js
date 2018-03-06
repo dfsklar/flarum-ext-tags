@@ -24,6 +24,7 @@ export default class ReorderTagsModal extends Modal {
         left: options.tags.reverse().map(function (tag) {
           return { 
             name : tag.name(),
+            tagID: tag.id(),
             position: tag.data.attributes.position,
             hidden: tag.data.attributes.isHidden 
           };
@@ -41,7 +42,8 @@ export default class ReorderTagsModal extends Modal {
           if (!(item.hidden))
             indexLastVisibleSession = index;
           return m('li', {
-            position: item.position
+            position: item.position,
+            tagID: item.tagID
           }, item.name)
         });
         retval.splice(indexLastVisibleSession+1, 0, 
@@ -83,7 +85,7 @@ export default class ReorderTagsModal extends Modal {
   init() {
     super.init();
 
-    this.tag = this.props.tag || app.store.createRecord('tags');
+    this.tag = this.props.current_tag || app.store.createRecord('tags');
     this.tags = this.props.tags;
 
     this.init_draganddrop();
@@ -132,21 +134,23 @@ export default class ReorderTagsModal extends Modal {
       return;
     }
 
-    // Scan through this.latestOrder to determine all tags who have experienced
-    // a change in position.
+    // Scan through this.latestOrder and recompute all positions.
     this.parentTag = null;
     this.idsOfChildrendInOrder = [];
     this.visiblePortion = true;
+    this.curSessionNumber = 0;
     this.$latestOrder.children().each(function(index, elem) {
       if (elem.localName == 'li') {
         // index is the zero-based *new* position
         // elem.attr('index') is the zero-base *old* position
+        this.curSessionNumber += 1;
         var newIDX = index;
-        var pos = parseInt($(elem).attr('position'));
+        var tagID = parseInt($(elem).attr('tagID'));
         var matchingTag =
           this.tags.find(function(x){
-            return (x.data.attributes.position == pos);
+            return (x.id() == tagID);
           });
+        matchingTag.sessionNumber = this.curSessionNumber;
         this.parentTag = matchingTag.parent();
         this.idsOfChildrendInOrder.push(
           {
@@ -155,7 +159,9 @@ export default class ReorderTagsModal extends Modal {
           }
         );
         // Change the position number for this tag, just in local store
-        app.store.getById('tags', matchingTag.id()).pushData({
+        const tagFromStore = app.store.getById('tags', matchingTag.id());
+        tagFromStore.sessionNumber = this.curSessionNumber;
+        tagFromStore.pushData({
             attributes: {
               position: newIDX,
               isChild: true,
@@ -182,10 +188,21 @@ export default class ReorderTagsModal extends Modal {
 
     this.hide();
 
+    // In later mithril, this would be m.route.set...
+    // but in mithril 0.2, it's an overloaded use of m.route with one param:
+    
+    m.redraw(true);
+    m.route('/t/' + this.tag.data.attributes.slug + '?redraw=8392');
+    m.redraw(true);
+  
+
+    // window.location.href = '/t/' + this.tag.data.attributes.slug + '?foo=bar';
+
     // A diff redraw won't work here, because sortable has mucked around
     // with the DOM which will confuse Mithril's diffing algorithm. Instead
     // we force a full reconstruction of the DOM.
+    
     m.redraw.strategy('all');
     m.redraw();
-}
+  }
 }
