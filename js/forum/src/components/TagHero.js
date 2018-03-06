@@ -88,6 +88,8 @@ export default class TagHero extends Component {
 			this.loading = false;
 			if (!(this.ENABLE_INSTANT_JOIN))
 				alert("Thanks for your interest!  You will receive email when your membership has been approved.");
+			else
+				this.groupMembershipRoster.push({type: "users", id: String(app.session.user.id())});
 			console.log("good");
 			m.redraw();
 		})
