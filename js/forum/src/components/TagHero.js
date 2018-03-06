@@ -126,6 +126,7 @@ export default class TagHero extends Component {
 			this.isMemberOfGroup = false;
 			this.loading = false;
 			this.indexPageOwner.assertMembership(false);
+			this.init();
 			m.redraw();
 		})
 		.catch(() => {
