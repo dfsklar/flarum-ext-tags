@@ -24,6 +24,7 @@ export default class ReorderTagsModal extends Modal {
         left: options.tags.reverse().map(function (tag) {
           return { 
             name : tag.name(),
+            tagID: tag.id(),
             position: tag.data.attributes.position,
             hidden: tag.data.attributes.isHidden 
           };
@@ -41,7 +42,8 @@ export default class ReorderTagsModal extends Modal {
           if (!(item.hidden))
             indexLastVisibleSession = index;
           return m('li', {
-            position: item.position
+            position: item.position,
+            tagID: item.tagID
           }, item.name)
         });
         retval.splice(indexLastVisibleSession+1, 0, 
@@ -142,10 +144,10 @@ export default class ReorderTagsModal extends Modal {
         // index is the zero-based *new* position
         // elem.attr('index') is the zero-base *old* position
         var newIDX = index;
-        var pos = parseInt($(elem).attr('position'));
+        var tagID = parseInt($(elem).attr('tagID'));
         var matchingTag =
           this.tags.find(function(x){
-            return (x.data.attributes.position == pos);
+            return (x.id() == tagID);
           });
         this.parentTag = matchingTag.parent();
         this.idsOfChildrendInOrder.push(
