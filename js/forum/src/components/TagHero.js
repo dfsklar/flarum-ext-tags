@@ -37,6 +37,9 @@ export default class TagHero extends Component {
 
 
 	init() {
+
+		this.ENABLE_INSTANT_JOIN = true;
+
 		// We want to force a reload of this user's complete info in case its group-membership list has changed.
 		this.loading = true;
 		this.groupWannabeRoster = [];
@@ -73,14 +76,18 @@ export default class TagHero extends Component {
 
 
 	_join() {
-		this.loggedinUserMembershipList = app.session.user.data.relationships.grouprequests.data;		
+		this.loggedinUserMembershipList = 
+			this.ENABLE_INSTANT_JOIN ? 
+			app.session.user.data.relationships.groups.data :		
+			app.session.user.data.relationships.grouprequests.data;		
 		this.loggedinUserMembershipList.push({type:"groups", id: this.matchingGroup.data.id});
 		app.session.user.save({relationships: app.session.user.data.relationships})
 		.then(() => {
-			this.isMemberOfGroup = false;
-			this.hasRequestedMembership = true;
+			this.isMemberOfGroup = this.ENABLE_INSTANT_JOIN;
+			this.hasRequestedMembership =  ( ! (this.ENABLE_INSTANT_JOIN) );
 			this.loading = false;
-			alert("Thanks for your interest!  You will receive email when your membership has been approved.");
+			if (!(this.ENABLE_INSTANT_JOIN))
+				alert("Thanks for your interest!  You will receive email when your membership has been approved.");
 			console.log("good");
 			m.redraw();
 		})
@@ -272,22 +279,22 @@ export default class TagHero extends Component {
 			onclick: this.launchSessionOrderingEditor.bind(this)
 		}));
 
-		const numWannabes = ( this.groupWannabeRoster.length );
-		items.add('approve', Button.component({
-			disabled: (numWannabes == 0),
-			children: [
-				<span className='label'>
-					Manage membership requests
-					<span className='count'>
-					   {numWannabes}
+		if ( ! (this.ENABLE_INSTANT_JOIN) ) {
+			const numWannabes = ( this.groupWannabeRoster.length );
+			items.add('approve', Button.component({
+				disabled: (numWannabes == 0),
+				children: [
+					<span className='label'>
+						Manage membership requests
+						<span className='count'>
+						{numWannabes}
+						</span>
 					</span>
-				</span>
-			],
-			onclick: this.launchWannabeApprover.bind(this)
-		}));
-
+				],
+				onclick: this.launchWannabeApprover.bind(this)
+			}));
+		}
 	}
-
 
 	// LEAVE GROUP (only if currently enrolled -- leaders are not allowed to leave)
 	if (this.isMemberOfGroup && (!this.yesIAmTheLeaderOfThisGroup)) {
