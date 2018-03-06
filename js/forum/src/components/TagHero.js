@@ -352,6 +352,11 @@ export default class TagHero extends Component {
 		  }
 
 		  <div class="marketing-block-footer">
+					{this.tag.data.attributes.isHidden ? 
+					  (
+						<span className='this-tag-is-hidden'>Currently HIDDEN</span>
+					  ) : ''
+					}
 					{controlsForActionDropdown.length ? (
 						<div class="more-options">
 						{
