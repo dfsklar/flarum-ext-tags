@@ -301,6 +301,10 @@ export default class TagHero extends Component {
   }
 
 
+  fix_destination_link(url) {
+	  const correctDomain = 'https://formed.org';
+	  return url.replace('https://alpha.formed.org',correctDomain).replace('http://sklardev.formed.org:3000',correctDomain);
+  }
 
 	
   view() {		
@@ -336,7 +340,7 @@ export default class TagHero extends Component {
 					<div class="session-description">{m.trust(this.tag.data.attributes.description)}</div>
 			 </div>
 	      	 <div class="rightside-imageholder" style={{"background-image": "url("+this.tag.data.attributes.backgroundImage+")"}}>
-					<a href={this.tag.data.attributes.linkDestination} target='_fromflarumtoformed'>
+					<a href={this.fix_destination_link(this.tag.data.attributes.linkDestination)} target='_fromflarumtoformed'>
 						 {icon('play-circle', {className: 'play-icon'})}
 				    </a>
 			 </div>
